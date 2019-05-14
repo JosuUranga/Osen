@@ -9,7 +9,6 @@ public class DBManager {
 	private String DBNAME = "osen";
 	public static void main(String[] args) throws IOException {
 		DBManager manager=new DBManager();
-		System.out.println(manager.executeUpdate("DROP DATABASE IF EXISTS OSEN;"));
 		
 	}
 	protected DBManager() {
