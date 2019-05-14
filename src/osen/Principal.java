@@ -10,6 +10,7 @@ public class Principal {
 	}
 	private void iniciarSerialComm() {
 		lsP = new LineaSeriePrincipal();
+		lsP.accion();
 	}
 	public static void main(String[] args) {
 		Principal programa = new Principal();
