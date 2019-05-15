@@ -1,17 +1,19 @@
-// using SendGrid's Java Library
-// https://github.com/sendgrid/sendgrid-java
+package mail;
+
 import com.sendgrid.*;
 import java.io.IOException;
 
 public class MailSender {
-  public static void main(String[] args) throws IOException {
-    Email from = new Email("osen@mondragon.edu");
+	static SendGrid sg;
+	public MailSender(String key) {
+		sg=new SendGrid(key);
+	}
+	public void sendMail() throws IOException {
+    Email from = new Email("noreply@osen.edu");
     String subject = "Sending with SendGrid is Fun";
     Email to = new Email("imanol.rubio@alumni.mondragon.edu");
     Content content = new Content("text/plain", "and easy to do anywhere, even with Java");
     Mail mail = new Mail(from, subject, to, content);
-
-    SendGrid sg = new SendGrid("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");
     Request request = new Request();
     try {
       request.setMethod(Method.POST);

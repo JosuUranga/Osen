@@ -1,3 +1,4 @@
+package db;
 import java.io.IOException;
 import java.sql.*;
 
@@ -5,13 +6,10 @@ public class DBManager {
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;
 	private String USER = "root";
-	private String PASS = "INnO4BcGBWIKa1HAfqlO51EeGwdF";
+	private String PASS = "";
 	private String DBNAME = "osen";
-	public static void main(String[] args) throws IOException {
-		DBManager manager=new DBManager();
-		
-	}
-	protected DBManager() {
+	
+	public DBManager() {
 		
 	}
 	
@@ -65,4 +63,3 @@ public class DBManager {
 		return result;
 	}
 }
-
