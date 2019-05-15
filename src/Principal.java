@@ -25,7 +25,7 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 
-public class Main extends JFrame implements ActionListener{
+public class Principal extends JFrame implements ActionListener{
 	
 	JScrollPane sPanel;
 	JMenuBar barra;
@@ -36,7 +36,7 @@ public class Main extends JFrame implements ActionListener{
 	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
 	boolean compararActivado=false;
 
-	public Main(){
+	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
@@ -243,8 +243,8 @@ public class Main extends JFrame implements ActionListener{
 				panelComboBox2.remove(0);
 				}
 				//hay q dinamizar esto
-				Main.this.revalidate();
-				Main.this.repaint();
+				Principal.this.revalidate();
+				Principal.this.repaint();
 				
 			}
 			if (texto.equals("AnadirMuestra")){
@@ -257,7 +257,7 @@ public class Main extends JFrame implements ActionListener{
 				
 			}
 			if (texto.equals("Salir")){
-				Main.this.dispose();
+				Principal.this.dispose();
 			}
 		}
 
@@ -272,7 +272,7 @@ public class Main extends JFrame implements ActionListener{
 		}
 		
 		
-		Main programa = new Main();
+		Principal programa = new Principal();
 	}
 
 
