@@ -1,11 +1,16 @@
 package osen;
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -15,22 +20,26 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JPanel;
-import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import db.DBManager;
 import lineaSerie.LineaSeriePrincipal;
 
 
 public class Principal extends JFrame implements ActionListener{
-	
-	JScrollPane sPanel;
+	final static String[] textoIdioma= {"AnadirCampo","Anade un nuevo campo","AnadirMuestra","Anade una nueva muestra","Recargar",
+			"Refresca la informacinn de la base de datos","Ayuda","Revisar informacinn de las variables meterologica.","Salir","Cierra la aplicacion",
+			"Mapa","Informacion general","Graficos","Lugar: ","Area: ","Habitantes: ","Densidad: ", "Datos medioambientales", "Temperatura: ",
+			"Co2 equivalente: ", "Humedad: ","Densidad: ", "Nº de muestra: ", "Fecha: ", "Condicion meteorologia: ", "Tomado por: ", "Ayuda", "Editar", "Salir",
+			" habitantes/km2"};
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
 	JMenuItem opcionMenu;
@@ -39,11 +48,16 @@ public class Principal extends JFrame implements ActionListener{
 	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
 	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
+	DBManager manager;
+	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
+	Font fuenteTituloInfoGeneral;
 	
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
+		manager = new DBManager();
+		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		this.crearAcciones();
 		this.crearComboBox1();
 		this.crearComboBox2();
@@ -58,34 +72,103 @@ public class Principal extends JFrame implements ActionListener{
 	
 
 	private void crearAcciones() {
-		anadirCampo = new MiAccion ("AnadirCampo",new ImageIcon("iconos/edit_add.png"),"Anade un nuevo campo",
+		anadirCampo = new MiAccion (textoIdioma[0],new ImageIcon("iconos/edit_add.png"),textoIdioma[1],
 				new Integer(KeyEvent.VK_C));
-		anadirMuestra = new MiAccion ("AnadirMuestra",new ImageIcon("iconos/amigo.png"),"Anade una nueva muestra",
+		anadirMuestra = new MiAccion (textoIdioma[2],new ImageIcon("iconos/amigo.png"),textoIdioma[3],
 				new Integer(KeyEvent.VK_A));
-		recargar = new MiAccion ("Recargar",new ImageIcon("iconos/recargar.png"),"Refresca la informacinn de la base de datos",
+		recargar = new MiAccion (textoIdioma[4],new ImageIcon("iconos/recargar.png"),textoIdioma[5],
 				new Integer(KeyEvent.VK_R));
-		ayuda = new MiAccion ("Ayuda",new ImageIcon("iconos/edit.png"),"Revisar informacinn de las variables meterologica.",
+		ayuda = new MiAccion (textoIdioma[6],new ImageIcon("iconos/edit.png"),textoIdioma[7],
 				new Integer(KeyEvent.VK_H));
-		salir = new MiAccion ("Salir",new ImageIcon("iconos/exit.png"),"Cierra la aplicacion",
+		salir = new MiAccion (textoIdioma[8],new ImageIcon("iconos/exit.png"),textoIdioma[9],
 				new Integer(KeyEvent.VK_S));
 	}
 	private void crearComboBox1() {
 		//coger los datos de la BD
 		comboLocalizacion1=new JComboBox<>();
-		comboLocalizacion1.addItem("Orio");
 		comboMeteo1=new JComboBox<>();
-		comboMeteo1.addItem("Soleado");
-		comboMeteo1.addItem("Lluvioso");
 		comboFecha1=new JComboBox<>();
-		comboFecha1.addItem("01/03/1999");
+		cargarDatosComboBox();
+		comboLocalizacion1.addActionListener(this);
+		comboLocalizacion1.setActionCommand("localizacion");
+		comboMeteo1.addActionListener(this);
+		comboMeteo1.setActionCommand("meteo");
 	}
+	
+	private void cargarDatosComboBox() {
+		cargarDatosLocalizacion();
+		cargarDatosMeteo();
+		cargarDatosFecha();
+	}
+
+
+
+	private void cargarDatosFecha() {
+		comboFecha1.removeAllItems();
+		
+		String pueblo=comboLocalizacion1.getSelectedItem().toString();
+		String meteo=comboMeteo1.getSelectedItem().toString();
+		
+		ResultSet resultados = manager.executeQuery("SELECT DISTINCT muestras.fecha\r\n" + 
+				"FROM (muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
+				"WHERE localizaciones.nombre='"+pueblo+"' AND meteos.descripcion='"+meteo+"';");
+		
+		try {
+			while(resultados.next()) {
+				comboFecha1.addItem(resultados.getString("fecha"));
+			}
+		} catch (SQLException e3) {
+			e3.printStackTrace();
+		}
+		manager.conClose();			
+	}
+
+
+
+	private void cargarDatosMeteo() {
+		comboMeteo1.removeAllItems();
+		
+		String pueblo=comboLocalizacion1.getSelectedItem().toString();
+		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
+		
+		ResultSet resultados = manager.executeQuery("SELECT DISTINCT meteos.descripcion \r\n" + 
+				"FROM (muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
+				condicion+";");
+		
+		try {
+			while(resultados.next()) {
+				comboMeteo1.addItem(resultados.getString("descripcion"));
+			}
+		} catch (SQLException e3) {
+			e3.printStackTrace();
+		}
+		manager.conClose();			
+	}
+
+
+
+	private void cargarDatosLocalizacion() {
+		ResultSet resultados = manager.executeQuery("SELECT localizaciones.nombre\r\n" + 
+				"FROM muestras JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
+				"GROUP BY localizaciones.localizacionID;");
+		try {
+			comboLocalizacion1.removeAllItems();
+			while(resultados.next()) {
+				comboLocalizacion1.addItem(resultados.getString("nombre"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		manager.conClose();		
+	}
+
+
+
 	private void crearComboBox2() {
 		//coger los datos de la BD
 		comboLocalizacion2=new JComboBox<>();
 		comboLocalizacion2.addItem("Orio");
 		comboMeteo2=new JComboBox<>();
-		comboMeteo2.addItem("Soleado");
-		comboMeteo2.addItem("Lluvioso");
 		comboFecha2=new JComboBox<>();
 		comboFecha2.addItem("01/03/1999");		
 	}
@@ -98,9 +181,9 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private Component crearPanelPestanas() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab("Mapa", crearPanelMapa());
-		panel.addTab("Informacinn general", crearPanelInfoGeneral());
-		panel.addTab("Grnficos", crearPanelGraficos());
+		panel.addTab(textoIdioma[10], crearPanelMapa());
+		panel.addTab(textoIdioma[11], crearPanelInfoGeneral());
+		panel.addTab(textoIdioma[12], crearPanelGraficos());
 		return panel;
 	}
 	private Component crearPanelGraficos() {
@@ -114,10 +197,97 @@ public class Principal extends JFrame implements ActionListener{
 		return panel;
 	}
 	private Component crearPanelInfoGeneral() {
-		JPanel panel = new JPanel (new BorderLayout(0,10));
+		JPanel panel = new JPanel (new GridLayout(3,1));
+		panel.add(crearPanelInfoNorte());
+		panel.add(crearPanelInfoCentro());
+		panel.add(crearPanelInfoSur());
+
+		return panel;
+	}
+	private Component crearPanelInfoSur() {
+		JPanel panel = new JPanel (new GridLayout(2,2));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[13])));
+		panel.add(crearPanelJLabel(labelLugar=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[14])));
+		panel.add(crearPanelJLabel(labelArea=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[15])));
+		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[16])));
+		panel.add(crearPanelJLabel(labelDensidad=new JLabel(" ")));
 		
 		return panel;
 	}
+
+
+
+	private Component crearPanelJLabelTitulo(JLabel label) {
+		JPanel panel = new JPanel (new BorderLayout(10,10));
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		label.setFont(fuenteTituloInfoGeneral);
+		panel.add(label);
+
+		return panel;
+	}
+
+
+
+	private Component crearPanelInfoCentro() {
+		JPanel panel = new JPanel (new GridLayout(2,2));
+		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), textoIdioma[17]));
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[18])));
+		panel.add(crearPanelJLabel(labelTemp=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[19])));
+		panel.add(crearPanelJLabel(labelCo2=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[20])));
+		panel.add(crearPanelJLabel(labelHumedad=new JLabel(" ")));
+		
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[21])));
+		panel.add(crearPanelJLabel(labelVoc=new JLabel(" ")));
+		
+		return panel;
+	}
+
+
+
+	private Component crearPanelInfoNorte() {
+		JPanel panel = new JPanel (new GridLayout(2,4));
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[22])));
+		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(" ")));
+
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[23])));
+		panel.add(crearPanelJLabel(labelFecha=new JLabel(" ")));
+
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[24])));
+		panel.add(crearPanelJLabel(labelMeteo=new JLabel(" ")));
+
+		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[25])));
+		panel.add(crearPanelJLabel(labelUsuario=new JLabel(" ")));
+		
+		return panel;
+	}
+
+
+
+	private Component crearPanelJLabel(JLabel label) {
+		JPanel panel = new JPanel (new BorderLayout(10,10));
+		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		panel.add(label);
+
+		return panel;
+	}
+
+
+
+	
+
+
+
 	private Component crearPanelNorte() {
 		JPanel panel = new JPanel (new GridLayout(2,1));
 		panel.add(panelBarraBotones());
@@ -201,14 +371,14 @@ public class Principal extends JFrame implements ActionListener{
 		return barra;
 	}
 	private JMenu crearMenuAyuda() {
-		JMenu menudAyuda = new JMenu ("Ayuda");
+		JMenu menudAyuda = new JMenu (textoIdioma[26]);
 		menudAyuda.setMnemonic(new Integer(KeyEvent.VK_A));
 		JMenuItem opcionMenu = new JMenuItem (ayuda);
 		menudAyuda.add(opcionMenu);
 		return menudAyuda;
 	}
 	private JMenu crearMenuEditar() {
-		JMenu menuEditar = new JMenu ("Editar");
+		JMenu menuEditar = new JMenu (textoIdioma[27]);
 		menuEditar.setMnemonic(new Integer(KeyEvent.VK_E));
 		JMenuItem opcionMenu = new JMenuItem (anadirCampo);
 		menuEditar.add(opcionMenu);
@@ -218,7 +388,7 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private JMenu crearMenuSalir() {
 		JMenuItem op;
-		JMenu menuSalir = new JMenu ("Salir");
+		JMenu menuSalir = new JMenu (textoIdioma[28]);
 		menuSalir.setMnemonic(new Integer(KeyEvent.VK_S));
 		op=menuSalir.add(salir);
 		
@@ -236,7 +406,7 @@ public class Principal extends JFrame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (texto.equals("AnadirCampo")){
+			if (texto.equals(textoIdioma[0])){
 				compararActivado=!compararActivado;
 				if(compararActivado) {
 					panelComboBox2.add(comboLocalizacion2,0);
@@ -253,16 +423,16 @@ public class Principal extends JFrame implements ActionListener{
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals("AnadirMuestra")){
+			if (texto.equals(textoIdioma[2])){
 				
 			}
-			if (texto.equals("Recargar")){
+			if (texto.equals(textoIdioma[4])){
 				
 			}
-			if(texto.equals("Ayuda")) {
+			if(texto.equals(textoIdioma[6])) {
 				
 			}
-			if (texto.equals("Salir")){
+			if (texto.equals(textoIdioma[8])){
 				Principal.this.dispose();
 			}
 		}
@@ -288,24 +458,69 @@ public class Principal extends JFrame implements ActionListener{
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
+				
 		switch(e.getActionCommand()) {
 		
 		case "Buscar":
-			System.out.println("Buscar");
 			if(!compararActivado) {
-				String pueblo=comboLocalizacion1.getSelectedItem().toString();
-				String meteo=comboMeteo1.getSelectedItem().toString();
-				String fecha=comboFecha1.getSelectedItem().toString();
-				String condicion=("WHERE nombre = '\"+ pueblo+\"' AND");
-				if(!pueblo.equals("Cualquiera1")) condicion+=(" nombre = '"+ pueblo+"' AND" );
-				
-				
-				condicion+=";";
-				System.out.println(condicion);
-
+				realizarBusquedaSinComparar();
 			}
+			break;
+		case "localizacion":		
+			cargarDatosMeteo();
+			break;
+			
+		case "meteo":		
+			if(comboMeteo1.getItemCount()!=0)cargarDatosFecha();
 			break;
 		}
 	}
-	
+
+
+
+	private void realizarBusquedaSinComparar() {
+		String pueblo=comboLocalizacion1.getSelectedItem().toString();
+		String meteo=comboMeteo1.getSelectedItem().toString();
+		String fecha=comboFecha1.getSelectedItem().toString();
+		String condicion=(" WHERE localizaciones.nombre = '"+ pueblo+"' AND meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
+		
+		ResultSet resultados = manager.executeQuery("SELECT muestras.muestraID, meteos.descripcion, muestras.fecha, usuarios.nombre, muestras.temperatura, muestras.humedad, muestras.co2eq, muestras.voc, localizaciones.nombre AS lugar, localizaciones.habitantes, localizaciones.aream2, localizaciones.habitantes/localizaciones.aream2 AS 'densidad (habitantes/km2)'\r\n" + 
+				"FROM ((muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID)JOIN usuarios ON muestras.usuario=usuarios.usuarioID\r\n" + 
+				condicion+";");
+		try {
+			resultados.next();
+		} catch (SQLException e2) {
+			e2.printStackTrace();
+		}
+		actualizarcampos(resultados);
+	}
+
+
+
+	private void actualizarcampos(ResultSet resultados) {
+		actualizarPestañaTexto(resultados);
+	}
+
+
+
+	private void actualizarPestañaTexto(ResultSet resultados) {
+		try {
+			labelMuestraID.setText((Integer.toString(resultados.getInt("muestraID"))));
+			labelMeteo.setText(resultados.getString("descripcion"));
+			labelFecha.setText(String.valueOf(resultados.getDate("fecha")));
+			labelUsuario.setText(resultados.getString("nombre"));
+			labelTemp.setText(Float.toString(resultados.getFloat("temperatura"))+" ºC");
+			labelHumedad.setText(Float.toString(resultados.getFloat("humedad"))+" %");
+			labelCo2.setText(Integer.toString(resultados.getInt("Co2eq"))+" PPP");
+			labelVoc.setText(Float.toString(resultados.getFloat("VOC"))+" l/min");
+			labelLugar.setText((resultados.getString("lugar")));
+			labelHabitantes.setText(Integer.toString(resultados.getInt("habitantes")));
+			labelArea.setText(Integer.toString(resultados.getInt("aream2"))+" m2");
+			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+textoIdioma[29]);
+
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		
+	}
 }

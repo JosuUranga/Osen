@@ -8,13 +8,19 @@ public class DBManager {
 	private String USER = "root";
 	private String PASS = "";
 	private String DBNAME = "osen";
-	
+	Connection connect;
 	public DBManager() {
 		
 	}
-	
+	public void conClose() {
+		try {
+			connect.close();
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+	}
 	public Connection getConnection() {
-		Connection connect = null;
+		connect = null;
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection(
@@ -28,35 +34,32 @@ public class DBManager {
 		return connect;
 	}
 	public ResultSet executeQuery(String query) {
-		Connection con = this.getConnection();
+		connect = this.getConnection();
 		try {
-			statement = con.createStatement();
+			statement = connect.createStatement();
 			resultSet = statement.executeQuery(query);
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return resultSet;
 	}
 	public int executeUpdate(String query) {
-		Connection con = this.getConnection();
+		connect = this.getConnection();
 		int result=0;
 		try {
-			statement = con.createStatement();
+			statement = connect.createStatement();
 			result = statement.executeUpdate(query);
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 		return result;
 	}
 	public boolean execute(String query) {
-		Connection con = this.getConnection();
+		connect = this.getConnection();
 		boolean result=false;
 		try {
-			statement = con.createStatement();
+			statement = connect.createStatement();
 			result = statement.execute(query);
-			con.close();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
