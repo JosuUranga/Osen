@@ -1,0 +1,30 @@
+Add Field
+Add a new field
+Add Sample
+Add a new sample
+Refresh
+Refreshes the information in the database
+Help
+Review the information of the meteorological variables
+Exit
+Close the application
+Map
+General information
+Charts
+Place:
+Area:
+Population:
+Density:
+Environmental data
+Temperature:
+Co2 equivalent:
+Humidity:
+Density:
+Sample number:
+Date:
+Weather condition:
+Taken by:
+Help
+Edit
+Exit
+inhabitants / km2

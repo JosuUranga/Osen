@@ -1,0 +1,30 @@
+Anadir Campo
+Anade un nuevo campo
+Anadir Muestra
+Anade una nueva muestra
+Recargar
+Refresca la informacion de la base de datos
+Ayuda
+Revisar la informacion de las variables meterologicas
+Salir
+Cierra la aplicacion
+Mapa
+Informacion general
+Graficos
+Lugar: 
+Area: 
+Habitantes: 
+Densidad:  
+Datos medioambientales 
+Temperatura: 
+Co2 equivalente:  
+Humedad: 
+Densidad:  
+Nº de muestra:  
+Fecha:  
+Condicion meteorologia:  
+Tomado por:  
+Ayuda 
+Editar 
+Salir
+habitantes/km2
