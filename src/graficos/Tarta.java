@@ -24,18 +24,20 @@ import org.jfree.ui.RectangleEdge;
 import org.jfree.ui.RectangleInsets;
 import org.jfree.ui.RefineryUtilities;
 
-public class Tarta extends ApplicationFrame{
-
-   public Tarta(String title) {
-	        super(title);
+public class Tarta extends JPanel{
+	static ChartPanel pan=null;
+	
+   public Tarta() {
+	   super();
+	   JFreeChart chart = createChart(createDataset());
+	   chart.setPadding(new RectangleInsets(4, 8, 2, 2));
+	   ChartPanel panel = new ChartPanel(chart);
+	   panel.setMouseWheelEnabled(true);
+	   panel.setPreferredSize(new Dimension(600, 300));
+	   pan=panel;
 	}
-   public static JPanel createDemoPanel() {
-       JFreeChart chart = createChart(createDataset());
-       chart.setPadding(new RectangleInsets(4, 8, 2, 2));
-       ChartPanel panel = new ChartPanel(chart);
-       panel.setMouseWheelEnabled(true);
-       panel.setPreferredSize(new Dimension(600, 300));
-       return panel;
+   public JPanel getTarta() {
+	   return pan;
    }
    private static PieDataset createDataset() {
        DefaultPieDataset dataset = new DefaultPieDataset();

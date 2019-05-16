@@ -211,8 +211,7 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private Component crearPanelGraficos() {
 		JPanel panel = new JPanel (new BorderLayout(0,10));
-		Tarta tarta=new Tarta("tarta");
-		panel=tarta.createDemoPanel();
+		panel=new Tarta().getTarta();
 		return panel;
 	}
 	private Component crearPanelMapa() {
