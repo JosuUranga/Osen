@@ -8,6 +8,7 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.io.File;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -38,11 +39,11 @@ import notificaciones.*;
 
 
 public class Principal extends JFrame implements ActionListener{
-	final static String[] textoIdioma= {"AnadirCampo","Anade un nuevo campo","AnadirMuestra","Anade una nueva muestra","Recargar",
-			"Refresca la informacinn de la base de datos","Ayuda","Revisar informacinn de las variables meterologica.","Salir","Cierra la aplicacion",
-			"Mapa","Informacion general","Graficos","Lugar: ","Area: ","Habitantes: ","Densidad: ", "Datos medioambientales", "Temperatura: ",
-			"Co2 equivalente: ", "Humedad: ","Densidad: ", "N� de muestra: ", "Fecha: ", "Condicion meteorologia: ", "Tomado por: ", "Ayuda", "Editar", "Salir",
-			" habitantes/km2"};
+	
+	final static String ficheroCastellano="ficheros/Castellano.txt";
+	final static String ficheroEuskara="ficheros/Euskara.txt";
+	final static String ficheroIngles="ficheros/Ingles.txt";
+
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
 	JMenuItem opcionMenu;
@@ -54,13 +55,16 @@ public class Principal extends JFrame implements ActionListener{
 	DBManager manager;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
-	
+	FicheroIdioma ficheroIdioma;
+	String seleccionIdioma="Castellano";
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
+		
 		manager = new DBManager();
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
+		this.inicializarFicheros();
 		this.crearAcciones();
 		this.crearComboBox1();
 		this.crearComboBox2();
@@ -74,16 +78,32 @@ public class Principal extends JFrame implements ActionListener{
 	
 	
 
+	private void inicializarFicheros() {
+		switch(seleccionIdioma) {
+		case "Castellano":
+			ficheroIdioma=new FicheroIdioma(ficheroCastellano);
+		break;
+		case "Euskara":
+			ficheroIdioma=new FicheroIdioma(ficheroEuskara);
+		break;
+		case "Ingles":
+			ficheroIdioma=new FicheroIdioma(ficheroIngles);
+		break;
+		}
+	}
+
+
+
 	private void crearAcciones() {
-		anadirCampo = new MiAccion (textoIdioma[0],new ImageIcon("iconos/edit_add.png"),textoIdioma[1],
+		anadirCampo = new MiAccion (ficheroIdioma.getListaPalabras().get(0),new ImageIcon("iconos/edit_add.png"),ficheroIdioma.getListaPalabras().get(1),
 				new Integer(KeyEvent.VK_C));
-		anadirMuestra = new MiAccion (textoIdioma[2],new ImageIcon("iconos/amigo.png"),textoIdioma[3],
+		anadirMuestra = new MiAccion (ficheroIdioma.getListaPalabras().get(2),new ImageIcon("iconos/amigo.png"),ficheroIdioma.getListaPalabras().get(3),
 				new Integer(KeyEvent.VK_A));
-		recargar = new MiAccion (textoIdioma[4],new ImageIcon("iconos/recargar.png"),textoIdioma[5],
+		recargar = new MiAccion (ficheroIdioma.getListaPalabras().get(4),new ImageIcon("iconos/recargar.png"),ficheroIdioma.getListaPalabras().get(5),
 				new Integer(KeyEvent.VK_R));
-		ayuda = new MiAccion (textoIdioma[6],new ImageIcon("iconos/edit.png"),textoIdioma[7],
+		ayuda = new MiAccion (ficheroIdioma.getListaPalabras().get(6),new ImageIcon("iconos/edit.png"),ficheroIdioma.getListaPalabras().get(7),
 				new Integer(KeyEvent.VK_H));
-		salir = new MiAccion (textoIdioma[8],new ImageIcon("iconos/exit.png"),textoIdioma[9],
+		salir = new MiAccion (ficheroIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),ficheroIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
 	}
 	private void crearComboBox1() {
@@ -184,9 +204,9 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private Component crearPanelPestanas() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(textoIdioma[10], crearPanelMapa());
-		panel.addTab(textoIdioma[11], crearPanelInfoGeneral());
-		panel.addTab(textoIdioma[12], crearPanelGraficos());
+		panel.addTab(ficheroIdioma.getListaPalabras().get(10), crearPanelMapa());
+		panel.addTab(ficheroIdioma.getListaPalabras().get(11), crearPanelInfoGeneral());
+		panel.addTab(ficheroIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 	}
 	private Component crearPanelGraficos() {
@@ -211,16 +231,16 @@ public class Principal extends JFrame implements ActionListener{
 	private Component crearPanelInfoSur() {
 		JPanel panel = new JPanel (new GridLayout(2,2));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[13])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(13))));
 		panel.add(crearPanelJLabel(labelLugar=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[14])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(14))));
 		panel.add(crearPanelJLabel(labelArea=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[15])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(15))));
 		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[16])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(16))));
 		panel.add(crearPanelJLabel(labelDensidad=new JLabel(" ")));
 		
 		return panel;
@@ -241,17 +261,17 @@ public class Principal extends JFrame implements ActionListener{
 
 	private Component crearPanelInfoCentro() {
 		JPanel panel = new JPanel (new GridLayout(2,2));
-		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), textoIdioma[17]));
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[18])));
+		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), ficheroIdioma.getListaPalabras().get(17)));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(18))));
 		panel.add(crearPanelJLabel(labelTemp=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[19])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(19))));
 		panel.add(crearPanelJLabel(labelCo2=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[20])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(20))));
 		panel.add(crearPanelJLabel(labelHumedad=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[21])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(21))));
 		panel.add(crearPanelJLabel(labelVoc=new JLabel(" ")));
 		
 		return panel;
@@ -261,16 +281,16 @@ public class Principal extends JFrame implements ActionListener{
 
 	private Component crearPanelInfoNorte() {
 		JPanel panel = new JPanel (new GridLayout(2,4));
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[22])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(22))));
 		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[23])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(23))));
 		panel.add(crearPanelJLabel(labelFecha=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[24])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(24))));
 		panel.add(crearPanelJLabel(labelMeteo=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(textoIdioma[25])));
+		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(25))));
 		panel.add(crearPanelJLabel(labelUsuario=new JLabel(" ")));
 		
 		return panel;
@@ -375,14 +395,14 @@ public class Principal extends JFrame implements ActionListener{
 		return barra;
 	}
 	private JMenu crearMenuAyuda() {
-		JMenu menudAyuda = new JMenu (textoIdioma[26]);
+		JMenu menudAyuda = new JMenu (ficheroIdioma.getListaPalabras().get(26));
 		menudAyuda.setMnemonic(new Integer(KeyEvent.VK_A));
 		JMenuItem opcionMenu = new JMenuItem (ayuda);
 		menudAyuda.add(opcionMenu);
 		return menudAyuda;
 	}
 	private JMenu crearMenuEditar() {
-		JMenu menuEditar = new JMenu (textoIdioma[27]);
+		JMenu menuEditar = new JMenu (ficheroIdioma.getListaPalabras().get(27));
 		menuEditar.setMnemonic(new Integer(KeyEvent.VK_E));
 		JMenuItem opcionMenu = new JMenuItem (anadirCampo);
 		menuEditar.add(opcionMenu);
@@ -392,7 +412,7 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private JMenu crearMenuSalir() {
 		JMenuItem op;
-		JMenu menuSalir = new JMenu (textoIdioma[28]);
+		JMenu menuSalir = new JMenu (ficheroIdioma.getListaPalabras().get(28));
 		menuSalir.setMnemonic(new Integer(KeyEvent.VK_S));
 		op=menuSalir.add(salir);
 		
@@ -410,7 +430,7 @@ public class Principal extends JFrame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (texto.equals(textoIdioma[0])){
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(0))){
 				compararActivado=!compararActivado;
 				if(compararActivado) {
 					panelComboBox2.add(comboLocalizacion2,0);
@@ -427,16 +447,16 @@ public class Principal extends JFrame implements ActionListener{
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals(textoIdioma[2])){
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){
 				
 			}
-			if (texto.equals(textoIdioma[4])){
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(4))){
 				
 			}
-			if(texto.equals(textoIdioma[6])) {
+			if(texto.equals(ficheroIdioma.getListaPalabras().get(6))) {
 				
 			}
-			if (texto.equals(textoIdioma[8])){
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(8))){
 				Principal.this.dispose();
 			}
 		}
@@ -499,8 +519,6 @@ public class Principal extends JFrame implements ActionListener{
 		actualizarcampos(resultados);
 	}
 
-
-
 	private void actualizarcampos(ResultSet resultados) {
 		actualizarPestanaTexto(resultados);
 	}
@@ -520,7 +538,7 @@ public class Principal extends JFrame implements ActionListener{
 			labelLugar.setText((resultados.getString("lugar")));
 			labelHabitantes.setText(Integer.toString(resultados.getInt("habitantes")));
 			labelArea.setText(Integer.toString(resultados.getInt("aream2"))+" m2");
-			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+textoIdioma[29]);
+			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+ficheroIdioma.getListaPalabras().get(29));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
