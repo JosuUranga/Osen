@@ -8,6 +8,7 @@ public class DBManager {
 	private String USER = "root";
 	private String PASS = "";
 	private String DBNAME = "osen";
+	Connection connect;
 	public void conClose() {
 		try {
 			connect.close();

@@ -502,12 +502,12 @@ public class Principal extends JFrame implements ActionListener{
 
 
 	private void actualizarcampos(ResultSet resultados) {
-		actualizarPesta�aTexto(resultados);
+		actualizarPestanaTexto(resultados);
 	}
 
 
 
-	private void actualizarPesta�aTexto(ResultSet resultados) {
+	private void actualizarPestanaTexto(ResultSet resultados) {
 		try {
 			labelMuestraID.setText((Integer.toString(resultados.getInt("muestraID"))));
 			labelMeteo.setText(resultados.getString("descripcion"));
