@@ -30,15 +30,18 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import graficos.Tarta;
 import db.DBManager;
 import lineaSerie.LineaSeriePrincipal;
+import stripe.PaymentsTest;
+import notificaciones.*;
 
 
 public class Principal extends JFrame implements ActionListener{
 	final static String[] textoIdioma= {"AnadirCampo","Anade un nuevo campo","AnadirMuestra","Anade una nueva muestra","Recargar",
 			"Refresca la informacinn de la base de datos","Ayuda","Revisar informacinn de las variables meterologica.","Salir","Cierra la aplicacion",
 			"Mapa","Informacion general","Graficos","Lugar: ","Area: ","Habitantes: ","Densidad: ", "Datos medioambientales", "Temperatura: ",
-			"Co2 equivalente: ", "Humedad: ","Densidad: ", "Nº de muestra: ", "Fecha: ", "Condicion meteorologia: ", "Tomado por: ", "Ayuda", "Editar", "Salir",
+			"Co2 equivalente: ", "Humedad: ","Densidad: ", "Nï¿½ de muestra: ", "Fecha: ", "Condicion meteorologia: ", "Tomado por: ", "Ayuda", "Editar", "Salir",
 			" habitantes/km2"};
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
@@ -65,8 +68,8 @@ public class Principal extends JFrame implements ActionListener{
 		this.setContentPane(crearPanelVentana());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		lsP = new LineaSeriePrincipal();
-		lsP.accion();
+		//lsP = new LineaSeriePrincipal();
+		//lsP.accion();
 	}
 	
 	
@@ -188,7 +191,8 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private Component crearPanelGraficos() {
 		JPanel panel = new JPanel (new BorderLayout(0,10));
-		
+		Tarta tarta=new Tarta("tarta");
+		panel=tarta.createDemoPanel();
 		return panel;
 	}
 	private Component crearPanelMapa() {
@@ -449,8 +453,8 @@ public class Principal extends JFrame implements ActionListener{
 		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		
-		
+		//NotificationSender noti=new NotificationSender();
+		//PaymentsTest payments=new PaymentsTest("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
 		Principal programa = new Principal();
 	}
 
@@ -498,18 +502,18 @@ public class Principal extends JFrame implements ActionListener{
 
 
 	private void actualizarcampos(ResultSet resultados) {
-		actualizarPestañaTexto(resultados);
+		actualizarPestaï¿½aTexto(resultados);
 	}
 
 
 
-	private void actualizarPestañaTexto(ResultSet resultados) {
+	private void actualizarPestaï¿½aTexto(ResultSet resultados) {
 		try {
 			labelMuestraID.setText((Integer.toString(resultados.getInt("muestraID"))));
 			labelMeteo.setText(resultados.getString("descripcion"));
 			labelFecha.setText(String.valueOf(resultados.getDate("fecha")));
 			labelUsuario.setText(resultados.getString("nombre"));
-			labelTemp.setText(Float.toString(resultados.getFloat("temperatura"))+" ºC");
+			labelTemp.setText(Float.toString(resultados.getFloat("temperatura"))+" ï¿½C");
 			labelHumedad.setText(Float.toString(resultados.getFloat("humedad"))+" %");
 			labelCo2.setText(Integer.toString(resultados.getInt("Co2eq"))+" PPP");
 			labelVoc.setText(Float.toString(resultados.getFloat("VOC"))+" l/min");

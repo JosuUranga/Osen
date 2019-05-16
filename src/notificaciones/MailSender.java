@@ -1,4 +1,4 @@
-package mail;
+package notificaciones;
 
 import com.sendgrid.*;
 import java.io.IOException;
