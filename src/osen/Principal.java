@@ -33,7 +33,11 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import graficos.Tarta;
 import db.DBManager;
+import dialogos.DialogoInsertarLocalizacion;
+import dialogos.DialogoInsertarMuestra;
 import lineaSerie.LineaSeriePrincipal;
+import muestras.Localizacion;
+import muestras.Muestra;
 import stripe.PaymentsTest;
 import notificaciones.*;
 
@@ -57,6 +61,7 @@ public class Principal extends JFrame implements ActionListener{
 	Font fuenteTituloInfoGeneral;
 	FicheroIdioma ficheroIdioma;
 	String seleccionIdioma="Castellano";
+	Muestra muestra;
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
@@ -446,8 +451,13 @@ public class Principal extends JFrame implements ActionListener{
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){//añadir muestra
+				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, ficheroIdioma.getListaPalabras().get(2), true, comboLocalizacion1, ficheroIdioma.getListaPalabras());
+				insertarlocalizacion(dialogoInsertarMuestra.getLocalizacion());
+				insertarmuestra(dialogoInsertarMuestra.getMuestra());
 				
+				
+
 			}
 			if (texto.equals(ficheroIdioma.getListaPalabras().get(4))){
 				
@@ -458,6 +468,16 @@ public class Principal extends JFrame implements ActionListener{
 			if (texto.equals(ficheroIdioma.getListaPalabras().get(8))){
 				Principal.this.dispose();
 			}
+		}
+
+		private void insertarmuestra(Muestra muestra) {
+			//manager.execute("INSERT INTO muestras(fecha, duracion, co2eq, humedad, temperatura, voc, meteorologia, localizacion, usuario) VALUES('2019-05-01',10, 10, 50.00, 21.53, 25.23, 1, 1, 1);");
+			
+		}
+
+		private void insertarlocalizacion(Localizacion localizacion) {
+			manager.execute("INSERT INTO localizaciones (nombre, habitantes, areakm2) VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
+			System.out.println("INSERT INTO localizaciones (nombre, habitantes, areakm2)VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
 		}
 
 			
@@ -507,7 +527,7 @@ public class Principal extends JFrame implements ActionListener{
 		String fecha=comboFecha1.getSelectedItem().toString();
 		String condicion=(" WHERE localizaciones.nombre = '"+ pueblo+"' AND meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
 		
-		ResultSet resultados = manager.executeQuery("SELECT muestras.muestraID, meteos.descripcion, muestras.fecha, usuarios.nombre, muestras.temperatura, muestras.humedad, muestras.co2eq, muestras.voc, localizaciones.nombre AS lugar, localizaciones.habitantes, localizaciones.aream2, localizaciones.habitantes/localizaciones.aream2 AS 'densidad (habitantes/km2)'\r\n" + 
+		ResultSet resultados = manager.executeQuery("SELECT muestras.muestraID, meteos.descripcion, muestras.fecha, usuarios.nombre, muestras.temperatura, muestras.humedad, muestras.co2eq, muestras.voc, localizaciones.nombre AS lugar, localizaciones.habitantes, localizaciones.areakm2, localizaciones.habitantes/localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
 				"FROM ((muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID)JOIN usuarios ON muestras.usuario=usuarios.usuarioID\r\n" + 
 				condicion+";");
 		try {
@@ -536,7 +556,7 @@ public class Principal extends JFrame implements ActionListener{
 			labelVoc.setText(Float.toString(resultados.getFloat("VOC"))+" l/min");
 			labelLugar.setText((resultados.getString("lugar")));
 			labelHabitantes.setText(Integer.toString(resultados.getInt("habitantes")));
-			labelArea.setText(Integer.toString(resultados.getInt("aream2"))+" m2");
+			labelArea.setText(Integer.toString(resultados.getInt("areakm2"))+" km2");
 			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+ficheroIdioma.getListaPalabras().get(29));
 
 		} catch (SQLException e) {
