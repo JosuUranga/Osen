@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
 
@@ -20,6 +21,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
+import db.DBManager;
 import muestras.Localizacion;
 import muestras.Muestra;
 
@@ -40,6 +42,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	Muestra muestra;
 	boolean anadirLocalizacionSeleccionado=false;
 	String numeroLocalizacion;
+	DBManager manager;
 	//Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	public void setErrorIgual(boolean errorIgual) {
@@ -51,13 +54,14 @@ public class DialogoInsertarMuestra extends JDialog{
 	boolean errorIgual=false;
 	
 	
-	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, JComboBox<String> comboLocalizacion, List<String> list) {
+	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
-		this.comboLocalizacion=comboLocalizacion;
 		this.ventana=ventana;
 		this.setSize(600,400);
 		this.setLocation (100,100);
+		this.manager=manager;
+		manager.cargarDatosLocalizaciones(comboLocalizacion=new JComboBox<>());
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -161,7 +165,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		
 		boton4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new DialogoInsertarLocalizacion(DialogoInsertarMuestra.this, listaPalabras.get(2), true, comboLocalizacion, listaPalabras);
+				DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new DialogoInsertarLocalizacion(DialogoInsertarMuestra.this, listaPalabras.get(2), true, comboLocalizacion, listaPalabras, manager);
 				if(dialogoInsertarLocalizacion.isAnadirLocalizacionSeleccionado()) {
 					localizacion=dialogoInsertarLocalizacion.getLocalizacion();
 					comboLocalizacion.addItem(localizacion.getNombre());
@@ -192,12 +196,21 @@ public class DialogoInsertarMuestra extends JDialog{
 		boton1.addActionListener(new ActionListener(){
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
+				
 				String numeroMeteorologia=String.valueOf(comboMeteorologia.getSelectedIndex());
 				numeroLocalizacion=String.valueOf(comboLocalizacion.getSelectedIndex());;
 				if(hiloProgressBar!=null)hiloProgressBar.stop();	
-				muestra=new Muestra("'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
+				try {
+					muestra=new Muestra("'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
+					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) VALUES (curdate(), "+muestra.getDuracion()+", "+muestra.getCo2eq()+", "+muestra.getHumedad()+", "+muestra.getTemperatura()+", "+muestra.getVoc()+", "+muestra.getMetorologia()+", "+ muestra.getLocalizacion()+", "+muestra.getUsuario()+");");
+					DialogoInsertarMuestra.this.dispose();
+
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
-				DialogoInsertarMuestra.this.dispose();
+				} catch (NumberFormatException e2) {
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no válido", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}
 
 			}
 		});

@@ -7,21 +7,21 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Date;
+import java.sql.SQLException;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JDialog;
-import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JProgressBar;
 import javax.swing.JTextField;
 
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
+
+import db.DBManager;
 import muestras.Localizacion;
 import muestras.Muestra;
 
@@ -38,6 +38,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	JTextField nombre,habitantes,area;
 	List<String>listaPalabras;
 	Localizacion localizacion;
+	DBManager manager;
 	//Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	boolean anadirLocalizacionSeleccionado=false;
@@ -50,13 +51,14 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	boolean errorIgual=false;
 	
 	
-	public DialogoInsertarLocalizacion (DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, JComboBox<String> comboLocalizacion, List<String> list) {
+	public DialogoInsertarLocalizacion (DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, JComboBox<String> comboLocalizacion, List<String> list, DBManager manager) {
 		super(dialogoInsertarMuestra,titulo,modo);
 		this.listaPalabras=list;
 		this.comboLocalizacion=comboLocalizacion;
 		this.ventana=dialogoInsertarMuestra;
 		this.setSize(600,400);
 		this.setLocation (100,100);
+		this.manager=manager;
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -117,10 +119,20 @@ public class DialogoInsertarLocalizacion extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				localizacion = new Localizacion(nombre.getText(),Integer.valueOf(habitantes.getText()),Float.valueOf(area.getText()));
-				anadirLocalizacionSeleccionado=true;
-				DialogoInsertarLocalizacion.this.dispose();
 
+				try {
+					localizacion = new Localizacion(nombre.getText(),Integer.valueOf(habitantes.getText()),Float.valueOf(area.getText()));
+					manager.execute("INSERT INTO Localizaciones (nombre, habitantes, areakm2) VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
+					anadirLocalizacionSeleccionado=true;
+					DialogoInsertarLocalizacion.this.dispose();
+
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				
+				} catch (NumberFormatException e2) {
+					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, "Formato no válido", "Aviso", JOptionPane.WARNING_MESSAGE);
+				}	
+				
 			}
 			
 		});

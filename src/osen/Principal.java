@@ -3,12 +3,14 @@ import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
+import java.awt.Desktop;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.io.File;
+import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -25,22 +27,18 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import graficos.Anillo;
-import graficos.Tarta;
 import db.DBManager;
-import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
+import graficos.Anillo;
 import lineaSerie.LineaSeriePrincipal;
-import muestras.Localizacion;
 import muestras.Muestra;
-import stripe.PaymentsTest;
-import notificaciones.*;
 
 
 public class Principal extends JFrame implements ActionListener{
@@ -48,6 +46,12 @@ public class Principal extends JFrame implements ActionListener{
 	final static String ficheroCastellano="ficheros/Castellano.txt";
 	final static String ficheroEuskara="ficheros/Euskara.txt";
 	final static String ficheroIngles="ficheros/Ingles.txt";
+	File file = new File("ficheros/TeoriaCo2.pdf");
+	
+	final static String dbuser="Admin";
+	final static String dbpass="Osen!1234";
+	final static String dbname="osen";
+	final static String dbip="68.183.211.91";
 
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
@@ -68,7 +72,7 @@ public class Principal extends JFrame implements ActionListener{
 		this.setLocation (340,100);
 		this.setSize(1000,800);
 		
-		manager = new DBManager("Admin","Osen!1234","Osen","68.183.211.91");
+		manager = new DBManager(dbuser,dbpass,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		this.inicializarFicheros();
 		this.crearAcciones();
@@ -117,81 +121,18 @@ public class Principal extends JFrame implements ActionListener{
 		comboLocalizacion1=new JComboBox<>();
 		comboMeteo1=new JComboBox<>();
 		comboFecha1=new JComboBox<>();
-		cargarDatosComboBox();
+		cargarDatosComboBox(comboLocalizacion1,comboMeteo1,comboFecha1);
 		comboLocalizacion1.addActionListener(this);
 		comboLocalizacion1.setActionCommand("localizacion");
 		comboMeteo1.addActionListener(this);
 		comboMeteo1.setActionCommand("meteo");
 	}
 	
-	private void cargarDatosComboBox() {
-		cargarDatosLocalizacion();
-		cargarDatosMeteo();
-		cargarDatosFecha();
+	private void cargarDatosComboBox(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
+		manager.cargarDatosLocalizacionMuestra(comboLocalizacion);
+		manager.cargarDatosMeteo(comboLocalizacion,comboMeteo);
+		manager.cargarDatosFecha(comboLocalizacion,comboMeteo,comboFecha);
 	}
-
-
-
-	private void cargarDatosFecha() {
-		comboFecha1.removeAllItems();
-		
-		String pueblo=comboLocalizacion1.getSelectedItem().toString();
-		String meteo=comboMeteo1.getSelectedItem().toString();
-		
-		ResultSet resultados = manager.executeQuery("SELECT DISTINCT muestras.fecha\r\n" + 
-				"FROM (muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
-				"WHERE localizaciones.nombre='"+pueblo+"' AND meteos.descripcion='"+meteo+"';");
-		
-		try {
-			while(resultados.next()) {
-				comboFecha1.addItem(resultados.getString("fecha"));
-			}
-		} catch (SQLException e3) {
-			e3.printStackTrace();
-		}
-		manager.conClose();			
-	}
-
-
-
-	private void cargarDatosMeteo() {
-		comboMeteo1.removeAllItems();
-		
-		String pueblo=comboLocalizacion1.getSelectedItem().toString();
-		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
-		
-		ResultSet resultados = manager.executeQuery("SELECT DISTINCT meteos.descripcion \r\n" + 
-				"FROM (muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
-				condicion+";");
-		
-		try {
-			while(resultados.next()) {
-				comboMeteo1.addItem(resultados.getString("descripcion"));
-			}
-		} catch (SQLException e3) {
-			e3.printStackTrace();
-		}
-		manager.conClose();			
-	}
-
-
-
-	private void cargarDatosLocalizacion() {
-		ResultSet resultados = manager.executeQuery("SELECT localizaciones.nombre\r\n" + 
-				"FROM muestras JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID\r\n" + 
-				"GROUP BY localizaciones.localizacionID;");
-		try {
-			comboLocalizacion1.removeAllItems();
-			while(resultados.next()) {
-				comboLocalizacion1.addItem(resultados.getString("nombre"));
-			}
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
-		manager.conClose();		
-	}
-
-
 
 	private void crearComboBox2() {
 		//coger los datos de la BD
@@ -452,33 +393,34 @@ public class Principal extends JFrame implements ActionListener{
 				
 			}
 			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){//añadir muestra
-				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, ficheroIdioma.getListaPalabras().get(2), true, comboLocalizacion1, ficheroIdioma.getListaPalabras());
-				insertarlocalizacion(dialogoInsertarMuestra.getLocalizacion());
-				insertarmuestra(dialogoInsertarMuestra.getMuestra());
-				
-				
+				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, ficheroIdioma.getListaPalabras().get(2), true, ficheroIdioma.getListaPalabras(),manager);
 
 			}
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(4))){
-				
+			if (texto.equals(ficheroIdioma.getListaPalabras().get(4))){//recargar
+				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
+				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
 			if(texto.equals(ficheroIdioma.getListaPalabras().get(6))) {
 				
+				System.out.println("Ayuda");
+				Desktop desktop = Desktop.getDesktop();
+		        
+		        if(file.exists())
+					try {
+						desktop.open(file);
+					} catch (IOException e1) {
+						// TODO Auto-generated catch block
+						e1.printStackTrace();
+					}
+
 			}
 			if (texto.equals(ficheroIdioma.getListaPalabras().get(8))){
+				
 				Principal.this.dispose();
 			}
 		}
 
-		private void insertarmuestra(Muestra muestra) {
-			//manager.execute("INSERT INTO muestras(fecha, duracion, co2eq, humedad, temperatura, voc, meteorologia, localizacion, usuario) VALUES('2019-05-01',10, 10, 50.00, 21.53, 25.23, 1, 1, 1);");
-			
-		}
-
-		private void insertarlocalizacion(Localizacion localizacion) {
-			manager.execute("INSERT INTO localizaciones (nombre, habitantes, areakm2) VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
-			System.out.println("INSERT INTO localizaciones (nombre, habitantes, areakm2)VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
-		}
+		
 
 			
 	}
@@ -510,11 +452,11 @@ public class Principal extends JFrame implements ActionListener{
 			}
 			break;
 		case "localizacion":		
-			cargarDatosMeteo();
+			if(comboLocalizacion1.getItemCount()!=0)manager.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
 			break;
 			
 		case "meteo":		
-			if(comboMeteo1.getItemCount()!=0)cargarDatosFecha();
+			if(comboMeteo1.getItemCount()!=0)manager.cargarDatosFecha(comboLocalizacion1, comboMeteo1, comboFecha1);
 			break;
 		}
 	}
@@ -525,10 +467,10 @@ public class Principal extends JFrame implements ActionListener{
 		String pueblo=comboLocalizacion1.getSelectedItem().toString();
 		String meteo=comboMeteo1.getSelectedItem().toString();
 		String fecha=comboFecha1.getSelectedItem().toString();
-		String condicion=(" WHERE localizaciones.nombre = '"+ pueblo+"' AND meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
+		String condicion=(" WHERE Localizaciones.nombre = '"+ pueblo+"' AND Meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
 		
-		ResultSet resultados = manager.executeQuery("SELECT muestras.muestraID, meteos.descripcion, muestras.fecha, usuarios.nombre, muestras.temperatura, muestras.humedad, muestras.co2eq, muestras.voc, localizaciones.nombre AS lugar, localizaciones.habitantes, localizaciones.areakm2, localizaciones.habitantes/localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
-				"FROM ((muestras JOIN meteos ON muestras.meteorologia=meteos.meteoID) JOIN localizaciones ON muestras.localizacion=localizaciones.localizacionID)JOIN usuarios ON muestras.usuario=usuarios.usuarioID\r\n" + 
+		ResultSet resultados = manager.executeQuery("SELECT Muestras.muestraID, Meteos.descripcion, Muestras.fecha, Usuarioa.nombre, Muestras.temperatura, Muestras.humedad, Muestras.co2eq, Muestras.voc, Localizaciones.nombre AS lugar, Localizaciones.habitantes, Localizaciones.areakm2, Localizaciones.habitantes/Localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
+				"FROM ((Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID)JOIN Usuarioa ON Muestras.usuario=Usuarioa.usuarioID\r\n" + 
 				condicion+";");
 		try {
 			resultados.next();

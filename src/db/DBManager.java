@@ -1,6 +1,9 @@
 package db;
-import java.io.IOException;
 import java.sql.*;
+
+import javax.swing.JComboBox;
+
+import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
 
 public class DBManager {
 	Statement statement, tempStatement;
@@ -60,15 +63,11 @@ public class DBManager {
 		}
 		return result;
 	}
-	public boolean execute(String query) {
+	public boolean execute(String query) throws SQLException {
 		connect = this.getConnection();
 		boolean result=false;
-		try {
-			statement = connect.createStatement();
-			result = statement.execute(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		statement = connect.createStatement();
+		result = statement.execute(query);
 		return result;
 	}
 	public CallableStatement executeCall(String sql) {
@@ -89,4 +88,73 @@ public class DBManager {
 		}
 		return resultSet;
 	}
+	
+	public void cargarDatosLocalizacionMuestra(JComboBox<String> comboLocalizacion) {
+		ResultSet resultados = this.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+				"FROM Muestras JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
+				"GROUP BY Localizaciones.localizacionID;");
+		try {
+			comboLocalizacion.removeAllItems();
+			while(resultados.next()) {
+				comboLocalizacion.addItem(resultados.getString("nombre"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.conClose();		
+	}
+	public void cargarDatosLocalizaciones(JComboBox<String> comboLocalizacion) {
+		ResultSet resultados = this.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+				"FROM Localizaciones\r\n;");
+		try {
+			comboLocalizacion.removeAllItems();
+			while(resultados.next()) {
+				comboLocalizacion.addItem(resultados.getString("nombre"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
+		}
+		this.conClose();		
+	}
+	
+	public void cargarDatosFecha(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
+		comboFecha.removeAllItems();
+		
+		String pueblo=comboLocalizacion.getSelectedItem().toString();
+		String meteo=comboMeteo.getSelectedItem().toString();
+		
+		ResultSet resultados = this.executeQuery("SELECT DISTINCT Muestras.fecha\r\n" + 
+				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
+				"WHERE Localizaciones.nombre='"+pueblo+"' AND Meteos.descripcion='"+meteo+"';");
+		
+		try {
+			while(resultados.next()) {
+				comboFecha.addItem(resultados.getString("fecha"));
+			}
+		} catch (SQLException e3) {
+			e3.printStackTrace();
+		}
+		this.conClose();			
+	}
+	
+	public void cargarDatosMeteo(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo) {
+		comboMeteo.removeAllItems();
+		
+		String pueblo=comboLocalizacion.getSelectedItem().toString();
+		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
+		
+		ResultSet resultados = this.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
+				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
+				condicion+";");
+		
+		try {
+			while(resultados.next()) {
+				comboMeteo.addItem(resultados.getString("descripcion"));
+			}
+		} catch (SQLException e3) {
+			e3.printStackTrace();
+		}
+		this.conClose();			
+	}
+	
 }
