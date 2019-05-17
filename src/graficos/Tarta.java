@@ -21,15 +21,18 @@ public class Tarta extends JPanel{
 	
    public Tarta() {
 	   super();
+	   pan=crearPanel();
+	}
+   public JPanel getTarta() {
+	   return pan;
+   }
+   public ChartPanel crearPanel() {
 	   JFreeChart chart = createChart(createDataset());
 	   chart.setPadding(new RectangleInsets(4, 8, 2, 2));
 	   ChartPanel panel = new ChartPanel(chart);
 	   panel.setMouseWheelEnabled(true);
 	   panel.setPreferredSize(new Dimension(600, 300));
-	   pan=panel;
-	}
-   public JPanel getTarta() {
-	   return pan;
+	   return panel;
    }
    private static PieDataset createDataset() {
        DefaultPieDataset dataset = new DefaultPieDataset();

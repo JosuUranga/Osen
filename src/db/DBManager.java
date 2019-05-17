@@ -5,10 +5,18 @@ import java.sql.*;
 public class DBManager {
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;
+	CallableStatement callState;
 	private String USER = "root";
 	private String PASS = "";
 	private String DBNAME = "osen";
+	private String IP = "localhost";
 	Connection connect;
+	public DBManager(String u,String p,String db,String ip) {
+		this.USER=u;
+		this.PASS=p;
+		this.DBNAME=db;
+		this.IP=ip;
+	}
 	public void conClose() {
 		try {
 			connect.close();
@@ -22,7 +30,7 @@ public class DBManager {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection(
-					"jdbc:mysql://localhost:3306/"+this.DBNAME,this.USER,this.PASS);
+					"jdbc:mysql://"+this.IP+":3306/"+this.DBNAME,this.USER,this.PASS);
 			System.out.println("Conexion con la DB establecida");
 			return connect;
 		} catch (Exception e) {
@@ -62,5 +70,23 @@ public class DBManager {
 			e.printStackTrace();
 		}
 		return result;
+	}
+	public CallableStatement executeCall(String sql) {
+		try {
+			callState = this.getConnection().prepareCall(sql);
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return callState;
+	}
+	public ResultSet reCall(CallableStatement call) {
+		try {
+			resultSet=call.executeQuery();
+		} catch (SQLException e) {
+			e.printStackTrace();
+			return null;
+		}
+		return resultSet;
 	}
 }

@@ -31,6 +31,7 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
+import graficos.Anillo;
 import graficos.Tarta;
 import db.DBManager;
 import dialogos.DialogoInsertarLocalizacion;
@@ -67,7 +68,7 @@ public class Principal extends JFrame implements ActionListener{
 		this.setLocation (340,100);
 		this.setSize(1000,800);
 		
-		manager = new DBManager();
+		manager = new DBManager("Admin","Osen!1234","Osen","68.183.211.91");
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		this.inicializarFicheros();
 		this.crearAcciones();
@@ -215,8 +216,7 @@ public class Principal extends JFrame implements ActionListener{
 		return panel;
 	}
 	private Component crearPanelGraficos() {
-		JPanel panel = new JPanel (new BorderLayout(0,10));
-		panel=new Tarta().getTarta();
+		JPanel panel=new Anillo().getPanel();
 		return panel;
 	}
 	private Component crearPanelMapa() {
