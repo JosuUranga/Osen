@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Date;
 import java.util.List;
@@ -34,7 +35,6 @@ public class DialogoInsertarMuestra extends JDialog{
 	JFrame ventana;
 	JComboBox<String> comboLocalizacion;
 	JComboBox<String> comboMeteorologia;
-	Date fecha;
 	JProgressBar progressBar;
 	Thread hiloProgressBar;
 	List<String>listaPalabras;
@@ -43,15 +43,10 @@ public class DialogoInsertarMuestra extends JDialog{
 	boolean anadirLocalizacionSeleccionado=false;
 	String numeroLocalizacion;
 	DBManager manager;
-	//Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
+	JButton botonOK;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
-
-	int numVariables;
-	boolean errorRellenar=false;
-	boolean errorIgual=false;
+	
+	
 	
 	
 	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager) {
@@ -61,7 +56,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		this.setSize(600,400);
 		this.setLocation (100,100);
 		this.manager=manager;
-		manager.cargarDatosLocalizaciones(comboLocalizacion=new JComboBox<>());
+		this.cargarDatosLocalizaciones(comboLocalizacion=new JComboBox<>());
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -123,14 +118,16 @@ public class DialogoInsertarMuestra extends JDialog{
 							try {
 								Thread.sleep(1000);
 							} catch (InterruptedException e) {
-								// TODO Auto-generated catch block
 								e.printStackTrace();
 							}
 						}
 						JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "La muestra se ha tomado correctamente", "Aviso", JOptionPane.PLAIN_MESSAGE);
+						botonOK.setEnabled(true);
+
 					}		
 				});
 				hiloProgressBar.start();
+
 			}
 		});
 		panel.add(boton3);
@@ -190,10 +187,9 @@ public class DialogoInsertarMuestra extends JDialog{
 	private Component crearPanelBotones() {
 		JPanel panel = new JPanel(new GridLayout(1,2,20,0));
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		JButton boton1 = new JButton ("OK");
-		
-	
-		boton1.addActionListener(new ActionListener(){
+		botonOK = new JButton ("OK");
+		botonOK.setEnabled(false);	
+		botonOK.addActionListener(new ActionListener(){
 			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 				
@@ -223,27 +219,28 @@ public class DialogoInsertarMuestra extends JDialog{
 				DialogoInsertarMuestra.this.dispose();
 			}
 		});
-		panel.add(boton1);
-		this.getRootPane().setDefaultButton(boton1);
+		panel.add(botonOK);
+		this.getRootPane().setDefaultButton(botonOK);
 
 		panel.add(boton2);
 		return panel;
 	}
-	/*private void check(String nombreVerificar) {
-		errorRellenar=false;
-		errorIgual=false;
-		if(nombre.getText().length()==0) {
-			errorRellenar=true;
+	
+	public void cargarDatosLocalizaciones(JComboBox<String> comboLocalizacion) {
+		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+				"FROM Localizaciones\r\n;");
+		try {
+			comboLocalizacion.removeAllItems();
+			while(resultados.next()) {
+				comboLocalizacion.addItem(resultados.getString("nombre"));
+			}
+		} catch (SQLException e) {
+			e.printStackTrace();
 		}
-
-	}*/
-	
-	
-	private Component crearPanelDispositivos() {
-		JPanel panel = new JPanel (new GridLayout(1,2));
-		
-		return panel;
+		manager.conClose();		
 	}
+	
+	
 	
 	public String getText() {
 		return comboMeteorologia.getSelectedItem().toString();
