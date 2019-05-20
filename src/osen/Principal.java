@@ -41,6 +41,7 @@ import dialogos.DialogoInsertarMuestra;
 import graficos.Anillo;
 import lineaSerie.LineaSeriePrincipal;
 import muestras.Muestra;
+import muestras.MuestraCo2;
 import idiomas.ControladorIdioma;
 
 
@@ -66,7 +67,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	ControladorIdioma controladorIdioma;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
-	FicheroIdioma ficheroIdioma;
 	String seleccionIdioma="Castellano";
 	MuestraCo2 muestra;
 	public Principal(){
@@ -490,7 +490,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			labelLugar.setText((resultados.getString("lugar")));
 			labelHabitantes.setText(Integer.toString(resultados.getInt("habitantes")));
 			labelArea.setText(Integer.toString(resultados.getInt("areakm2"))+" km2");
-			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+ficheroIdioma.getListaPalabras().get(29));
+			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+controladorIdioma.getListaPalabras().get(29));
 
 		} catch (SQLException e) {
 			e.printStackTrace();
@@ -535,9 +535,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	
 	public void cargarDatosMeteo(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo) {
 		comboMeteo.removeAllItems();
-		
-	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
+				
+		String pueblo=comboLocalizacion.getSelectedItem().toString();
+		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
 		
 		ResultSet resultados = manager.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
 				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
@@ -551,5 +551,11 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			e3.printStackTrace();
 		}
 		manager.conClose();			
+	}
+
+
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
+		
 	}
 }
