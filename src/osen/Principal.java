@@ -27,7 +27,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -37,15 +36,16 @@ import javax.swing.UnsupportedLookAndFeelException;
 import db.DBManager;
 import dialogos.DialogoInsertarMuestra;
 import graficos.Anillo;
+import idiomas.FicheroIdioma;
+import idiomas.GestorIdiomas;
 import lineaSerie.LineaSeriePrincipal;
-import muestras.Muestra;
+import muestras.MuestraCo2;
 
 
+@SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener{
 	
-	final static String ficheroCastellano="ficheros/Castellano.txt";
-	final static String ficheroEuskara="ficheros/Euskara.txt";
-	final static String ficheroIngles="ficheros/Ingles.txt";
+	
 	File file = new File("ficheros/TeoriaCo2.pdf");
 	
 	final static String dbuser="Admin";
@@ -66,12 +66,13 @@ public class Principal extends JFrame implements ActionListener{
 	Font fuenteTituloInfoGeneral;
 	FicheroIdioma ficheroIdioma;
 	String seleccionIdioma="Castellano";
-	Muestra muestra;
+	MuestraCo2 muestra;
+	GestorIdiomas gestorIdiomas;
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
-		
+		gestorIdiomas= new GestorIdiomas();
 		manager = new DBManager(dbuser,dbpass,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		this.inicializarFicheros();
@@ -91,13 +92,13 @@ public class Principal extends JFrame implements ActionListener{
 	private void inicializarFicheros() {
 		switch(seleccionIdioma) {
 		case "Castellano":
-			ficheroIdioma=new FicheroIdioma(ficheroCastellano);
+			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicherocastellano());
 		break;
 		case "Euskara":
-			ficheroIdioma=new FicheroIdioma(ficheroEuskara);
+			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicheroEuskara());
 		break;
 		case "Ingles":
-			ficheroIdioma=new FicheroIdioma(ficheroIngles);
+			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicheroIngles());
 		break;
 		}
 	}
@@ -319,6 +320,7 @@ public class Principal extends JFrame implements ActionListener{
 	private Component panelBarraBotones() {
 		JToolBar toolBar = new JToolBar();
 		
+		@SuppressWarnings("unused")
 		JButton boton;
 		boton =(JButton) toolBar.add(anadirCampo);
 		toolBar.add(Box.createGlue());
@@ -356,11 +358,8 @@ public class Principal extends JFrame implements ActionListener{
 		return menuEditar;
 	}
 	private JMenu crearMenuSalir() {
-		JMenuItem op;
 		JMenu menuSalir = new JMenu (ficheroIdioma.getListaPalabras().get(28));
 		menuSalir.setMnemonic(new Integer(KeyEvent.VK_S));
-		op=menuSalir.add(salir);
-		
 		return menuSalir;
 	}
 	private class MiAccion extends AbstractAction {
@@ -393,6 +392,7 @@ public class Principal extends JFrame implements ActionListener{
 				
 			}
 			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){//añadir muestra
+				@SuppressWarnings("unused")
 				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, ficheroIdioma.getListaPalabras().get(2), true, ficheroIdioma.getListaPalabras(),manager);
 
 			}
@@ -424,10 +424,12 @@ public class Principal extends JFrame implements ActionListener{
 
 			
 	}
+	@SuppressWarnings("unused")
 	private void iniciarSerialComm() {
 		lsP = new LineaSeriePrincipal();
 		lsP.accion();
 	}
+	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

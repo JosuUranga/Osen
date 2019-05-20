@@ -17,12 +17,11 @@ import org.jfree.chart.title.TextTitle;
 import org.jfree.data.general.DefaultPieDataset;
 import org.jfree.data.general.PieDataset;
 import org.jfree.text.TextUtilities;
-import org.jfree.ui.ApplicationFrame;
 import org.jfree.ui.HorizontalAlignment;
 import org.jfree.ui.RectangleInsets;
-import org.jfree.ui.RefineryUtilities;
 import org.jfree.ui.TextAnchor;
 
+@SuppressWarnings("serial")
 public class Anillo extends JPanel {
 	static ChartPanel pan=null;
     static class CustomRingPlot extends RingPlot {

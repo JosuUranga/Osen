@@ -1,10 +1,6 @@
 package db;
 import java.sql.*;
 
-import javax.swing.JComboBox;
-
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-
 public class DBManager {
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;

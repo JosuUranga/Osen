@@ -16,6 +16,7 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.HorizontalAlignment;
 import org.jfree.ui.RectangleInsets;
 
+@SuppressWarnings("serial")
 public class Tarta extends JPanel{
 	static ChartPanel pan=null;
 	

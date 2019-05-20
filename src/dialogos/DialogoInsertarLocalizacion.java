@@ -19,11 +19,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import com.mysql.jdbc.exceptions.MySQLIntegrityConstraintViolationException;
-
 import db.DBManager;
 import muestras.Localizacion;
-import muestras.Muestra;
+import muestras.MuestraCo2;
 
 
 
@@ -32,7 +30,7 @@ import muestras.Muestra;
 public class DialogoInsertarLocalizacion extends JDialog{
 	
 	DialogoInsertarMuestra ventana;
-	Muestra muestra;
+	MuestraCo2 muestra;
 	JComboBox<String> comboLocalizacion;
 	JComboBox<String> comboMeteorologia;
 	JTextField nombre,habitantes,area;
@@ -65,7 +63,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 		
 	}
 	
-	public Muestra getMuestra() {
+	public MuestraCo2 getMuestra() {
 		return muestra;
 	}
 

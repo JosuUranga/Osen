@@ -69,7 +69,8 @@ public class SerialComm {
     }
     public CommPortIdentifier encontrarPuerto() //coje todos los puertos del pc y te devuelve si hay un serial
     {
-        java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
+        @SuppressWarnings("unchecked")
+		java.util.Enumeration<CommPortIdentifier> portEnum = CommPortIdentifier.getPortIdentifiers();
         while ( portEnum.hasMoreElements() ) 
         {
             CommPortIdentifier portIdentifier = portEnum.nextElement();

@@ -9,7 +9,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Date;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -24,7 +23,7 @@ import javax.swing.JProgressBar;
 
 import db.DBManager;
 import muestras.Localizacion;
-import muestras.Muestra;
+import muestras.MuestraCo2;
 
 
 
@@ -39,7 +38,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	Thread hiloProgressBar;
 	List<String>listaPalabras;
 	Localizacion localizacion;
-	Muestra muestra;
+	MuestraCo2 muestra;
 	boolean anadirLocalizacionSeleccionado=false;
 	String numeroLocalizacion;
 	DBManager manager;
@@ -62,7 +61,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		this.setVisible(true);
 		
 	}
-	public Muestra getMuestra() {
+	public MuestraCo2 getMuestra() {
 		return muestra;
 	}
 
@@ -176,7 +175,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		
 		return panel;
 	}
-	private Component crearPanelDatosFila(String tituloCombo, JComboBox comboBox) {
+	private Component crearPanelDatosFila(String tituloCombo, JComboBox<String> comboBox) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 
 		panel.add(new JLabel (tituloCombo));
@@ -197,7 +196,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				numeroLocalizacion=String.valueOf(comboLocalizacion.getSelectedIndex());;
 				if(hiloProgressBar!=null)hiloProgressBar.stop();	
 				try {
-					muestra=new Muestra("'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
+					muestra=new MuestraCo2("'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
 					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) VALUES (curdate(), "+muestra.getDuracion()+", "+muestra.getCo2eq()+", "+muestra.getHumedad()+", "+muestra.getTemperatura()+", "+muestra.getVoc()+", "+muestra.getMetorologia()+", "+ muestra.getLocalizacion()+", "+muestra.getUsuario()+");");
 					DialogoInsertarMuestra.this.dispose();
 
