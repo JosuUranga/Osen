@@ -9,6 +9,8 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
@@ -27,6 +29,7 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -36,16 +39,13 @@ import javax.swing.UnsupportedLookAndFeelException;
 import db.DBManager;
 import dialogos.DialogoInsertarMuestra;
 import graficos.Anillo;
-import idiomas.FicheroIdioma;
-import idiomas.GestorIdiomas;
 import lineaSerie.LineaSeriePrincipal;
-import muestras.MuestraCo2;
+import muestras.Muestra;
+import idiomas.ControladorIdioma;
 
 
-@SuppressWarnings("serial")
-public class Principal extends JFrame implements ActionListener{
-	
-	
+public class Principal extends JFrame implements ActionListener, PropertyChangeListener{
+
 	File file = new File("ficheros/TeoriaCo2.pdf");
 	
 	final static String dbuser="Admin";
@@ -62,20 +62,24 @@ public class Principal extends JFrame implements ActionListener{
 	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
 	DBManager manager;
+	Usuario usuario;
+	ControladorIdioma controladorIdioma;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
 	FicheroIdioma ficheroIdioma;
 	String seleccionIdioma="Castellano";
 	MuestraCo2 muestra;
-	GestorIdiomas gestorIdiomas;
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
-		gestorIdiomas= new GestorIdiomas();
+		
 		manager = new DBManager(dbuser,dbpass,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		this.inicializarFicheros();
+		usuario = new Usuario("Castellano");
+		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());
+		controladorIdioma.addPropertyChangeListener(this);
+		controladorIdioma.cargarIdioma();
 		this.crearAcciones();
 		this.crearComboBox1();
 		this.crearComboBox2();
@@ -87,34 +91,17 @@ public class Principal extends JFrame implements ActionListener{
 		//lsP.accion();
 	}
 	
-	
-
-	private void inicializarFicheros() {
-		switch(seleccionIdioma) {
-		case "Castellano":
-			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicherocastellano());
-		break;
-		case "Euskara":
-			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicheroEuskara());
-		break;
-		case "Ingles":
-			ficheroIdioma=new FicheroIdioma(gestorIdiomas.getFicheroIngles());
-		break;
-		}
-	}
-
-
 
 	private void crearAcciones() {
-		anadirCampo = new MiAccion (ficheroIdioma.getListaPalabras().get(0),new ImageIcon("iconos/edit_add.png"),ficheroIdioma.getListaPalabras().get(1),
+		anadirCampo = new MiAccion (controladorIdioma.getListaPalabras().get(0),new ImageIcon("iconos/edit_add.png"),controladorIdioma.getListaPalabras().get(1),
 				new Integer(KeyEvent.VK_C));
-		anadirMuestra = new MiAccion (ficheroIdioma.getListaPalabras().get(2),new ImageIcon("iconos/amigo.png"),ficheroIdioma.getListaPalabras().get(3),
+		anadirMuestra = new MiAccion (controladorIdioma.getListaPalabras().get(2),new ImageIcon("iconos/amigo.png"),controladorIdioma.getListaPalabras().get(3),
 				new Integer(KeyEvent.VK_A));
-		recargar = new MiAccion (ficheroIdioma.getListaPalabras().get(4),new ImageIcon("iconos/recargar.png"),ficheroIdioma.getListaPalabras().get(5),
+		recargar = new MiAccion (controladorIdioma.getListaPalabras().get(4),new ImageIcon("iconos/recargar.png"),controladorIdioma.getListaPalabras().get(5),
 				new Integer(KeyEvent.VK_R));
-		ayuda = new MiAccion (ficheroIdioma.getListaPalabras().get(6),new ImageIcon("iconos/edit.png"),ficheroIdioma.getListaPalabras().get(7),
+		ayuda = new MiAccion (controladorIdioma.getListaPalabras().get(6),new ImageIcon("iconos/edit.png"),controladorIdioma.getListaPalabras().get(7),
 				new Integer(KeyEvent.VK_H));
-		salir = new MiAccion (ficheroIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),ficheroIdioma.getListaPalabras().get(9),
+		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
 	}
 	private void crearComboBox1() {
@@ -152,9 +139,9 @@ public class Principal extends JFrame implements ActionListener{
 	}
 	private Component crearPanelPestanas() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(ficheroIdioma.getListaPalabras().get(10), crearPanelMapa());
-		panel.addTab(ficheroIdioma.getListaPalabras().get(11), crearPanelInfoGeneral());
-		panel.addTab(ficheroIdioma.getListaPalabras().get(12), crearPanelGraficos());
+		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
+		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral());
+		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 	}
 	private Component crearPanelGraficos() {
@@ -177,16 +164,16 @@ public class Principal extends JFrame implements ActionListener{
 	private Component crearPanelInfoSur() {
 		JPanel panel = new JPanel (new GridLayout(2,2));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(13))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(13))));
 		panel.add(crearPanelJLabel(labelLugar=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(14))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(14))));
 		panel.add(crearPanelJLabel(labelArea=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(15))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(15))));
 		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(16))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(16))));
 		panel.add(crearPanelJLabel(labelDensidad=new JLabel(" ")));
 		
 		return panel;
@@ -207,17 +194,17 @@ public class Principal extends JFrame implements ActionListener{
 
 	private Component crearPanelInfoCentro() {
 		JPanel panel = new JPanel (new GridLayout(2,2));
-		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), ficheroIdioma.getListaPalabras().get(17)));
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(18))));
+		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), controladorIdioma.getListaPalabras().get(17)));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(18))));
 		panel.add(crearPanelJLabel(labelTemp=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(19))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(19))));
 		panel.add(crearPanelJLabel(labelCo2=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(20))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(20))));
 		panel.add(crearPanelJLabel(labelHumedad=new JLabel(" ")));
 		
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(21))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(21))));
 		panel.add(crearPanelJLabel(labelVoc=new JLabel(" ")));
 		
 		return panel;
@@ -227,16 +214,16 @@ public class Principal extends JFrame implements ActionListener{
 
 	private Component crearPanelInfoNorte() {
 		JPanel panel = new JPanel (new GridLayout(2,4));
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(22))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(22))));
 		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(23))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(23))));
 		panel.add(crearPanelJLabel(labelFecha=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(24))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(24))));
 		panel.add(crearPanelJLabel(labelMeteo=new JLabel(" ")));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(ficheroIdioma.getListaPalabras().get(25))));
+		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(25))));
 		panel.add(crearPanelJLabel(labelUsuario=new JLabel(" ")));
 		
 		return panel;
@@ -342,14 +329,14 @@ public class Principal extends JFrame implements ActionListener{
 		return barra;
 	}
 	private JMenu crearMenuAyuda() {
-		JMenu menudAyuda = new JMenu (ficheroIdioma.getListaPalabras().get(26));
+		JMenu menudAyuda = new JMenu (controladorIdioma.getListaPalabras().get(26));
 		menudAyuda.setMnemonic(new Integer(KeyEvent.VK_A));
 		JMenuItem opcionMenu = new JMenuItem (ayuda);
 		menudAyuda.add(opcionMenu);
 		return menudAyuda;
 	}
 	private JMenu crearMenuEditar() {
-		JMenu menuEditar = new JMenu (ficheroIdioma.getListaPalabras().get(27));
+		JMenu menuEditar = new JMenu (controladorIdioma.getListaPalabras().get(27));
 		menuEditar.setMnemonic(new Integer(KeyEvent.VK_E));
 		JMenuItem opcionMenu = new JMenuItem (anadirCampo);
 		menuEditar.add(opcionMenu);
@@ -358,8 +345,11 @@ public class Principal extends JFrame implements ActionListener{
 		return menuEditar;
 	}
 	private JMenu crearMenuSalir() {
-		JMenu menuSalir = new JMenu (ficheroIdioma.getListaPalabras().get(28));
+		JMenuItem op;
+		JMenu menuSalir = new JMenu (controladorIdioma.getListaPalabras().get(28));
 		menuSalir.setMnemonic(new Integer(KeyEvent.VK_S));
+		op=menuSalir.add(salir);
+		
 		return menuSalir;
 	}
 	private class MiAccion extends AbstractAction {
@@ -374,7 +364,7 @@ public class Principal extends JFrame implements ActionListener{
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(0))){
+			if (texto.equals(controladorIdioma.getListaPalabras().get(0))){
 				compararActivado=!compararActivado;
 				if(compararActivado) {
 					panelComboBox2.add(comboLocalizacion2,0);
@@ -391,16 +381,15 @@ public class Principal extends JFrame implements ActionListener{
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(2))){//añadir muestra
-				@SuppressWarnings("unused")
-				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, ficheroIdioma.getListaPalabras().get(2), true, ficheroIdioma.getListaPalabras(),manager);
+			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//aï¿½adir muestra
+				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, controladorIdioma.getListaPalabras().get(2), true, controladorIdioma.getListaPalabras(),manager);
 
 			}
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(4))){//recargar
+			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
 				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
-			if(texto.equals(ficheroIdioma.getListaPalabras().get(6))) {
+			if(texto.equals(controladorIdioma.getListaPalabras().get(6))) {
 				
 				System.out.println("Ayuda");
 				Desktop desktop = Desktop.getDesktop();
@@ -414,7 +403,7 @@ public class Principal extends JFrame implements ActionListener{
 					}
 
 			}
-			if (texto.equals(ficheroIdioma.getListaPalabras().get(8))){
+			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){
 				
 				Principal.this.dispose();
 			}
@@ -471,8 +460,8 @@ public class Principal extends JFrame implements ActionListener{
 		String fecha=comboFecha1.getSelectedItem().toString();
 		String condicion=(" WHERE Localizaciones.nombre = '"+ pueblo+"' AND Meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
 		
-		ResultSet resultados = manager.executeQuery("SELECT Muestras.muestraID, Meteos.descripcion, Muestras.fecha, Usuarioa.nombre, Muestras.temperatura, Muestras.humedad, Muestras.co2eq, Muestras.voc, Localizaciones.nombre AS lugar, Localizaciones.habitantes, Localizaciones.areakm2, Localizaciones.habitantes/Localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
-				"FROM ((Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID)JOIN Usuarioa ON Muestras.usuario=Usuarioa.usuarioID\r\n" + 
+		ResultSet resultados = manager.executeQuery("SELECT Muestras.muestraID, Meteos.descripcion, Muestras.fecha, Usuarios.nombre, Muestras.temperatura, Muestras.humedad, Muestras.co2eq, Muestras.voc, Localizaciones.nombre AS lugar, Localizaciones.habitantes, Localizaciones.areakm2, Localizaciones.habitantes/Localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
+				"FROM ((Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID)JOIN Usuarios ON Muestras.usuario=Usuarios.usuarioID\r\n" + 
 				condicion+";");
 		try {
 			resultados.next();
@@ -547,8 +536,8 @@ public class Principal extends JFrame implements ActionListener{
 	public void cargarDatosMeteo(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo) {
 		comboMeteo.removeAllItems();
 		
-		String pueblo=comboLocalizacion.getSelectedItem().toString();
-		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
+	@Override
+	public void propertyChange(PropertyChangeEvent arg0) {
 		
 		ResultSet resultados = manager.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
 				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
