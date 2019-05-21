@@ -1,12 +1,13 @@
 package muestras;
 
-public class Muestra {
+public abstract class Muestra {
 	String fecha;
 	float duracion;
 	String metorologia;
 	Localizacion localizacion;
 	String usuario;
 	
+
 	public Muestra(String fecha, float duracion, String metorologia, Localizacion localizacion, String usuario) {
 		super();
 		this.fecha = fecha;
@@ -55,6 +56,7 @@ public class Muestra {
 	public void setUsuario(String usuario) {
 		this.usuario = usuario;
 	}
+	
 	
 	
 }

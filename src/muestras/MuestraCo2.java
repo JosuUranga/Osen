@@ -10,8 +10,7 @@ public class MuestraCo2 extends Muestra{
 	float temperatura;
 	float voc;
 	
-	public MuestraCo2(String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,
-			String metorologia, Localizacion localizacion, String usuario) {
+	public MuestraCo2(String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,String metorologia, Localizacion localizacion, String usuario) {
 		super(fecha, duracion, metorologia, localizacion, usuario);
 		this.co2eq = co2eq;
 		this.humedad = humedad;
@@ -110,6 +109,8 @@ public class MuestraCo2 extends Muestra{
 		// TODO Auto-generated method stub
 		super.setUsuario(usuario);
 	}
+
+	
 	
 	
 	
