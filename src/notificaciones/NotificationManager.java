@@ -9,7 +9,6 @@ import java.sql.SQLException;
 import javax.swing.Timer;
 
 import db.DBManager;
-import muestras.Muestra;
 import osen.Usuario;
 
 public class NotificationManager extends Thread {
@@ -20,7 +19,6 @@ public class NotificationManager extends Thread {
 	String key, body;
 	DBManager manager;
 	Notificacion notificacion;
-	Muestra muestra;
 	Timer timer;
 	Tiempo tiempo;
 	Usuario user;
@@ -38,7 +36,7 @@ public class NotificationManager extends Thread {
 	}
 	@Override
 	public void run() {
-		resultado = manager.executeQuery("SELECT muestraID FROM Muestras ORDER BY muestraID DESC LIMIT 1");
+		resultado = manager.executeQuery("SELECT muestraID FROM Muestras WHERE localizacion="+user.getLocalizacion()+" ORDER BY muestraID DESC LIMIT 1");
 		try {
 			resultado.next();
 			ultimaMuestra=resultado.getInt(1);
@@ -56,7 +54,7 @@ public class NotificationManager extends Thread {
 				System.out.println("timer a 0, notificacion ");
 				tiempo.setMinutos(MINUTOS);
 				tiempo.setSegundos(SEGUNDOS);
-				resultado = manager.executeQuery("SELECT muestraID, co2eq FROM Muestras ORDER BY muestraID DESC LIMIT 1");
+				resultado = manager.executeQuery("SELECT muestraID, co2eq FROM Muestras WHERE localizacion="+user.getLocalizacion()+" ORDER BY muestraID DESC LIMIT 1");
 				try {
 					resultado.next();
 					muestraActual=resultado.getInt(1);
