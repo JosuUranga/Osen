@@ -41,6 +41,9 @@ import estados.GestorEstadosAnadirMuestra;
 import graficos.Anillo;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
+import muestras.GeneradorPanelesMuestra;
+import muestras.Localizacion;
+import muestras.Muestra;
 import muestras.MuestraCo2;
 import notificaciones.NotificationManager;
 import idiomas.ControladorIdioma;
@@ -58,7 +61,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
 	JMenuItem opcionMenu;
-	JPanel panelComboBox2;
+	JPanel panelComboBox2,panelinfo;
 	MiAccion anadirCampo, anadirMuestra, ayuda, recargar, salir;
 	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
 	boolean compararActivado=false;
@@ -69,7 +72,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
 	String seleccionIdioma="Castellano";
-	MuestraCo2 muestra;
+	GeneradorPanelesMuestra generadorPan;
+	Muestra muestra1,muestra2;
+	Component combo;
 	NotificationManager notiManager;
 	public Principal(){
 		super("OSEN");
@@ -84,6 +89,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());
 		controladorIdioma.addPropertyChangeListener(this);
 		controladorIdioma.cargarIdioma();
+		generadorPan=new GeneradorPanelesMuestra(controladorIdioma);
 		this.crearAcciones();
 		this.crearComboBox1();
 		this.crearComboBox2();
@@ -121,7 +127,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		comboLocalizacion1=new JComboBox<>();
 		comboMeteo1=new JComboBox<>();
 		comboFecha1=new JComboBox<>();
-		cargarDatosComboBox(comboLocalizacion1,comboMeteo1,comboFecha1);
+		cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 		comboLocalizacion1.addActionListener(this);
 		comboLocalizacion1.setActionCommand("localizacion");
 		comboMeteo1.addActionListener(this);
@@ -137,126 +143,22 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	private void crearComboBox2() {
 		//coger los datos de la BD
 		comboLocalizacion2=new JComboBox<>();
-		comboLocalizacion2.addItem("Orio");
 		comboMeteo2=new JComboBox<>();
-		comboFecha2=new JComboBox<>();
-		comboFecha2.addItem("01/03/1999");		
+		comboFecha2=new JComboBox<>();	
+		comboLocalizacion2.addActionListener(this);
+		comboLocalizacion2.setActionCommand("localizacion2");
+		comboMeteo2.addActionListener(this);
+		comboMeteo2.setActionCommand("meteo2");
 	}
 	private Container crearPanelVentana() {
-		JPanel panel = new JPanel(new BorderLayout(0,0));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(crearPanelNorte(),BorderLayout.NORTH);
-		panel.add(crearPanelPestanas(),BorderLayout.CENTER);
-		return panel;
+		panelinfo = new JPanel(new BorderLayout(0,0));
+		panelinfo.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		combo=crearPanelNorte();
+		panelinfo.add(combo,BorderLayout.NORTH);
+		panelinfo.add(generadorPan.getPanel(muestra1, muestra2),BorderLayout.CENTER);
+		return panelinfo;
 	}
-	private Component crearPanelPestanas() {
-		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
-		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral());
-		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
-		return panel;
-	}
-	private Component crearPanelGraficos() {
-		JPanel panel=new Anillo().getPanel();
-		return panel;
-	}
-	private Component crearPanelMapa() {
-		JPanel panel = new JPanel (new BorderLayout(0,10));
-		
-		return panel;
-	}
-	private Component crearPanelInfoGeneral() {
-		JPanel panel = new JPanel (new GridLayout(3,1));
-		panel.add(crearPanelInfoNorte());
-		panel.add(crearPanelInfoCentro());
-		panel.add(crearPanelInfoSur());
-
-		return panel;
-	}
-	private Component crearPanelInfoSur() {
-		JPanel panel = new JPanel (new GridLayout(2,2));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(13))));
-		panel.add(crearPanelJLabel(labelLugar=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(14))));
-		panel.add(crearPanelJLabel(labelArea=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(15))));
-		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(16))));
-		panel.add(crearPanelJLabel(labelDensidad=new JLabel(" ")));
-		
-		return panel;
-	}
-
-
-
-	private Component crearPanelJLabelTitulo(JLabel label) {
-		JPanel panel = new JPanel (new BorderLayout(10,10));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		label.setFont(fuenteTituloInfoGeneral);
-		panel.add(label);
-
-		return panel;
-	}
-
-
-
-	private Component crearPanelInfoCentro() {
-		JPanel panel = new JPanel (new GridLayout(2,2));
-		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), controladorIdioma.getListaPalabras().get(17)));
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(18))));
-		panel.add(crearPanelJLabel(labelTemp=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(19))));
-		panel.add(crearPanelJLabel(labelCo2=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(20))));
-		panel.add(crearPanelJLabel(labelHumedad=new JLabel(" ")));
-		
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(21))));
-		panel.add(crearPanelJLabel(labelVoc=new JLabel(" ")));
-		
-		return panel;
-	}
-
-
-
-	private Component crearPanelInfoNorte() {
-		JPanel panel = new JPanel (new GridLayout(2,4));
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(22))));
-		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(" ")));
-
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(23))));
-		panel.add(crearPanelJLabel(labelFecha=new JLabel(" ")));
-
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(24))));
-		panel.add(crearPanelJLabel(labelMeteo=new JLabel(" ")));
-
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(25))));
-		panel.add(crearPanelJLabel(labelUsuario=new JLabel(" ")));
-		
-		return panel;
-	}
-
-
-
-	private Component crearPanelJLabel(JLabel label) {
-		JPanel panel = new JPanel (new BorderLayout(10,10));
-		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
-		panel.add(label);
-
-		return panel;
-	}
-
-
-
 	
-
-
-
 	private Component crearPanelNorte() {
 		JPanel panel = new JPanel (new GridLayout(2,1));
 		panel.add(panelBarraBotones());
@@ -378,10 +280,13 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			
 			if (texto.equals(controladorIdioma.getListaPalabras().get(0))){
 				compararActivado=!compararActivado;
+				if(generadorPan.getState()!=2)generadorPan.setState(2);
+				else generadorPan.setState(0);
 				if(compararActivado) {
 					panelComboBox2.add(comboLocalizacion2,0);
 					panelComboBox2.add(comboMeteo2,1);
 					panelComboBox2.add(comboFecha2,2);
+					cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 				}
 				else {
 				panelComboBox2.remove(0);
@@ -449,9 +354,17 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		switch(e.getActionCommand()) {
 		
 		case "Buscar":
-			if(!compararActivado) {
-				realizarBusquedaSinComparar();
+			if(!compararActivado)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
+			else {
+				muestra2=realizarBusquedaSinComparar(comboLocalizacion2,comboMeteo2,comboFecha2);
+				System.out.println(muestra2);
 			}
+			muestra1=realizarBusquedaSinComparar(comboLocalizacion1,comboMeteo1,comboFecha1);
+			panelinfo.removeAll();
+			panelinfo.add(combo,BorderLayout.NORTH);
+			panelinfo.add(generadorPan.getPanel(muestra1, muestra2),BorderLayout.CENTER);
+			panelinfo.revalidate();
+			panelinfo.repaint();
 			break;
 		case "localizacion":		
 			if(comboLocalizacion1.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
@@ -465,10 +378,11 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 
 
-	private void realizarBusquedaSinComparar() {
-		String pueblo=comboLocalizacion1.getSelectedItem().toString();
-		String meteo=comboMeteo1.getSelectedItem().toString();
-		String fecha=comboFecha1.getSelectedItem().toString();
+	private Muestra realizarBusquedaSinComparar(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
+		String pueblo=comboLocalizacion.getSelectedItem().toString();
+		String meteo=comboMeteo.getSelectedItem().toString();
+		String fecha=comboFecha.getSelectedItem().toString();
+		Muestra muestra=null;
 		String condicion=(" WHERE Localizaciones.nombre = '"+ pueblo+"' AND Meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
 		
 		ResultSet resultados = manager.executeQuery("SELECT Muestras.muestraID, Meteos.descripcion, Muestras.fecha, Usuarios.nombre, Muestras.temperatura, Muestras.humedad, Muestras.co2eq, Muestras.voc, Localizaciones.nombre AS lugar, Localizaciones.habitantes, Localizaciones.areakm2, Localizaciones.habitantes/Localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
@@ -476,37 +390,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				condicion+";");
 		try {
 			resultados.next();
+			float duracion=(float) 10.5;
+			muestra=new MuestraCo2(resultados.getInt(1), resultados.getString(3), duracion, resultados.getInt(7), resultados.getFloat(6), resultados.getFloat(5), resultados.getFloat(8), resultados.getString(2), new Localizacion(resultados.getString(9),resultados.getInt(10),resultados.getFloat(11)), resultados.getString(12));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		actualizarcampos(resultados);
-	}
-
-	private void actualizarcampos(ResultSet resultados) {
-		actualizarPestanaTexto(resultados);
-	}
-
-
-
-	private void actualizarPestanaTexto(ResultSet resultados) {
-		try {
-			labelMuestraID.setText((Integer.toString(resultados.getInt("muestraID"))));
-			labelMeteo.setText(resultados.getString("descripcion"));
-			labelFecha.setText(String.valueOf(resultados.getDate("fecha")));
-			labelUsuario.setText(resultados.getString("nombre"));
-			labelTemp.setText(Float.toString(resultados.getFloat("temperatura"))+" �C");
-			labelHumedad.setText(Float.toString(resultados.getFloat("humedad"))+" %");
-			labelCo2.setText(Integer.toString(resultados.getInt("Co2eq"))+" PPP");
-			labelVoc.setText(Float.toString(resultados.getFloat("VOC"))+" l/min");
-			labelLugar.setText((resultados.getString("lugar")));
-			labelHabitantes.setText(Integer.toString(resultados.getInt("habitantes")));
-			labelArea.setText(Integer.toString(resultados.getInt("areakm2"))+" km2");
-			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+controladorIdioma.getListaPalabras().get(29));
-
-		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-		}
-		
+		return muestra;
 	}
 	public void cargarDatosLocalizacionMuestra(JComboBox<String> comboLocalizacion) {
 		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
@@ -515,7 +404,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		try {
 			comboLocalizacion.removeAllItems();
 			while(resultados.next()) {
-				comboLocalizacion.addItem(resultados.getString("nombre"));
+				String result=resultados.getString("nombre");
+				comboLocalizacion.addItem(result);
 			}
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
@@ -541,7 +431,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();			
+		manager.conClose();	
+		if(muestra1!=null)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 	}
 	
 	public void cargarDatosMeteo(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo) {

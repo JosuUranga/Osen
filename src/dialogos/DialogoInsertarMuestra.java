@@ -198,15 +198,21 @@ public class DialogoInsertarMuestra extends JDialog{
 		botonOK = new JButton ("OK");
 		botonOK.setEnabled(false);	
 		botonOK.addActionListener(new ActionListener(){
-			@SuppressWarnings("deprecation")
 			public void actionPerformed(ActionEvent arg0) {
 				
-				String numeroMeteorologia=String.valueOf(comboMeteorologia.getSelectedIndex());
-				numeroLocalizacion=String.valueOf(comboLocalizacion.getSelectedIndex());;
-				if(hiloProgressBar!=null)hiloProgressBar.stop();	
+				String numeroMeteorologia=String.valueOf(comboMeteorologia.getSelectedIndex()+1);
+				ResultSet resultado=manager.executeQuery("SELECT localizacionId from Localizaciones where nombre='"+comboLocalizacion.getSelectedItem().toString()+"'");
 				try {
-					muestra=new MuestraCo2(1, "'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
-					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) VALUES (curdate(), "+muestra.getDuracion()+", "+muestra.getCo2eq()+", "+muestra.getHumedad()+", "+muestra.getTemperatura()+", "+muestra.getVoc()+", "+muestra.getMetorologia()+", "+ muestra.getLocalizacion()+", "+muestra.getUsuario()+");");
+					resultado.next();
+					numeroLocalizacion=Integer.toString(resultado.getInt(1));
+				} catch (SQLException e) {
+					e.printStackTrace();
+				}
+				if(hiloProgressBar!=null)hiloProgressBar.interrupt();
+				
+				try {
+					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) "
+							+ "VALUES (curdate(), 10.00, 15, 50.59, 18.64, 65.95, "+numeroMeteorologia+", "+ numeroLocalizacion+", "+"1)");
 					DialogoInsertarMuestra.this.dispose();
 
 				} catch (SQLException e1) {

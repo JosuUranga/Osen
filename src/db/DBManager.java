@@ -39,6 +39,7 @@ public class DBManager {
 		return connect;
 	}
 	public ResultSet executeQuery(String query) {
+		System.out.println(query);
 		connect = this.getConnection();
 		try {
 			statement = connect.createStatement();
