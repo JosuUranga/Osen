@@ -148,9 +148,15 @@ public class GeneradorPanelesMuestra {
 
 
 	private Component crearPanelInfoNorte(Muestra muestra) {
-		JPanel panel = new JPanel (new GridLayout(2,4));
+		
+		int columnas;
+		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
+		else columnas=4;
+		
+		JPanel panel = new JPanel (new GridLayout(2,columnas));
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(22))));
 		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.enseñarTexto()[8])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.enseñarTexto()[8])));
 
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(23))));
 		panel.add(crearPanelJLabel(labelFecha=new JLabel(muestra.enseñarTexto()[9])));
@@ -160,6 +166,7 @@ public class GeneradorPanelesMuestra {
 
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(25))));
 		panel.add(crearPanelJLabel(labelUsuario=new JLabel(muestra.enseñarTexto()[11])));
+		
 		
 		return panel;
 	}

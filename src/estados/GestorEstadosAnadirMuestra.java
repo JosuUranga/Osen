@@ -3,14 +3,12 @@ package estados;
 import java.util.List;
 
 import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JProgressBar;
 
 import db.DBManager;
 import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
 import muestras.Localizacion;
-import muestras.Muestra;
 
 public class GestorEstadosAnadirMuestra {
 
@@ -49,7 +47,7 @@ public class GestorEstadosAnadirMuestra {
 			break;
 			
 		case 2://añadir localizacion
-			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new 
+			@SuppressWarnings("unused") DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new 
 			DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, manager);
 			break;
 			
