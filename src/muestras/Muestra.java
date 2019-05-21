@@ -1,20 +1,26 @@
 package muestras;
 
 public abstract class Muestra {
+	int id;
 	String fecha;
 	float duracion;
 	String metorologia;
 	Localizacion localizacion;
 	String usuario;
-	
 
-	public Muestra(String fecha, float duracion, String metorologia, Localizacion localizacion, String usuario) {
+	public Muestra(int id, String fecha, float duracion, String metorologia, Localizacion localizacion,
+			String usuario) {
 		super();
+		this.id = id;
 		this.fecha = fecha;
 		this.duracion = duracion;
 		this.metorologia = metorologia;
 		this.localizacion = localizacion;
 		this.usuario = usuario;
+	}
+
+	public int getId() {
+		return id;
 	}
 
 	public String getFecha() {
@@ -57,6 +63,7 @@ public abstract class Muestra {
 		this.usuario = usuario;
 	}
 	
+	public abstract String[] enseñarTexto();
 	
 	
 }

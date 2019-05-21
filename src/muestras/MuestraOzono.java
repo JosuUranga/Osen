@@ -5,9 +5,9 @@ public class MuestraOzono extends Muestra{
 	float humedad;
 	float temperatura;
 	float ozono;
-	public MuestraOzono(String fecha, float duracion, int oxigeno, float humedad, float temperatura, float ozono, 
+	public MuestraOzono(int id, String fecha, float duracion, int oxigeno, float humedad, float temperatura, float ozono, 
 			String metorologia, Localizacion localizacion, String usuario) {
-		super(fecha, duracion, metorologia, localizacion, usuario);
+		super(id,fecha, duracion, metorologia, localizacion, usuario);
 		this.oxigeno = oxigeno;
 		this.humedad = humedad;
 		this.temperatura = temperatura;
@@ -111,6 +111,14 @@ public class MuestraOzono extends Muestra{
 	public String toString() {
 		// TODO Auto-generated method stub
 		return super.toString();
+	}
+	@Override
+	public String[] enseñarTexto() {
+		String[] info= {this.getLocalizacion().getNombre(), Float.toString(this.getLocalizacion().getArea()),
+				Integer.toString(this.getLocalizacion().getHabitantes()), Float.toString(this.getLocalizacion().getDensidad()),
+				Float.toString(this.getTemperatura()), Integer.toString(this.getOxigeno()), Float.toString(this.getHumedad()),
+				Float.toString(this.getOzono()), Integer.toString(this.getId()),this.getFecha(),this.getMetorologia(), this.getUsuario()};
+		return info;
 	}
 	
 	

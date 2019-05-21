@@ -19,6 +19,10 @@ public class Localizacion {
 	public float getArea() {
 		return area;
 	}
+	public float getDensidad() {
+		return (float)habitantes/area;
+	}
+	
 	
 	
 }

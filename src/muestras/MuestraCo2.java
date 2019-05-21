@@ -1,7 +1,5 @@
 package muestras;
 
-
-
 public class MuestraCo2 extends Muestra{
 	
 	
@@ -10,8 +8,8 @@ public class MuestraCo2 extends Muestra{
 	float temperatura;
 	float voc;
 	
-	public MuestraCo2(String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,String metorologia, Localizacion localizacion, String usuario) {
-		super(fecha, duracion, metorologia, localizacion, usuario);
+	public MuestraCo2(int id, String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,String metorologia, Localizacion localizacion, String usuario) {
+		super(id, fecha, duracion, metorologia, localizacion, usuario);
 		this.co2eq = co2eq;
 		this.humedad = humedad;
 		this.temperatura = temperatura;
@@ -109,16 +107,15 @@ public class MuestraCo2 extends Muestra{
 		// TODO Auto-generated method stub
 		super.setUsuario(usuario);
 	}
-
 	
-	
-	
-	
-	
-	
-
-
-	
+	@Override
+	public String[] enseñarTexto() {
+		String[] info= {this.getLocalizacion().getNombre(), Float.toString(this.getLocalizacion().getArea()),
+				Integer.toString(this.getLocalizacion().getHabitantes()), Float.toString(this.getLocalizacion().getDensidad()),
+				Float.toString(this.getTemperatura()), Integer.toString(this.getCo2eq()), Float.toString(this.getHumedad()),
+				Float.toString(this.getVoc()), Integer.toString(this.getId()),this.getFecha(),this.getMetorologia(), this.getUsuario()};
+		return info;		
+	}
 
 	
 	
