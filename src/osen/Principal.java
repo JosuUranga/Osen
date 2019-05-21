@@ -29,7 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
@@ -40,7 +39,6 @@ import db.DBManager;
 import dialogos.DialogoInsertarMuestra;
 import graficos.Anillo;
 import lineaSerie.LineaSeriePrincipal;
-import muestras.Muestra;
 import muestras.MuestraCo2;
 import idiomas.ControladorIdioma;
 
@@ -555,7 +553,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 
 	@Override
-	public void propertyChange(PropertyChangeEvent arg0) {
-		
+	public void propertyChange(PropertyChangeEvent evt) {
+		switch(evt.getPropertyName()) {
+		case "idioma":
+				this.revalidate();
+				this.repaint();
+			break;
+		}
 	}
 }
