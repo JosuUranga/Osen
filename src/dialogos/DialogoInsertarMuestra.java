@@ -205,7 +205,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				numeroLocalizacion=String.valueOf(comboLocalizacion.getSelectedIndex());;
 				if(hiloProgressBar!=null)hiloProgressBar.stop();	
 				try {
-					muestra=new MuestraCo2("'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
+					muestra=new MuestraCo2(1, "'2019-05-01'", (float)10.00, 15, (float)50.59, (float)18.64, (float)65.95, numeroMeteorologia, localizacion, "1"); 
 					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) VALUES (curdate(), "+muestra.getDuracion()+", "+muestra.getCo2eq()+", "+muestra.getHumedad()+", "+muestra.getTemperatura()+", "+muestra.getVoc()+", "+muestra.getMetorologia()+", "+ muestra.getLocalizacion()+", "+muestra.getUsuario()+");");
 					DialogoInsertarMuestra.this.dispose();
 
