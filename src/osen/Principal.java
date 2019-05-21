@@ -42,6 +42,8 @@ import graficos.Anillo;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import muestras.MuestraCo2;
+import notificaciones.NotificationManager;
+import idiomas.ControladorIdioma;
 
 
 public class Principal extends JFrame implements ActionListener, PropertyChangeListener{
@@ -68,6 +70,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	Font fuenteTituloInfoGeneral;
 	String seleccionIdioma="Castellano";
 	MuestraCo2 muestra;
+	NotificationManager notiManager;
 	public Principal(){
 		super("OSEN");
 		this.setLocation (340,100);
@@ -75,7 +78,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		
 		manager = new DBManager(dbuser,dbpass,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		usuario = new Usuario("Castellano");
+		usuario = new Usuario(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, "Castellano");
+		usuario.setTipo(2);
+		//iniciarNotis();
 		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());
 		controladorIdioma.addPropertyChangeListener(this);
 		controladorIdioma.cargarIdioma();
@@ -90,6 +95,14 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		//lsP.accion();
 	}
 	
+
+	private void iniciarNotis() {
+		if(usuario.getTipo()>0) {
+			notiManager=new NotificationManager("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", manager, usuario);
+			notiManager.start();
+			}		
+	}
+
 
 	private void crearAcciones() {
 		anadirCampo = new MiAccion (controladorIdioma.getListaPalabras().get(0),new ImageIcon("iconos/edit_add.png"),controladorIdioma.getListaPalabras().get(1),

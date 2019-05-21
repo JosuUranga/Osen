@@ -213,7 +213,7 @@ public class DialogoInsertarMuestra extends JDialog{
 					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no válido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no vï¿½lido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}

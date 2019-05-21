@@ -46,6 +46,6 @@ public class ControladorIdioma {
 			ficheroIdioma=new FicheroIdioma(ficheroIngles); 
 		break; 
 		} 
-	soporte.firePropertyChange("idioma", null, ficheroIdioma.getListaPalabras()); 
+	soporte.firePropertyChange("idioma", null, null); 
 	} 
 } 
