@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import db.DBManager;
+import estados.GestorEstadosAnadirMuestra;
 import muestras.Localizacion;
 import muestras.MuestraCo2;
 
@@ -31,12 +32,12 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	
 	DialogoInsertarMuestra ventana;
 	MuestraCo2 muestra;
-	JComboBox<String> comboLocalizacion;
-	JComboBox<String> comboMeteorologia;
+	
 	JTextField nombre,habitantes,area;
 	List<String>listaPalabras;
 	Localizacion localizacion;
 	DBManager manager;
+	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	//Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	boolean anadirLocalizacionSeleccionado=false;
@@ -49,10 +50,10 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	boolean errorIgual=false;
 	
 	
-	public DialogoInsertarLocalizacion (DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, JComboBox<String> comboLocalizacion, List<String> list, DBManager manager) {
+	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, DBManager manager) {
 		super(dialogoInsertarMuestra,titulo,modo);
+		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
 		this.listaPalabras=list;
-		this.comboLocalizacion=comboLocalizacion;
 		this.ventana=dialogoInsertarMuestra;
 		this.setSize(600,400);
 		this.setLocation (100,100);
@@ -155,9 +156,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 		return localizacion;
 	}
 
-	public String getText() {
-		return comboMeteorologia.getSelectedItem().toString();
-	}
+	
 
 	public boolean isAnadirLocalizacionSeleccionado() {
 		return anadirLocalizacionSeleccionado;

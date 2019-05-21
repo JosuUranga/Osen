@@ -36,11 +36,11 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import db.DBManager;
-import dialogos.DialogoInsertarMuestra;
+import estados.GestorEstadosAnadirMuestra;
 import graficos.Anillo;
+import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import muestras.MuestraCo2;
-import idiomas.ControladorIdioma;
 
 
 public class Principal extends JFrame implements ActionListener, PropertyChangeListener{
@@ -379,8 +379,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//a�adir muestra
-				DialogoInsertarMuestra dialogoInsertarMuestra= new DialogoInsertarMuestra(Principal.this, controladorIdioma.getListaPalabras().get(2), true, controladorIdioma.getListaPalabras(),manager);
+			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
+				GestorEstadosAnadirMuestra gestorAnadirMuestra= new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager);
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
@@ -402,7 +402,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){
-				
 				Principal.this.dispose();
 			}
 		}
@@ -463,8 +462,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				condicion+";");
 		try {
 			resultados.next();
-		} catch (SQLException e2) {
-			e2.printStackTrace();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		actualizarcampos(resultados);
 	}
@@ -491,7 +490,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			labelDensidad.setText(Integer.toString(resultados.getInt("densidad (habitantes/km2)"))+controladorIdioma.getListaPalabras().get(29));
 
 		} catch (SQLException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		
 	}
@@ -505,7 +504,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				comboLocalizacion.addItem(resultados.getString("nombre"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();		
 	}
@@ -525,8 +524,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			while(resultados.next()) {
 				comboFecha.addItem(resultados.getString("fecha"));
 			}
-		} catch (SQLException e3) {
-			e3.printStackTrace();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();			
 	}
@@ -545,8 +544,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			while(resultados.next()) {
 				comboMeteo.addItem(resultados.getString("descripcion"));
 			}
-		} catch (SQLException e3) {
-			e3.printStackTrace();
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();			
 	}

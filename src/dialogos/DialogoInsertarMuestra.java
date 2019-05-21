@@ -7,6 +7,7 @@ import java.awt.Container;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.security.Principal;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
@@ -22,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import db.DBManager;
+import estados.GestorEstadosAnadirMuestra;
 import muestras.Localizacion;
 import muestras.MuestraCo2;
 
@@ -43,19 +45,25 @@ public class DialogoInsertarMuestra extends JDialog{
 	String numeroLocalizacion;
 	DBManager manager;
 	JButton botonOK;
+	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	
 	
 	
 	
-	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager) {
+	public JComboBox<String> getComboLocalizacion() {
+		return comboLocalizacion;
+	}
+	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra) {
 		super(ventana,titulo,modo);
+		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
 		this.listaPalabras=list;
 		this.ventana=ventana;
 		this.setSize(600,400);
 		this.setLocation (100,100);
 		this.manager=manager;
-		this.cargarDatosLocalizaciones(comboLocalizacion=new JComboBox<>());
+		this.comboLocalizacion=new JComboBox<>();
+		this.cargarDatosLocalizaciones();
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -109,29 +117,31 @@ public class DialogoInsertarMuestra extends JDialog{
 		
 		boton3.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				hiloProgressBar = new Thread(new Runnable() {
-					@Override
-					public void run() {
-						while(progressBar.getValue()<100) {
-							progressBar.setValue(progressBar.getValue()+10);
-							try {
-								Thread.sleep(1000);
-							} catch (InterruptedException e) {
-								e.printStackTrace();
-							}
-						}
-						JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "La muestra se ha tomado correctamente", "Aviso", JOptionPane.PLAIN_MESSAGE);
-						botonOK.setEnabled(true);
-
-					}		
-				});
-				hiloProgressBar.start();
-
-			}
+				gestionarStart();
+			}			
 		});
 		panel.add(boton3);
 		
 		return panel;
+	}
+	public void gestionarStart() {
+		hiloProgressBar = new Thread(new Runnable() {
+			@Override
+			public void run() {
+				while(progressBar.getValue()<100) {
+					progressBar.setValue(progressBar.getValue()+10);
+					try {
+						Thread.sleep(1000);
+					} catch (InterruptedException e) {
+						e.printStackTrace();
+					}
+				}
+				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "La muestra se ha tomado correctamente", "Aviso", JOptionPane.PLAIN_MESSAGE);
+				botonOK.setEnabled(true);
+
+			}		
+		});
+		hiloProgressBar.start();				
 	}
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(2,1));
@@ -161,11 +171,10 @@ public class DialogoInsertarMuestra extends JDialog{
 		
 		boton4.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent arg0) {
-				DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new DialogoInsertarLocalizacion(DialogoInsertarMuestra.this, listaPalabras.get(2), true, comboLocalizacion, listaPalabras, manager);
-				if(dialogoInsertarLocalizacion.isAnadirLocalizacionSeleccionado()) {
-					localizacion=dialogoInsertarLocalizacion.getLocalizacion();
-					comboLocalizacion.addItem(localizacion.getNombre());
-				}
+				gestorEstadosAnadirMuestra.setState(2);
+				gestorEstadosAnadirMuestra.estados();
+				cargarDatosLocalizaciones();
+
 			}
 		});
 		
@@ -225,7 +234,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		return panel;
 	}
 	
-	public void cargarDatosLocalizaciones(JComboBox<String> comboLocalizacion) {
+	public void cargarDatosLocalizaciones() {
 		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
 				"FROM Localizaciones\r\n;");
 		try {
@@ -234,7 +243,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				comboLocalizacion.addItem(resultados.getString("nombre"));
 			}
 		} catch (SQLException e) {
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();		
 	}
