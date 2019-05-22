@@ -37,12 +37,13 @@ import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
 import db.DBManager;
+import dialogos.DialogoUsuario;
+import estados.GeneradorPanelesMuestra;
 import estados.GestorEstadosAnadirMuestra;
 import graficos.Anillo;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.UsuarioVO;
-import muestras.GeneradorPanelesMuestra;
 import muestras.Localizacion;
 import muestras.Muestra;
 import muestras.MuestraCo2;
@@ -63,7 +64,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JMenu	menuAgregaciones, menuSalir;
 	JMenuItem opcionMenu;
 	JPanel panelComboBox2,panelinfo;
-	MiAccion anadirCampo, anadirMuestra, ayuda, recargar, salir;
+	MiAccion anadirCampo, anadirMuestra, ayuda, recargar,perfil, salir;
 	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
 	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
@@ -119,6 +120,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				new Integer(KeyEvent.VK_R));
 		ayuda = new MiAccion (controladorIdioma.getListaPalabras().get(6),new ImageIcon("iconos/edit.png"),controladorIdioma.getListaPalabras().get(7),
 				new Integer(KeyEvent.VK_H));
+		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
+				new Integer(KeyEvent.VK_P));
 		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
 	}
@@ -228,6 +231,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		boton =(JButton) toolBar.add(recargar);
 		boton =(JButton) toolBar.add(anadirMuestra);
 		toolBar.add(Box.createHorizontalGlue());
+		boton =(JButton) toolBar.add(perfil);
 		boton =(JButton) toolBar.add(salir);
 		return toolBar;
 	}
@@ -255,6 +259,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		JMenuItem opcionMenu = new JMenuItem (anadirCampo);
 		menuEditar.add(opcionMenu);
 		opcionMenu = new JMenuItem (recargar);
+		menuEditar.add(opcionMenu);
+		opcionMenu = new JMenuItem (perfil);
 		menuEditar.add(opcionMenu);
 		return menuEditar;
 	}
@@ -320,7 +326,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 					}
 
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){
+			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
+				DialogoUsuario dialogoUsuario = new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager);
+			}
+			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();
 			}
 		}

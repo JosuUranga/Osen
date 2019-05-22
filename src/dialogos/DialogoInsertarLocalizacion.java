@@ -37,16 +37,9 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	Localizacion localizacion;
 	DBManager manager;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
-	//Date fecha = new SimpleDateFormat("yyyy-MM-dd").parse(fecha);
-	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
+	
 	boolean anadirLocalizacionSeleccionado=false;
-	public void setErrorIgual(boolean errorIgual) {
-		this.errorIgual = errorIgual;
-	}
-
-	int numVariables;
-	boolean errorRellenar=false;
-	boolean errorIgual=false;
+	
 	
 	
 	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, DBManager manager) {

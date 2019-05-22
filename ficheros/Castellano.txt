@@ -28,3 +28,12 @@ Ayuda
 Editar 
 Salir
 habitantes/km2
+Perfil
+Consulta la información del perfil de usuario
+Numero de usuario: 
+Tipo de usuario: 
+Nombre: 
+Contraseña: 
+Email: 
+Localización: 
+Idioma: 

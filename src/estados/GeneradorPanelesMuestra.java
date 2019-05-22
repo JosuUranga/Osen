@@ -1,4 +1,4 @@
-package muestras;
+package estados;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -13,6 +13,7 @@ import javax.swing.JTabbedPane;
 
 import graficos.Anillo;
 import idiomas.ControladorIdioma;
+import muestras.Muestra;
 
 public class GeneradorPanelesMuestra {
 	public final static int ESTADO_SIN_COMPARAR=1;
@@ -168,7 +169,17 @@ public class GeneradorPanelesMuestra {
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
 		else columnas=4;
 		
-		JPanel panel = new JPanel (new GridLayout(2,columnas));
+		JPanel panel = new JPanel (new GridLayout(3,columnas));
+		
+		
+		panel.add(crearPanelJLabel(new JLabel(" ")));
+		panel.add(crearPanelJLabel(new JLabel("Muestra 1 ")));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(panel.add(crearPanelJLabel(new JLabel("Muestra 2 "))));
+		
+		panel.add(crearPanelJLabel(new JLabel(" ")));
+		panel.add(crearPanelJLabel(new JLabel("Muestra 1 ")));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(panel.add(crearPanelJLabel(new JLabel("Muestra 2 "))));
+		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(22))));
 		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.ensenarTexto()[8])));
 		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[8])));
