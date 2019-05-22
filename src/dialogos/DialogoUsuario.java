@@ -7,19 +7,24 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.DBManager;
 import modelos.UsuarioVO;
+import osen.Principal;
 
 @SuppressWarnings("serial")
 public class DialogoUsuario extends JDialog{
@@ -28,12 +33,14 @@ public class DialogoUsuario extends JDialog{
 	List<String>listaPalabras;
 	DBManager manager;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
-	JTextField nombre, email, localizacion, idioma;
+	JTextField nombre, email;
+	JComboBox <String> localizacion, idioma;
 	JPasswordField pass;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	boolean editando=false;
 	UsuarioVO user;
 	JButton botonOK,botonEditar, botonSalir;
+	
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list, DBManager manager,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
@@ -42,12 +49,20 @@ public class DialogoUsuario extends JDialog{
 		this.setLocation (500,200);
 		this.user=user;
 		this.manager=manager;
+		this.cargarLocalizaciones();
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
 		
 	}
 	
+	private void cargarLocalizaciones() {
+		this.cargarDatosIdioma(idioma=new JComboBox<>());
+		this.localizacion=new JComboBox<>();
+		this.cargarDatosLocalizaciones();
+		//this.localizacion.setSelectedIndex(usuario.getLocalizacionIndex());		
+	}
+
 	private Container crearPanelDialogo() {
 		JPanel panel = new JPanel (new BorderLayout(0,20));
 		panel.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
@@ -92,12 +107,23 @@ public class DialogoUsuario extends JDialog{
 		
 		panel.add(crearTextField(email=new JTextField("andercarrera@hotmail.com"), listaPalabras.get(36)));
 		
-		panel.add(crearTextField(localizacion=new JTextField("Orio"), listaPalabras.get(37)));
+		panel.add(crearComboBox(localizacion, listaPalabras.get(37)));
 
-		panel.add(crearTextField(idioma=new JTextField("Castellano"), listaPalabras.get(38)));
+		panel.add(crearComboBox(idioma, listaPalabras.get(38)));
 
 		return panel;
 	}
+	private Component crearComboBox(JComboBox<String> text, String string) {
+		JPanel panel = new JPanel(new GridLayout(1,2));
+		JLabel label = new JLabel(string);	
+		label.setFont(fuenteTituloInfoGeneral);
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 30));
+		panel.add(label);
+		text.setEnabled(editando);
+		panel.add(text);
+		return panel;
+	}
+
 	private Component crearJLabelCombo(JLabel text, String titulo) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 		JLabel label = new JLabel(titulo);	
@@ -167,10 +193,36 @@ public class DialogoUsuario extends JDialog{
 		localizacion.setEnabled(editando);
 		idioma.setEnabled(editando);
 
-		
-
 	}
 	
+	public void cargarDatosIdioma(JComboBox<String> combo) {
+		ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
+				"FROM Idiomas\r\n" + 
+				"GROUP BY Idiomas.idiomaID;");
+		try {
+			combo.removeAllItems();
+			while(resultados.next()) {
+				String result=resultados.getString("descripcion");
+				combo.addItem(result);
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+		}
+		manager.conClose();		
+	}
+	public void cargarDatosLocalizaciones() {
+		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+				"FROM Localizaciones\r\n;");
+		try {
+			localizacion.removeAllItems();
+			while(resultados.next()) {
+				localizacion.addItem(resultados.getString("nombre"));
+			}
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+		}
+		manager.conClose();		
+	}
 	
 
 
