@@ -4,19 +4,19 @@ public class UsuarioVO {
 	int usuarioID;
 	String nombre;
 	String email;
-	int localizacion;
-	String idiomaSeleccionado; 
+	int localizacionId;
+	int idiomaSeleccionado; 
 	int tipo;
 	public final static int NORMAL=0;
 	public final static int PRO=1;
 	public final static int ADMIN=2;
 	 
-	public UsuarioVO(int ID, String nombre, String email, int localizacion, String idioma) { 
+	public UsuarioVO(int ID, String nombre, String email, int localizacion, int idioma) { 
 		this.idiomaSeleccionado=idioma; 
 		this.usuarioID=ID;
 		this.nombre=nombre;
 		this.email=email;
-		this.localizacion=localizacion;
+		this.localizacionId=localizacion;
 		tipo=0;
 	} 
  
@@ -45,11 +45,11 @@ public class UsuarioVO {
 	}
 
 	public int getLocalizacion() {
-		return localizacion;
+		return localizacionId;
 	}
 
 	public void setLocalizacion(int localizacion) {
-		this.localizacion = localizacion;
+		this.localizacionId = localizacion;
 	}
 
 	public int getTipo() {
@@ -61,11 +61,11 @@ public class UsuarioVO {
 			this.tipo = tipo;
 	}
 
-	public String getIdiomaSeleccionado() { 
+	public int getIdiomaSeleccionado() { 
 		return idiomaSeleccionado; 
 	} 
  
-	public void setIdiomaSeleccionado(String idiomaSeleccionado) { 
+	public void setIdiomaSeleccionado(int idiomaSeleccionado) { 
 		this.idiomaSeleccionado = idiomaSeleccionado; 
 	} 
 	 

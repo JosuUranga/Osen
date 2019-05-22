@@ -49,66 +49,6 @@ public class MuestraCo2 extends Muestra{
 	}
 
 	@Override
-	public String getFecha() {
-		// TODO Auto-generated method stub
-		return super.getFecha();
-	}
-
-	@Override
-	public void setFecha(String fecha) {
-		// TODO Auto-generated method stub
-		super.setFecha(fecha);
-	}
-
-	@Override
-	public float getDuracion() {
-		// TODO Auto-generated method stub
-		return super.getDuracion();
-	}
-
-	@Override
-	public void setDuracion(float duracion) {
-		// TODO Auto-generated method stub
-		super.setDuracion(duracion);
-	}
-
-	@Override
-	public String getMetorologia() {
-		// TODO Auto-generated method stub
-		return super.getMetorologia();
-	}
-
-	@Override
-	public void setMetorologia(String metorologia) {
-		// TODO Auto-generated method stub
-		super.setMetorologia(metorologia);
-	}
-
-	@Override
-	public Localizacion getLocalizacion() {
-		// TODO Auto-generated method stub
-		return super.getLocalizacion();
-	}
-
-	@Override
-	public void setLocalizacion(Localizacion localizacion) {
-		// TODO Auto-generated method stub
-		super.setLocalizacion(localizacion);
-	}
-
-	@Override
-	public String getUsuario() {
-		// TODO Auto-generated method stub
-		return super.getUsuario();
-	}
-
-	@Override
-	public void setUsuario(String usuario) {
-		// TODO Auto-generated method stub
-		super.setUsuario(usuario);
-	}
-	
-	@Override
 	public String[] ensenarTexto() {
 		String[] info= {this.getLocalizacion().getNombre(), Float.toString(this.getLocalizacion().getArea()),
 				Integer.toString(this.getLocalizacion().getHabitantes()), Float.toString(this.getLocalizacion().getDensidad()),

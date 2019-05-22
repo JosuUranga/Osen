@@ -20,6 +20,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.DBManager;
+import modelos.UsuarioDAO;
+import modelos.UsuarioVO;
 
 @SuppressWarnings("serial")
 public class DialogoUsuario extends JDialog{
@@ -32,13 +34,15 @@ public class DialogoUsuario extends JDialog{
 	JPasswordField pass;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	boolean editando=false;
+	UsuarioVO user;
 	JButton botonOK,botonEditar, botonSalir;
-	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list, DBManager manager) {
+	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list, DBManager manager,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
 		this.ventana=ventana;
 		this.setSize(600,500);
 		this.setLocation (500,200);
+		this.user=user;
 		this.manager=manager;
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
@@ -129,7 +133,7 @@ public class DialogoUsuario extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				toggleStatusEditando();
-				
+				//UsuarioDAO.getInstance("Admin","Osen!1234","osen","68.183.211.91").updateUser(nombre.getText(), pass.getPassword().toString(), email.getText(), localizacion.getText(), idioma.getText(), type, id);
 				
 			}
 			

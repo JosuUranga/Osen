@@ -12,9 +12,9 @@ public class ControladorIdioma {
 	 
 	PropertyChangeSupport soporte; 
 	FicheroIdioma ficheroIdioma; 
-	String idioma; 
+	int idioma; 
 	 
-	public ControladorIdioma(String idioma) { 
+	public ControladorIdioma(int idioma) { 
 		soporte=new PropertyChangeSupport(this); 
 		this.idioma=idioma; 
 	} 
@@ -26,7 +26,7 @@ public class ControladorIdioma {
 		soporte.removePropertyChangeListener(listener); 
 	} 
 	 
-	public void cambiarIdioma(String idioma) { 
+	public void cambiarIdioma(int idioma) { 
 		this.idioma=idioma; 
 	} 
 	 
@@ -36,13 +36,13 @@ public class ControladorIdioma {
  
 	public void cargarIdioma() { 
 		switch(idioma) { 
-		case "Castellano": 
+		case 0: 
 			ficheroIdioma=new FicheroIdioma(ficheroCastellano); 
 		break; 
-		case "Euskara": 
+		case 1: 
 			ficheroIdioma=new FicheroIdioma(ficheroEuskara); 
 		break; 
-		case "Ingles": 
+		case 2: 
 			ficheroIdioma=new FicheroIdioma(ficheroIngles); 
 		break; 
 		} 

@@ -84,7 +84,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setSize(1000,800);
 		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, "Castellano");
+		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, 0);
 		usuario.setTipo(2);
 		//iniciarNotis();
 		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());
@@ -327,7 +327,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				DialogoUsuario dialogoUsuario = new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager);
+				DialogoUsuario dialogoUsuario = new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager,usuario);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();
@@ -378,7 +378,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		case "localizacion":		
 			if(comboLocalizacion1.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
 			break;
-			
+		case "localizacion2":
+			if(comboLocalizacion2.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion2, comboMeteo2);
+			break;
+		case "meteo2":
+			if(comboMeteo2.getItemCount()!=0)this.cargarDatosFecha(comboLocalizacion2, comboMeteo2, comboFecha2);
+			break;
 		case "meteo":		
 			if(comboMeteo1.getItemCount()!=0)this.cargarDatosFecha(comboLocalizacion1, comboMeteo1, comboFecha1);
 			break;
@@ -400,7 +405,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		try {
 			resultados.next();
 			float duracion=(float) 10.5;
-			muestra=new MuestraCo2(resultados.getInt(1), resultados.getString(3), duracion, resultados.getInt(7), resultados.getFloat(6), resultados.getFloat(5), resultados.getFloat(8), resultados.getString(2), new Localizacion(resultados.getString(9),resultados.getInt(10),resultados.getFloat(11)), resultados.getString(12));
+			muestra=new MuestraCo2(resultados.getInt(1), resultados.getString(3), duracion, resultados.getInt(7), resultados.getFloat(6), resultados.getFloat(5), resultados.getFloat(8), resultados.getString(2), new Localizacion(resultados.getString(9),resultados.getInt(10),resultados.getFloat(11)), resultados.getString(4));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}

@@ -32,7 +32,7 @@ public class UsuarioDAO extends DBManager{
 			while (resultSet.next()) {
 				user = new UsuarioVO(resultSet.getInt("id"), resultSet.getString("name"),
 						resultSet.getString("email"), resultSet.getInt("localizacion"),
-						resultSet.getString("idioma"));
+						resultSet.getInt("idioma"));
 				user.setTipo(resultSet.getInt("tipo"));
 			}
 			con.close();
@@ -43,33 +43,28 @@ public class UsuarioDAO extends DBManager{
 		return user;
 	}
 
-	public void updateUser(int id, String name, String username, String password, String birth, double initialWeight,
-			double currentWeight, double height, double desiredWeight, int wantedDays, String type) {
+	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) {
 		Connection con = this.getConnection();
 		try {
 			statement = con.createStatement();
-			statement.executeUpdate("UPDATE user SET TYPE='" + type + "', NAME='" + name + "', HEIGHT='" + height
-					+ "', INITIAL_WEIGHT='" + initialWeight + "', CURRENT_WEIGHT='" + currentWeight + "', USERNAME='"
-					+ username + "', PASSWORD='" + password + "', DESIRED_WEIGHT='" + desiredWeight + "',WANTED_DAYS='"
-					+ wantedDays + "' WHERE ID='" + id + "';");
+			statement.executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion='"+localizacion+"', idioma='"+idioma+ "' WHERE usuarioID='" + id + "';");
+			statement.executeUpdate("UPDATE RelacionTipoUsuarios SET tipo='"+type+ "' WHERE usuario='" + id + "';");
 		} catch (SQLException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void addUser(String name, String username, String password, String birth, String initialWeight,
-			String currentWeight, String height, String desiredWeight, String wantedDays, String type) {
+	public void addUser(String name, String password,String email,int localizacion,int idioma,int type,int id) {
 		Connection con = this.getConnection();
 		try {
 			statement = con.createStatement();
 			statement.executeUpdate(
-					"INSERT INTO `osen`.`user` (`TYPE`, `NAME`, `HEIGHT`, `INITIAL_WEIGHT`, `USERNAME`, `PASSWORD`, `BIRTH`, `DESIRED_WEIGHT`, `WANTED_DAYS`) VALUES ('"
-							+ type + "', '" + name + "', '" + height + "', '" + initialWeight + "', '" + username
-							+ "', '" + password + "', '" + birth + "', '" + desiredWeight + "', '" + wantedDays
-							+ "');");
+					"INSERT INTO Usuarios (nombre, email, pass, localizacion, idioma) VALUES ('"
+							+ name + "', '" + email + "', '" + password + "', '" + localizacion + "', '" + idioma
+							+"');");
+			statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, '"+type+"', '"+id+");");
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 
 		}

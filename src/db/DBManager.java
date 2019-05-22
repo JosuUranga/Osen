@@ -1,8 +1,6 @@
 package db;
 import java.sql.*;
 
-import modelos.UsuarioDAO;
-
 public class DBManager {
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;

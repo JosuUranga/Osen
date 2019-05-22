@@ -95,7 +95,6 @@ public class GeneradorPanelesMuestra {
 		return panel;
 	}
 	private Component crearPanelInfoSur(Muestra muestra,Muestra muestra2) {
-		
 		int columnas;
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
 		else columnas=4;
