@@ -113,7 +113,7 @@ public class MuestraOzono extends Muestra{
 		return super.toString();
 	}
 	@Override
-	public String[] enseñarTexto() {
+	public String[] ensenarTexto() {
 		String[] info= {this.getLocalizacion().getNombre(), Float.toString(this.getLocalizacion().getArea()),
 				Integer.toString(this.getLocalizacion().getHabitantes()), Float.toString(this.getLocalizacion().getDensidad()),
 				Float.toString(this.getTemperatura()), Integer.toString(this.getOxigeno()), Float.toString(this.getHumedad()),

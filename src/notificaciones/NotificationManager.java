@@ -9,7 +9,7 @@ import java.sql.SQLException;
 import javax.swing.Timer;
 
 import db.DBManager;
-import osen.Usuario;
+import modelos.UsuarioVO;
 
 public class NotificationManager extends Thread {
 	private static final int MINUTOS = 60;
@@ -21,10 +21,10 @@ public class NotificationManager extends Thread {
 	Notificacion notificacion;
 	Timer timer;
 	Tiempo tiempo;
-	Usuario user;
+	UsuarioVO user;
 	ResultSet resultado;
 	int ultimaMuestra, muestraActual, co2eq;
-	public NotificationManager(String key, DBManager manager, Usuario usuario) {
+	public NotificationManager(String key, DBManager manager, UsuarioVO usuario) {
 		this.key=key;
 		this.user=usuario;
 		this.manager=manager;

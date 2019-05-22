@@ -109,7 +109,7 @@ public class MuestraCo2 extends Muestra{
 	}
 	
 	@Override
-	public String[] enseñarTexto() {
+	public String[] ensenarTexto() {
 		String[] info= {this.getLocalizacion().getNombre(), Float.toString(this.getLocalizacion().getArea()),
 				Integer.toString(this.getLocalizacion().getHabitantes()), Float.toString(this.getLocalizacion().getDensidad()),
 				Float.toString(this.getTemperatura()), Integer.toString(this.getCo2eq()), Float.toString(this.getHumedad()),

@@ -52,19 +52,19 @@ public class GeneradorPanelesMuestra {
 	}
 	private JTabbedPane getPanelSinComparar() {
 		JTabbedPane panel = new JTabbedPane();
-		System.out.println(muestra1);
+		
 		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
-		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1));
-		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficosSinCompa());
+		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,null));
+		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 		
 	}
 	private JTabbedPane getPanelComparando() {
 		JTabbedPane panel = new JTabbedPane();
-		System.out.println(muestra2+"muestra2");
+		
 		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
-		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1));
-		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficosCompa());
+		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,muestra2));
+		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 		
 	}
@@ -76,40 +76,46 @@ public class GeneradorPanelesMuestra {
 		return panel;
 		
 	}
-	private Component crearPanelGraficosSinCompa() {
+	private Component crearPanelGraficos() {
 		JPanel panel=new Anillo().getPanel();
 		return panel;
 	}
-	private Component crearPanelGraficosCompa() {
-		JPanel panel=new Anillo().getPanel();
-		return panel;
-	}
+	
 	private Component crearPanelMapa() {
 		JPanel panel = new JPanel (new BorderLayout(0,10));
 		
 		return panel;
 	}
-	private Component crearPanelInfoGeneral(Muestra muestra) {
+	private Component crearPanelInfoGeneral(Muestra muestra1,Muestra muestra2) {
 		JPanel panel = new JPanel (new GridLayout(3,1));
-		panel.add(crearPanelInfoNorte(muestra));
-		panel.add(crearPanelInfoCentro(muestra));
-		panel.add(crearPanelInfoSur(muestra));
+		panel.add(crearPanelInfoNorte(muestra1,muestra2));
+		panel.add(crearPanelInfoCentro(muestra1,muestra2));
+		panel.add(crearPanelInfoSur(muestra1,muestra2));
 		return panel;
 	}
-	private Component crearPanelInfoSur(Muestra muestra) {
-		JPanel panel = new JPanel (new GridLayout(2,2));
+	private Component crearPanelInfoSur(Muestra muestra,Muestra muestra2) {
+		
+		int columnas;
+		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
+		else columnas=4;
+		
+		JPanel panel = new JPanel (new GridLayout(2,columnas));
 		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(13))));
-		panel.add(crearPanelJLabel(labelLugar=new JLabel(muestra.enseñarTexto()[0])));
+		panel.add(crearPanelJLabel(labelLugar=new JLabel(muestra.ensenarTexto()[0])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[0])));
 		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(14))));
-		panel.add(crearPanelJLabel(labelArea=new JLabel(muestra.enseñarTexto()[1])));
+		panel.add(crearPanelJLabel(labelArea=new JLabel(muestra.ensenarTexto()[1])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[1])));
 		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(15))));
-		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(muestra.enseñarTexto()[2])));
+		panel.add(crearPanelJLabel(labelHabitantes=new JLabel(muestra.ensenarTexto()[2])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[2])));
 		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(16))));
-		panel.add(crearPanelJLabel(labelDensidad=new JLabel(muestra.enseñarTexto()[3])));
+		panel.add(crearPanelJLabel(labelDensidad=new JLabel(muestra.ensenarTexto()[3])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[3])));
 		
 		return panel;
 	}
@@ -119,6 +125,7 @@ public class GeneradorPanelesMuestra {
 	private Component crearPanelJLabelTitulo(JLabel label) {
 		JPanel panel = new JPanel (new BorderLayout(10,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		label.setHorizontalAlignment(0);
 		label.setFont(fuenteTituloInfoGeneral);
 		panel.add(label);
 
@@ -127,27 +134,35 @@ public class GeneradorPanelesMuestra {
 
 
 
-	private Component crearPanelInfoCentro(Muestra muestra) {
-		JPanel panel = new JPanel (new GridLayout(2,2));
+	private Component crearPanelInfoCentro(Muestra muestra,Muestra muestra2) {
+		int columnas;
+		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
+		else columnas=4;
+		
+		JPanel panel = new JPanel (new GridLayout(2,columnas));
 		panel.setBorder(BorderFactory.createTitledBorder(BorderFactory.createLineBorder(Color.black,2), controladorIdioma.getListaPalabras().get(17)));
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(18))));
-		panel.add(crearPanelJLabel(labelTemp=new JLabel(muestra.enseñarTexto()[4])));
+		panel.add(crearPanelJLabel(labelTemp=new JLabel(muestra.ensenarTexto()[4])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[4])));
 		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(19))));
-		panel.add(crearPanelJLabel(labelCo2=new JLabel(muestra.enseñarTexto()[5])));
-		
+		panel.add(crearPanelJLabel(labelCo2=new JLabel(muestra.ensenarTexto()[5])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[5])));
+
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(20))));
-		panel.add(crearPanelJLabel(labelHumedad=new JLabel(muestra.enseñarTexto()[6])));
-		
+		panel.add(crearPanelJLabel(labelHumedad=new JLabel(muestra.ensenarTexto()[6])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[6])));
+
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(21))));
-		panel.add(crearPanelJLabel(labelVoc=new JLabel(muestra.enseñarTexto()[7])));
-		
+		panel.add(crearPanelJLabel(labelVoc=new JLabel(muestra.ensenarTexto()[7])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[7])));
+
 		return panel;
 	}
 
 
 
-	private Component crearPanelInfoNorte(Muestra muestra) {
+	private Component crearPanelInfoNorte(Muestra muestra,Muestra muestra2) {
 		
 		int columnas;
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
@@ -155,18 +170,20 @@ public class GeneradorPanelesMuestra {
 		
 		JPanel panel = new JPanel (new GridLayout(2,columnas));
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(22))));
-		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.enseñarTexto()[8])));
-		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.enseñarTexto()[8])));
+		panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra.ensenarTexto()[8])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[8])));
 
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(23))));
-		panel.add(crearPanelJLabel(labelFecha=new JLabel(muestra.enseñarTexto()[9])));
-
+		panel.add(crearPanelJLabel(labelFecha=new JLabel(muestra.ensenarTexto()[9])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[9])));
+		
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(24))));
-		panel.add(crearPanelJLabel(labelMeteo=new JLabel(muestra.enseñarTexto()[10])));
+		panel.add(crearPanelJLabel(labelMeteo=new JLabel(muestra.ensenarTexto()[10])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[10])));
 
 		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(25))));
-		panel.add(crearPanelJLabel(labelUsuario=new JLabel(muestra.enseñarTexto()[11])));
-		
+		panel.add(crearPanelJLabel(labelUsuario=new JLabel(muestra.ensenarTexto()[11])));
+		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[11])));
 		
 		return panel;
 	}
@@ -176,6 +193,7 @@ public class GeneradorPanelesMuestra {
 	private Component crearPanelJLabel(JLabel label) {
 		JPanel panel = new JPanel (new BorderLayout(10,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 10, 10, 10));
+		label.setHorizontalAlignment(0);
 		panel.add(label);
 
 		return panel;

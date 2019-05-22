@@ -41,6 +41,7 @@ import estados.GestorEstadosAnadirMuestra;
 import graficos.Anillo;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
+import modelos.UsuarioVO;
 import muestras.GeneradorPanelesMuestra;
 import muestras.Localizacion;
 import muestras.Muestra;
@@ -67,7 +68,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
 	DBManager manager;
-	Usuario usuario;
+	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
@@ -80,10 +81,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		super("OSEN");
 		this.setLocation (340,100);
 		this.setSize(1000,800);
-		
-		manager = new DBManager(dbuser,dbpass,dbname,dbip);
+		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		usuario = new Usuario(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, "Castellano");
+		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, "Castellano");
 		usuario.setTipo(2);
 		//iniciarNotis();
 		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());

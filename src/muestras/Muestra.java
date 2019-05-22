@@ -63,7 +63,7 @@ public abstract class Muestra {
 		this.usuario = usuario;
 	}
 	
-	public abstract String[] enseñarTexto();
+	public abstract String[] ensenarTexto();
 	
 	
 }

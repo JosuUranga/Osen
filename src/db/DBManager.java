@@ -1,6 +1,8 @@
 package db;
 import java.sql.*;
 
+import modelos.UsuarioDAO;
+
 public class DBManager {
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;
@@ -10,11 +12,18 @@ public class DBManager {
 	private String DBNAME = "osen";
 	private String IP = "localhost";
 	Connection connect;
-	public DBManager(String u,String p,String db,String ip) {
+	static DBManager instance;
+	protected DBManager(String u,String p,String db,String ip) {
 		this.USER=u;
 		this.PASS=p;
 		this.DBNAME=db;
 		this.IP=ip;
+	}
+	public static DBManager getInstance(String u,String p,String db,String ip) {
+		if (instance == null) {
+			instance = new DBManager(u,p,db,ip);
+		}
+		return instance;
 	}
 	public void conClose() {
 		try {
