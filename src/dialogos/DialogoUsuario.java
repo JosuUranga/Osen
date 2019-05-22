@@ -3,7 +3,6 @@ package dialogos;
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
-import java.awt.FlowLayout;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
@@ -20,7 +19,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.DBManager;
-import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 
 @SuppressWarnings("serial")
