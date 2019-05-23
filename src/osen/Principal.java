@@ -12,6 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.io.LineNumberInputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -36,6 +37,7 @@ import javax.swing.UnsupportedLookAndFeelException;
 
 import db.DBManager;
 import dialogos.DialogoUsuario;
+import dialogos.Login;
 import estados.GeneradorPanelesMuestra;
 import estados.GestorEstadosAnadirMuestra;
 import idiomas.ControladorIdioma;
@@ -52,10 +54,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	File file = new File("ficheros/TeoriaCo2.pdf");
 	
-	final static String dbuser="Admin";
-	final static String dbpass="Osen!1234";
-	final static String dbname="osen";
-	final static String dbip="68.183.211.91";
+	public final static String dbuser="Admin";
+	public final static String dbpass="Osen!1234";
+	public final static String dbname="osen";
+	public final static String dbip="68.183.211.91";
 
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
@@ -75,18 +77,18 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	Muestra muestra1,muestra2;
 	Component combo;
 	NotificationManager notiManager;
+	Login login;
 	public Principal(){
 		super("OSEN");
+		
+		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
+		this.loguear();
 		this.setLocation (340,100);
 		this.setSize(1000,800);
-		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu","kaixo", 1, 0);
-		usuario.setTipo(2);
+		
 		//iniciarNotis();
-		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());
-		controladorIdioma.addPropertyChangeListener(this);
-		controladorIdioma.cargarIdioma();
+		
 		generadorPan=new GeneradorPanelesMuestra(controladorIdioma);
 		this.crearAcciones();
 		this.crearComboBox1();
@@ -99,6 +101,19 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		//lsP.accion();
 	}
 	
+
+	private void loguear() {
+		login = new Login(this, manager);
+		controladorIdioma=login.getControladorIdioma();
+		System.out.println(login.esCorrecto());
+		if(login.esCorrecto()) {
+			usuario=login.getUser();
+		}else {
+			this.dispose();
+			System.exit(1);
+		}		
+	}
+
 
 	private void iniciarNotis() {
 		if(usuario.getTipo()>0) {

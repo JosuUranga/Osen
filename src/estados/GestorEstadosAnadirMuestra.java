@@ -47,8 +47,9 @@ public class GestorEstadosAnadirMuestra {
 			break;
 			
 		case 2://añadir localizacion
-			@SuppressWarnings("unused") DialogoInsertarLocalizacion dialogoInsertarLocalizacion= new 
-			DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, manager);
+			@SuppressWarnings("unused") 
+			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
+			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, manager);
 			break;
 			
 		case 3://sensor

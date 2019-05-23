@@ -23,7 +23,6 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.DBManager;
-import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 
 @SuppressWarnings("serial")

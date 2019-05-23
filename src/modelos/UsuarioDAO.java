@@ -22,13 +22,15 @@ public class UsuarioDAO extends DBManager{
 		return super.getConnection();
 	}
 	
-	public UsuarioVO getUser(String nombre, String password) {
+	public UsuarioVO getUser(String email, String password) throws SQLException{
 		UsuarioVO user=null;
 		Connection con = this.getConnection();
-		try {
+		
 			statement = con.createStatement();
 			resultSet = statement.executeQuery(
-					"select * from user where username='" + nombre + "' and password='" + password + "';");
+					"select * "
+					+ "from Usuarios JOIN RelacionTipoUsuarios ON Usuarios.usuarioID=RelacionTipoUsuarios.usuario "
+					+ "where email='" + email + "' and pass='" + password + "';");
 			while (resultSet.next()) {
 				user = new UsuarioVO(resultSet.getInt("usuarioID"), resultSet.getString("nombre"),
 						resultSet.getString("email"),resultSet.getString("pass"), resultSet.getInt("localizacion"),
@@ -36,40 +38,34 @@ public class UsuarioDAO extends DBManager{
 				user.setTipo(resultSet.getInt("tipo"));
 			}
 			con.close();
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		
 		return user;
 	}
 
-	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) {
+	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) throws SQLException{
 		Connection con = this.getConnection();
-		try {
+		
 			statement = con.createStatement();
-			statement.executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion='"+localizacion+"', idioma='"+idioma+ "' WHERE usuarioID='" + id + "';");
-			statement.executeUpdate("UPDATE RelacionTipoUsuarios SET tipo='"+type+ "' WHERE usuario='" + id + "';");
-		} catch (SQLException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+			statement.executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion="+localizacion+", idioma="+idioma+ " WHERE usuarioID=" + id + ";");
+			statement.executeUpdate("UPDATE RelacionTipoUsuarios SET tipo="+type+ " WHERE usuario=" + id + ";");
+		
 	}
 
-	public void addUser(String name, String password,String email,int localizacion,int idioma,int type) {
+	public void addUser(String name, String password,String email,int idioma) throws SQLException{
 		Connection con = this.getConnection();
-		try {
+		String localizacion ="null";
+		System.out.println(password);
+
+		int type = 0;
 			statement = con.createStatement();
 			statement.executeUpdate(
 					"INSERT INTO Usuarios (nombre, email, pass, localizacion, idioma) VALUES ('"
-							+ name + "', '" + email + "', '" + password + "', '" + localizacion + "', '" + idioma
-							+"');");
+							+ name + "', '" + email + "', '" + password + "', " + localizacion + ", " + idioma
+							+");");
 			resultSet=statement.executeQuery("SELECT usuarioID FROM Usuarios WHERE email='"+email+"'");
 			resultSet.next();
 			int id=resultSet.getInt("usuarioID");
-			statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, '"+type+"', '"+id+");");
-		} catch (SQLException e) {
-			e.printStackTrace();
-
-		}
+			statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, "+type+", "+id+");");
+		
 	}
 }

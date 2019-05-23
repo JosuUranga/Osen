@@ -205,7 +205,7 @@ public class DialogoInsertarMuestra extends JDialog{
 					resultado.next();
 					numeroLocalizacion=Integer.toString(resultado.getInt(1));
 				} catch (SQLException e) {
-					e.printStackTrace();
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				}
 				if(hiloProgressBar!=null)hiloProgressBar.interrupt();
 				
@@ -218,7 +218,7 @@ public class DialogoInsertarMuestra extends JDialog{
 					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no v�lido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no valido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
