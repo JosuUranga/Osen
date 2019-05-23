@@ -12,7 +12,7 @@ Mapa
 Informacion general
 Graficos
 Lugar: 
-Area: 
+Area (km2):  
 Habitantes: 
 Densidad:  
 Datos medioambientales 
@@ -37,3 +37,16 @@ Contraseña:
 Email: 
 Localización: 
 Idioma: 
+Cancelar
+Ya existe un usuario en la base de datos con los datos proporcionados
+Codigo de error SQL: 
+Formato no valido: (
+Aviso
+Iniciar
+La muestra se ha tomado correctamente
+Anadir localizacion
+Crear usuario
+Iniciar sesion
+La informacion introducida no es valida
+Error
+Datos incorrectos: no existe ningun usuario con los datos proporcionados

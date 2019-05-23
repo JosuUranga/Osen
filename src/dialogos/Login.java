@@ -86,10 +86,10 @@ public class Login extends JDialog implements ActionListener{
 	public Container crearPanelTextos() {
 		JPanel panel=new JPanel(new GridLayout(2,2,10,10));
 		JLabel label,label2;
-		label=new JLabel("Usuario:");
+		label=new JLabel(listaPalabras.get(32));
 		panel.setBackground(Color.white);
 		label.setHorizontalAlignment(JLabel.LEFT);
-		label2=new JLabel("Contraseña:");
+		label2=new JLabel(listaPalabras.get(35));
 		label2.setHorizontalAlignment(JLabel.LEFT);
 		panel.add(label);
 		usuario=new JTextField();
@@ -105,12 +105,12 @@ public class Login extends JDialog implements ActionListener{
 		JPanel panel=new JPanel(new GridLayout(1,2,40,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 		panel.setBackground(Color.white);
-		logear=new JButton("Entrar");
+		logear=new JButton(listaPalabras.get(47));
 		logear.setActionCommand("logear");
 		this.getRootPane().setDefaultButton(logear);
 		logear.addActionListener(this);
 		panel.add(logear);
-		logear=new JButton("Crear usuario");
+		logear=new JButton(listaPalabras.get(48));
 		logear.setActionCommand("signup");
 		logear.addActionListener(this);
 		panel.add(logear);
@@ -132,18 +132,18 @@ public class Login extends JDialog implements ActionListener{
 					this.dispose();
 				}
 				else {
-					JOptionPane.showMessageDialog(Login.this, "La informacion introducida no es valida", "Error", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Login.this, listaPalabras.get(49), listaPalabras.get(50), JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (SQLException e1) {
-				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, "Datos incorrectos: no existe ningun usuario con los datos proporcionados", "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-				else JOptionPane.showMessageDialog(Login.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, listaPalabras.get(51), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				else JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 			} catch (NumberFormatException e2) {
-				JOptionPane.showMessageDialog(Login.this, "Formato no válido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(Login.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
 			}	 
 			
 		}
 		if(e.getActionCommand().equals("signup")) {
-			new DialogoCrearUsuario(this, "Crear Usuario", true, listaPalabras, manager);
+			new DialogoCrearUsuario(this, listaPalabras.get(47), true, listaPalabras, manager);
 		}
 	}
 	public Boolean esCorrecto() {

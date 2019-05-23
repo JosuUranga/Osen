@@ -111,7 +111,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	private Component crearPanelBotonStart() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0,220));
-		JButton boton3 = new JButton ("Start");
+		JButton boton3 = new JButton (listaPalabras.get(44));
 		
 		
 		boton3.addActionListener(new ActionListener(){
@@ -135,7 +135,7 @@ public class DialogoInsertarMuestra extends JDialog{
 						e.printStackTrace();
 					}
 				}
-				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "La muestra se ha tomado correctamente", "Aviso", JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(45), listaPalabras.get(43), JOptionPane.PLAIN_MESSAGE);
 				botonOK.setEnabled(true);
 
 			}		
@@ -159,13 +159,13 @@ public class DialogoInsertarMuestra extends JDialog{
 		JPanel panel = new JPanel(new BorderLayout(30,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(35, 10, 50, 10));
 
-		panel.add(crearPanelDatosFila("Meteorologia: ",comboMeteorologia));
+		panel.add(crearPanelDatosFila(listaPalabras.get(24),comboMeteorologia));
 		return panel;
 	}
 	private Component crearPanelDatosFila1() {
 		JPanel panel = new JPanel(new BorderLayout(30,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(45, 10, 40, 20));
-		JButton boton4 = new JButton ("Anadir localizacion");
+		JButton boton4 = new JButton (listaPalabras.get(46));
 		
 		
 		boton4.addActionListener(new ActionListener(){
@@ -177,7 +177,7 @@ public class DialogoInsertarMuestra extends JDialog{
 			}
 		});
 		
-		panel.add(crearPanelDatosFila("Lugar: ",comboLocalizacion),BorderLayout.CENTER);
+		panel.add(crearPanelDatosFila(listaPalabras.get(13),comboLocalizacion),BorderLayout.CENTER);
 		panel.add(boton4,BorderLayout.EAST);
 
 		
@@ -215,10 +215,10 @@ public class DialogoInsertarMuestra extends JDialog{
 					DialogoInsertarMuestra.this.dispose();
 
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, "Formato no valido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
 				}
 
 			}

@@ -69,7 +69,7 @@ public class DialogoCrearUsuario extends JDialog{
 	
 
 	private Component crearPanelBoton(JButton boton) {
-		JPanel panel = new JPanel(new GridLayout(1,1));
+		JPanel panel = new JPanel(new GridLayout(1,2,30,0));
 		panel.setBorder(BorderFactory.createEmptyBorder(10, 30, 10, 30));
 
 		boton.addActionListener(new ActionListener(){
@@ -82,16 +82,26 @@ public class DialogoCrearUsuario extends JDialog{
 					DialogoCrearUsuario.this.dispose();
 
 				} catch (SQLException e1) {
-					if(e1.getErrorCode()==1062) JOptionPane.showMessageDialog(DialogoCrearUsuario.this, "Ya existe un usuario en la base de datos con los datos proporcionados", "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-					else JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					if(e1.getErrorCode()==1062) JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.get(40), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					else JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, "Formato no valido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			
 		});
 		panel.add(boton);
+		JButton boton2= new JButton(listaPalabras.get(39));
+		boton2.addActionListener(new ActionListener(){
+
+			@Override
+			public void actionPerformed(ActionEvent e) {
+				DialogoCrearUsuario.this.dispose();
+			}
+			
+		});
+		panel.add(boton2);
 		return panel;
 	}
 
@@ -158,7 +168,7 @@ public class DialogoCrearUsuario extends JDialog{
 				combo.addItem(result);
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();		
 	}

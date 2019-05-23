@@ -83,9 +83,9 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(3,1));
 		
-		panel.add(crearTextField(nombre=new JTextField(), "Nombre: "));
-		panel.add(crearTextField(habitantes=new JTextField(), "Habitantes: "));
-		panel.add(crearTextField(area=new JTextField(), "Area (m2): "));
+		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.get(34)));
+		panel.add(crearTextField(habitantes=new JTextField(), listaPalabras.get(154)));
+		panel.add(crearTextField(area=new JTextField(), listaPalabras.get(14)));
 
 		
 
@@ -130,7 +130,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 			
 		});
 	
-		JButton boton2 = new JButton ("Cancel");
+		JButton boton2 = new JButton (listaPalabras.get(39));
 		boton2.addActionListener(new ActionListener(){
 		
 			public void actionPerformed(ActionEvent arg0) {

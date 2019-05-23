@@ -333,7 +333,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			}
 			if(texto.equals(controladorIdioma.getListaPalabras().get(6))) {//ayuda
 				
-				System.out.println("Ayuda");
 				Desktop desktop = Desktop.getDesktop();
 		        
 		        if(file.exists())
@@ -345,7 +344,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager,usuario);
+				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), manager,usuario);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();

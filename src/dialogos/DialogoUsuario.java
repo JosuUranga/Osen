@@ -176,7 +176,7 @@ public class DialogoUsuario extends JDialog{
 		});
 		panel.add(botonOK);
 		
-		botonEditar = new JButton ("Editar");
+		botonEditar = new JButton (listaPalabras.get(27));
 	
 		botonEditar.addActionListener(new ActionListener(){
 
@@ -218,7 +218,7 @@ public class DialogoUsuario extends JDialog{
 				combo.addItem(result);
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();		
 	}
@@ -231,7 +231,7 @@ public class DialogoUsuario extends JDialog{
 				combo.addItem(resultados.getString("nombre"));
 			}
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		manager.conClose();		
 	}
