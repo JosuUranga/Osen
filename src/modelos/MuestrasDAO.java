@@ -14,7 +14,7 @@ public class MuestrasDAO extends DBManager{
 	ResultSet resultSet, tempResultSet;
 	CallableStatement callStatement;
 	static MuestrasDAO instance;
-	public final static String getMuestra="{CALL get_muestra(?)}";
+	private final static String getMuestra="{CALL get_muestra(?)}";
 
 	protected MuestrasDAO(String u, String p, String db, String ip) {
 		super(u, p, db, ip);
@@ -45,27 +45,18 @@ public class MuestrasDAO extends DBManager{
 		return muestra;
 	}
 
-	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) {
-		Connection con = this.getConnection();
+	public void delMuestra(int id) {
 		try {
-			statement = con.createStatement();
-			statement.executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion='"+localizacion+"', idioma='"+idioma+ "' WHERE usuarioID='" + id + "';");
-			statement.executeUpdate("UPDATE RelacionTipoUsuarios SET tipo='"+type+ "' WHERE usuario='" + id + "';");
+			execute("DELETE FROM Muestras WHERE muestraID="+id);
 		} catch (SQLException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	public void addMuestra(String name, String password,String email,int localizacion,int idioma,int type,int id) {
-		Connection con = this.getConnection();
+	public void addMuestra(Float duracion, int co2eq,int humedad,int temp,int voc,int meteorologia,int localizacion,int usuario) {
 		try {
-			statement = con.createStatement();
-			statement.executeUpdate(
-					"INSERT INTO Usuarios (nombre, email, pass, localizacion, idioma) VALUES ('"
-							+ name + "', '" + email + "', '" + password + "', '" + localizacion + "', '" + idioma
-							+"');");
-			statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, '"+type+"', '"+id+");");
+			execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) "
+					+ "VALUES (curdate(), "+duracion+", "+co2eq+", "+humedad+", "+temp+", "+voc+", "+meteorologia+", "+ localizacion+", "+usuario+")");
 		} catch (SQLException e) {
 			e.printStackTrace();
 

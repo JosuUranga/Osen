@@ -10,9 +10,7 @@ public class DBManager {
 	private String DBNAME = "osen";
 	private String IP = "localhost";
 	public final static String getIdioma="{CALL get_idioma(?)}";
-	public final static String getMeteo="{CALL get_meteo(?)}";
-	public final static String insertLocalizacion="{CALL insert_Localizacion(?)}";
-	public final static String getLocalizacionMuestra="{CALL get_localizacion_where_exists_muestra(?)}";
+	
 	public final static String getFechas="{CALL get_fechas(?)}";
 	
 	Connection connect;
