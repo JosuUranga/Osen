@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.List;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -41,6 +42,8 @@ import estados.GeneradorPanelesMuestra;
 import estados.GestorEstadosAnadirMuestra;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
+import modelos.LocalizacionDAO;
+import modelos.MuestrasDAO;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
 import muestras.Muestra;
@@ -411,34 +414,23 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String meteo=comboMeteo.getSelectedItem().toString();
 		String fecha=comboFecha.getSelectedItem().toString();
 		Muestra muestra=null;
-		String condicion=(" WHERE Localizaciones.nombre = '"+ pueblo+"' AND Meteos.descripcion='"+meteo+"' AND fecha='"+fecha+"'");
-		
-		ResultSet resultados = manager.executeQuery("SELECT Muestras.muestraID, Meteos.descripcion, Muestras.fecha, Usuarios.nombre, Muestras.temperatura, Muestras.humedad, Muestras.co2eq, Muestras.voc, Localizaciones.nombre AS lugar, Localizaciones.habitantes, Localizaciones.areakm2, Localizaciones.habitantes/Localizaciones.areakm2 AS 'densidad (habitantes/km2)'\r\n" + 
-				"FROM ((Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID)JOIN Usuarios ON Muestras.usuario=Usuarios.usuarioID\r\n" + 
-				condicion+";");
 		try {
-			resultados.next();
-			float duracion=(float) 10.5;
-			muestra=new MuestraCo2(resultados.getInt(1), resultados.getString(3), duracion, resultados.getInt(7), resultados.getFloat(6), resultados.getFloat(5), resultados.getFloat(8), resultados.getString(2), new Localizacion(resultados.getString(9),resultados.getInt(10),resultados.getFloat(11)), resultados.getString(4));
-		} catch (SQLException e) {
+			muestra=MuestrasDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+					.getMuestra(1,pueblo, fecha);
+			} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		return muestra;
 	}
 	public void cargarDatosLocalizacionMuestra(JComboBox<String> comboLocalizacion) {
-		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
-				"FROM Muestras JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
-				"GROUP BY Localizaciones.localizacionID;");
 		try {
-			comboLocalizacion.removeAllItems();
-			while(resultados.next()) {
-				String result=resultados.getString("nombre");
-				comboLocalizacion.addItem(result);
-			}
+			List<Localizacion>lista=LocalizacionDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+					.getLocalizacionesMuestra();
+			comboLocalizacion.removeAll();
+			lista.forEach(loca->comboLocalizacion.addItem(loca.toString()));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();		
 	}
 	
 	

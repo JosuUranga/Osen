@@ -9,9 +9,9 @@ public class DBManager {
 	private String PASS = "";
 	private String DBNAME = "osen";
 	private String IP = "localhost";
-	public final static String getIdioma="{CALL get_idioma(?)}";
+	public final static String getIdioma="{CALL get_idioma()}";
 	
-	public final static String getFechas="{CALL get_fechas(?)}";
+	public final static String getFechas="{CALL get_fechas(?,?)}";
 	
 	Connection connect;
 	static DBManager instance;

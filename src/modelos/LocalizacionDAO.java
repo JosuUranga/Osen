@@ -17,9 +17,9 @@ public class LocalizacionDAO extends DBManager{
 	static LocalizacionDAO instance;
 	Localizacion localizacion;
 	List<Localizacion>listLoca;
-	public final static String insertLocalizacion="{CALL insert_Localizacion(?)}";
-	public final static String getLocalizacionMuestra="{CALL get_localizacion_where_exists_muestra(?)}";
-	public final static String getAllLocalizaciones="{CALL get_localizaciones(?)}";
+	public final static String insertLocalizacion="{CALL insert_Localizacion(?,?,?)}";
+	public final static String getLocalizacionMuestra="{CALL get_localizacion_where_exists_muestra()}";
+	public final static String getAllLocalizaciones="{CALL get_localizaciones()}";
 	
 	protected LocalizacionDAO(String u, String p, String db, String ip) {
 		super(u, p, db, ip);

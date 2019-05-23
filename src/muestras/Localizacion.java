@@ -22,6 +22,10 @@ public class Localizacion {
 	public float getDensidad() {
 		return (float)habitantes/area;
 	}
+	public String toString() {
+		return this.nombre;
+		
+	}
 	
 	
 	

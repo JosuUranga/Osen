@@ -14,7 +14,7 @@ public class MuestrasDAO extends DBManager{
 	ResultSet resultSet, tempResultSet;
 	CallableStatement callStatement;
 	static MuestrasDAO instance;
-	private final static String getMuestra="{CALL get_muestra(?)}";
+	private final static String getMuestra="{CALL get_muestra(?,?,?)}";
 
 	protected MuestrasDAO(String u, String p, String db, String ip) {
 		super(u, p, db, ip);
@@ -25,20 +25,19 @@ public class MuestrasDAO extends DBManager{
 		}
 		return instance;
 	}	
-	public Muestra getMuestra(int id, String fecha) {
+	public Muestra getMuestra(int id,String localizacion, String fecha) throws SQLException {
 		Muestra muestra=null;
 		try {
 			SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 			java.util.Date date = sdf1.parse(fecha);
 			callStatement=executeCall(getMuestra);
-			callStatement.setInt(0, id);
-			callStatement.setDate(1, new Date(date.getTime()));
+			callStatement.setInt(1, id);
+			callStatement.setString(2, localizacion);
+			callStatement.setDate(3, new Date(date.getTime()));
 			resultSet=callStatement.executeQuery();
 			resultSet.next();
 			float duracion=(float) 10.5;
 			muestra=new MuestraCo2(resultSet.getInt(1), resultSet.getString(2), duracion, resultSet.getInt(3), resultSet.getFloat(4), resultSet.getFloat(5), resultSet.getFloat(6), resultSet.getString(7), new Localizacion(resultSet.getString(8),resultSet.getInt(9),resultSet.getFloat(10)), resultSet.getString(11));
-		} catch (SQLException e) {
-			e.printStackTrace();
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
