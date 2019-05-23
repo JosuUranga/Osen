@@ -4,6 +4,7 @@ public class UsuarioVO {
 	int usuarioID;
 	String nombre;
 	String email;
+	String pass;
 	int localizacionId;
 	int idiomaSeleccionado; 
 	int tipo;
@@ -11,15 +12,24 @@ public class UsuarioVO {
 	public final static int PRO=1;
 	public final static int ADMIN=2;
 	 
-	public UsuarioVO(int ID, String nombre, String email, int localizacion, int idioma) { 
+	public UsuarioVO(int ID, String nombre, String email,String pass, int localizacion, int idioma) { 
 		this.idiomaSeleccionado=idioma; 
 		this.usuarioID=ID;
 		this.nombre=nombre;
 		this.email=email;
+		this.pass=pass;
 		this.localizacionId=localizacion;
 		tipo=0;
 	} 
  
+	public String getPass() {
+		return pass;
+	}
+
+	public void setPass(String pass) {
+		this.pass = pass;
+	}
+
 	public int getUsuarioID() {
 		return usuarioID;
 	}

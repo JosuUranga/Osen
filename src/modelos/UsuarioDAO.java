@@ -30,8 +30,8 @@ public class UsuarioDAO extends DBManager{
 			resultSet = statement.executeQuery(
 					"select * from user where username='" + nombre + "' and password='" + password + "';");
 			while (resultSet.next()) {
-				user = new UsuarioVO(resultSet.getInt("id"), resultSet.getString("name"),
-						resultSet.getString("email"), resultSet.getInt("localizacion"),
+				user = new UsuarioVO(resultSet.getInt("usuarioID"), resultSet.getString("nombre"),
+						resultSet.getString("email"),resultSet.getString("pass"), resultSet.getInt("localizacion"),
 						resultSet.getInt("idioma"));
 				user.setTipo(resultSet.getInt("tipo"));
 			}

@@ -1,6 +1,5 @@
 package osen;
 import java.awt.BorderLayout;
-import java.awt.Color;
 import java.awt.Component;
 import java.awt.Container;
 import java.awt.Desktop;
@@ -31,7 +30,6 @@ import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
 import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
@@ -40,7 +38,6 @@ import db.DBManager;
 import dialogos.DialogoUsuario;
 import estados.GeneradorPanelesMuestra;
 import estados.GestorEstadosAnadirMuestra;
-import graficos.Anillo;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.UsuarioVO;
@@ -48,9 +45,9 @@ import muestras.Localizacion;
 import muestras.Muestra;
 import muestras.MuestraCo2;
 import notificaciones.NotificationManager;
-import idiomas.ControladorIdioma;
 
 
+@SuppressWarnings("serial")
 public class Principal extends JFrame implements ActionListener, PropertyChangeListener{
 
 	File file = new File("ficheros/TeoriaCo2.pdf");
@@ -84,7 +81,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setSize(1000,800);
 		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu", 1, 0);
+		usuario = new UsuarioVO(1, "Mikel", "imanol.rubio@alumni.mondragon.edu","kaixo", 1, 0);
 		usuario.setTipo(2);
 		//iniciarNotis();
 		controladorIdioma=new ControladorIdioma(usuario.getIdiomaSeleccionado());

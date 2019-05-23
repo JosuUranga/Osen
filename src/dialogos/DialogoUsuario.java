@@ -23,8 +23,8 @@ import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
 import db.DBManager;
+import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
-import osen.Principal;
 
 @SuppressWarnings("serial")
 public class DialogoUsuario extends JDialog{
@@ -32,7 +32,6 @@ public class DialogoUsuario extends JDialog{
 	JFrame ventana;
 	List<String>listaPalabras;
 	DBManager manager;
-	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	JTextField nombre, email;
 	JComboBox <String> localizacion, idioma;
 	JPasswordField pass;
@@ -49,18 +48,19 @@ public class DialogoUsuario extends JDialog{
 		this.setLocation (500,200);
 		this.user=user;
 		this.manager=manager;
-		this.cargarLocalizaciones();
+		this.cargarLocalizacionesIdioma();
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
 		
 	}
 	
-	private void cargarLocalizaciones() {
+	private void cargarLocalizacionesIdioma() {
 		this.cargarDatosIdioma(idioma=new JComboBox<>());
-		this.localizacion=new JComboBox<>();
-		this.cargarDatosLocalizaciones();
-		//this.localizacion.setSelectedIndex(usuario.getLocalizacionIndex());		
+		this.idioma.setSelectedIndex(user.getIdiomaSeleccionado());
+		
+		this.cargarDatosLocalizaciones(localizacion=new JComboBox<>());
+		this.localizacion.setSelectedIndex(user.getLocalizacion());		
 	}
 
 	private Container crearPanelDialogo() {
@@ -97,15 +97,15 @@ public class DialogoUsuario extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(7,1));
 		
-		panel.add(crearJLabelCombo(new JLabel("1"), listaPalabras.get(32)));
+		panel.add(crearJLabelCombo(new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.get(32)));
 		
-		panel.add(crearJLabelCombo(new JLabel("Administrador"), listaPalabras.get(33)));
+		panel.add(crearJLabelCombo(new JLabel(calcularTipoUsuario()), listaPalabras.get(33)));
 
-		panel.add(crearTextField(nombre=new JTextField("Ander"), listaPalabras.get(34)));
+		panel.add(crearTextField(nombre=new JTextField(user.getNombre()), listaPalabras.get(34)));
 		
-		panel.add(crearTextField(pass= new JPasswordField("kaixo"), listaPalabras.get(35)));
+		panel.add(crearTextField(pass= new JPasswordField(user.getPass()), listaPalabras.get(35)));
 		
-		panel.add(crearTextField(email=new JTextField("andercarrera@hotmail.com"), listaPalabras.get(36)));
+		panel.add(crearTextField(email=new JTextField(user.getEmail()), listaPalabras.get(36)));
 		
 		panel.add(crearComboBox(localizacion, listaPalabras.get(37)));
 
@@ -113,6 +113,19 @@ public class DialogoUsuario extends JDialog{
 
 		return panel;
 	}
+	private String calcularTipoUsuario() {
+		String tipo;
+		
+		if(user.getTipo()==0)tipo="Admin";
+		else if(user.getTipo()==1)
+		{
+			tipo="Basic";
+		
+		}
+		else tipo="Pro";
+		return tipo;
+	}
+
 	private Component crearComboBox(JComboBox<String> text, String string) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 		JLabel label = new JLabel(string);	
@@ -210,13 +223,13 @@ public class DialogoUsuario extends JDialog{
 		}
 		manager.conClose();		
 	}
-	public void cargarDatosLocalizaciones() {
+	public void cargarDatosLocalizaciones(JComboBox<String> combo) {
 		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
 				"FROM Localizaciones\r\n;");
 		try {
-			localizacion.removeAllItems();
+			combo.removeAllItems();
 			while(resultados.next()) {
-				localizacion.addItem(resultados.getString("nombre"));
+				combo.addItem(resultados.getString("nombre"));
 			}
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
