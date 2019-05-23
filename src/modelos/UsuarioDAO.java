@@ -55,7 +55,7 @@ public class UsuarioDAO extends DBManager{
 		}
 	}
 
-	public void addUser(String name, String password,String email,int localizacion,int idioma,int type,int id) {
+	public void addUser(String name, String password,String email,int localizacion,int idioma,int type) {
 		Connection con = this.getConnection();
 		try {
 			statement = con.createStatement();
@@ -63,6 +63,9 @@ public class UsuarioDAO extends DBManager{
 					"INSERT INTO Usuarios (nombre, email, pass, localizacion, idioma) VALUES ('"
 							+ name + "', '" + email + "', '" + password + "', '" + localizacion + "', '" + idioma
 							+"');");
+			resultSet=statement.executeQuery("SELECT usuarioID FROM Usuarios WHERE email='"+email+"'");
+			resultSet.next();
+			int id=resultSet.getInt("usuarioID");
 			statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, '"+type+"', '"+id+");");
 		} catch (SQLException e) {
 			e.printStackTrace();
