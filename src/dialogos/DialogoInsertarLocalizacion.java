@@ -84,7 +84,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 		JPanel panel = new JPanel(new GridLayout(3,1));
 		
 		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.get(34)));
-		panel.add(crearTextField(habitantes=new JTextField(), listaPalabras.get(154)));
+		panel.add(crearTextField(habitantes=new JTextField(), listaPalabras.get(15)));
 		panel.add(crearTextField(area=new JTextField(), listaPalabras.get(14)));
 
 		
