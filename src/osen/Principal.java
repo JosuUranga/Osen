@@ -12,7 +12,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.io.LineNumberInputStream;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
@@ -136,6 +135,15 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				new Integer(KeyEvent.VK_P));
 		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
+		if(usuario.getTipo()==0) {
+			anadirCampo.setEnabled(false);
+			anadirMuestra.setEnabled(false);
+
+		}
+		if(usuario.getTipo()==1) {
+			anadirMuestra.setEnabled(false);
+		}
+		
 	}
 	private void crearComboBox1() {
 		//coger los datos de la BD
@@ -238,10 +246,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		
 		@SuppressWarnings("unused")
 		JButton boton;
-		boton =(JButton) toolBar.add(anadirCampo);
+		toolBar.add(anadirCampo);
 		toolBar.add(Box.createGlue());
 		boton =(JButton) toolBar.add(recargar);
-		boton =(JButton) toolBar.add(anadirMuestra);
+		toolBar.add(anadirMuestra);
 		toolBar.add(Box.createHorizontalGlue());
 		boton =(JButton) toolBar.add(perfil);
 		boton =(JButton) toolBar.add(salir);
@@ -277,10 +285,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		return menuEditar;
 	}
 	private JMenu crearMenuSalir() {
-		JMenuItem op;
 		JMenu menuSalir = new JMenu (controladorIdioma.getListaPalabras().get(28));
 		menuSalir.setMnemonic(new Integer(KeyEvent.VK_S));
-		op=menuSalir.add(salir);
+		menuSalir.add(salir);
 		
 		return menuSalir;
 	}
@@ -317,14 +324,14 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
-				GestorEstadosAnadirMuestra gestorAnadirMuestra= new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager);
+				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager);
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
 				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
-			if(texto.equals(controladorIdioma.getListaPalabras().get(6))) {
+			if(texto.equals(controladorIdioma.getListaPalabras().get(6))) {//ayuda
 				
 				System.out.println("Ayuda");
 				Desktop desktop = Desktop.getDesktop();
@@ -333,13 +340,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 					try {
 						desktop.open(file);
 					} catch (IOException e1) {
-						// TODO Auto-generated catch block
-						e1.printStackTrace();
-					}
+						JOptionPane.showMessageDialog(Principal.this, e1.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);					
+						}
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				DialogoUsuario dialogoUsuario = new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager,usuario);
+				new DialogoUsuario(Principal.this, "Perfil", true, controladorIdioma.getListaPalabras(), manager,usuario);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();
@@ -355,16 +361,13 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		lsP = new LineaSeriePrincipal();
 		lsP.accion();
 	}
-	@SuppressWarnings("unused")
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
 		}catch(ClassNotFoundException | InstantiationException | IllegalAccessException | UnsupportedLookAndFeelException e) {
 			e.printStackTrace();
 		}
-		//NotificationSender noti=new NotificationSender();
-		//PaymentsTest payments=new PaymentsTest("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
-		Principal programa = new Principal();
+		new Principal();
 	}
 
 

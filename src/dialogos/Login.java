@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-
 import db.DBManager;
 import idiomas.ControladorIdioma;
 import modelos.UsuarioDAO;
@@ -108,6 +107,7 @@ public class Login extends JDialog implements ActionListener{
 		panel.setBackground(Color.white);
 		logear=new JButton("Entrar");
 		logear.setActionCommand("logear");
+		this.getRootPane().setDefaultButton(logear);
 		logear.addActionListener(this);
 		panel.add(logear);
 		logear=new JButton("Crear usuario");
@@ -127,16 +127,23 @@ public class Login extends JDialog implements ActionListener{
 			try {
 				System.out.println(usuario.getText() + String.valueOf(password.getPassword()));
 				user = UsuarioDAO.getInstance(Principal.dbuser,Principal.dbpass, Principal.dbname, Principal.dbip).getUser(usuario.getText(), String.valueOf(password.getPassword()));
-				loginCorrecto=true;
-				this.dispose();
+				if(user!=null) {
+					loginCorrecto=true;
+					this.dispose();
+				}
+				else {
+					JOptionPane.showMessageDialog(Login.this, "La informacion introducida no es valida", "Error", JOptionPane.WARNING_MESSAGE);
+				}
 			} catch (SQLException e1) {
 				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, "Datos incorrectos: no existe ningun usuario con los datos proporcionados", "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				else JOptionPane.showMessageDialog(Login.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-			}
+			} catch (NumberFormatException e2) {
+				JOptionPane.showMessageDialog(Login.this, "Formato no válido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+			}	 
 			
 		}
 		if(e.getActionCommand().equals("signup")) {
-			DialogoCrearUsuario crearUser = new DialogoCrearUsuario(this, "Crear Usuario", true, listaPalabras, manager);
+			new DialogoCrearUsuario(this, "Crear Usuario", true, listaPalabras, manager);
 		}
 	}
 	public Boolean esCorrecto() {

@@ -23,7 +23,6 @@ import javax.swing.JTextField;
 
 import db.DBManager;
 import modelos.UsuarioDAO;
-import modelos.UsuarioVO;
 import osen.Principal;
 
 @SuppressWarnings("serial")
@@ -83,7 +82,8 @@ public class DialogoCrearUsuario extends JDialog{
 					DialogoCrearUsuario.this.dispose();
 
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					if(e1.getErrorCode()==1062) JOptionPane.showMessageDialog(DialogoCrearUsuario.this, "Ya existe un usuario en la base de datos con los datos proporcionados", "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					else JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
 					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, "Formato no valido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
