@@ -18,6 +18,7 @@ public class MeteoDAO extends DBManager{
 	List<Meteorologia> listaMeteo;
 	Meteorologia meteo;
 	private final static String getMeteoLocalizaciones="{CALL get_meteo(?)}";
+	private final static String getMeteoAll="{CALL get_meteoAll()}";
 	
 	protected MeteoDAO(String u, String p, String db, String ip) {
 		super(u, p, db, ip);
@@ -37,6 +38,18 @@ public class MeteoDAO extends DBManager{
 			meteo=new Meteorologia(resultSet.getInt(1),resultSet.getString(2));
 			listaMeteo.add(meteo);
 		}
+		conClose();
+		return listaMeteo;
+	}
+	public List<Meteorologia> getMeteoAll() throws SQLException{
+		callStatement=executeCall(getMeteoAll);
+		resultSet=callStatement.executeQuery();
+		listaMeteo=new ArrayList<>();
+		while(resultSet.next()) {
+			meteo=new Meteorologia(resultSet.getInt(1),resultSet.getString(2));
+			listaMeteo.add(meteo);
+		}
+		conClose();
 		return listaMeteo;
 	}
 

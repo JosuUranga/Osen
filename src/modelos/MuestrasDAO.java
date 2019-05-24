@@ -41,6 +41,7 @@ public class MuestrasDAO extends DBManager{
 		} catch (ParseException e) {
 			e.printStackTrace();
 		}
+		conClose();
 		return muestra;
 	}
 

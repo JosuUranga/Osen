@@ -36,7 +36,6 @@ public class UsuarioDAO extends DBManager{
 	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) throws SQLException{
 		executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion="+localizacion+", idioma="+idioma+ " WHERE usuarioID=" + id + ";");
 		executeUpdate("UPDATE RelacionTipoUsuarios SET tipo="+type+ " WHERE usuario=" + id + ";");
-		conClose();
 	}
 
 	public void addUser(String name, String password,String email,int idioma) throws SQLException{
@@ -46,10 +45,10 @@ public class UsuarioDAO extends DBManager{
 				"INSERT INTO Usuarios (nombre, email, pass, localizacion, idioma) VALUES ('"
 						+ name + "', '" + email + "', '" + password + "', " + localizacion + ", " + idioma
 						+");");
-		resultSet=statement.executeQuery("SELECT usuarioID FROM Usuarios WHERE email='"+email+"'");
+		resultSet=executeQuery("SELECT usuarioID FROM Usuarios WHERE email='"+email+"'");
 		resultSet.next();
 		int id=resultSet.getInt("usuarioID");
-		statement.executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, "+type+", "+id+");");
 		conClose();
+		executeUpdate("INSERT INTO RelacionTipoUsuarios (fecini, fecfinal, tipo, usuario)VALUES (CURDATE(), NULL, "+type+", "+id+");");
 	}
 }

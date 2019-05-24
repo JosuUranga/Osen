@@ -11,7 +11,7 @@ public class DBManager {
 	private String IP = "localhost";
 	public final static String getIdioma="{CALL get_idioma()}";
 	
-	public final static String getFechas="{CALL get_fechas(?,?)}";
+	
 	
 	Connection connect;
 	static DBManager instance;
@@ -62,7 +62,7 @@ public class DBManager {
 		int result=0;
 		statement = connect.createStatement();
 		result = statement.executeUpdate(query);
-		
+		conClose();
 		return result;
 	}
 	public boolean execute(String query) throws SQLException {
@@ -70,6 +70,7 @@ public class DBManager {
 		boolean result=false;
 		statement = connect.createStatement();
 		result = statement.execute(query);
+		conClose();
 		return result;
 	}
 	public CallableStatement executeCall(String sql) throws SQLException {

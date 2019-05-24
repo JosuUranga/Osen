@@ -42,10 +42,13 @@ import estados.GeneradorPanelesMuestra;
 import estados.GestorEstadosAnadirMuestra;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
+import modelos.FechaDAO;
 import modelos.LocalizacionDAO;
+import modelos.MeteoDAO;
 import modelos.MuestrasDAO;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
+import muestras.Meteorologia;
 import muestras.Muestra;
 import notificaciones.NotificationManager;
 
@@ -65,7 +68,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JMenuItem opcionMenu;
 	JPanel panelComboBox2,panelinfo;
 	MiAccion anadirCampo, anadirMuestra, ayuda, recargar,perfil, salir;
-	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
+	JComboBox<String>comboFecha1,comboFecha2;
+	JComboBox<Localizacion>comboLocalizacion1,comboLocalizacion2;
+	JComboBox<Meteorologia>comboMeteo1,comboMeteo2;
 	boolean compararActivado=false;
 	DBManager manager;
 	UsuarioVO usuario;
@@ -157,7 +162,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		comboMeteo1.setActionCommand("meteo");
 	}
 	
-	private void cargarDatosComboBox(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
+	private void cargarDatosComboBox(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
 		this.cargarDatosLocalizacionMuestra(comboLocalizacion);
 		this.cargarDatosMeteo(comboLocalizacion,comboMeteo);
 		this.cargarDatosFecha(comboLocalizacion,comboMeteo,comboFecha);
@@ -402,72 +407,58 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 
 
-	private Muestra realizarBusquedaSinComparar(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
-		String pueblo=comboLocalizacion.getSelectedItem().toString();
-		String meteo=comboMeteo.getSelectedItem().toString();
+	private Muestra realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
+		Localizacion localiz=(Localizacion) comboLocalizacion.getSelectedItem();
+		String pueblo=localiz.getNombre();
+		Meteorologia meteo2=(Meteorologia) comboMeteo.getSelectedItem();
+
 		String fecha=comboFecha.getSelectedItem().toString();
+		System.out.println(pueblo+meteo2.getId()+fecha);
 		Muestra muestra=null;
 		try {
 			muestra=MuestrasDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
-					.getMuestra(1,pueblo, fecha);
+					.getMuestra(meteo2.getId(),pueblo, fecha);
 			} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		return muestra;
 	}
-	public void cargarDatosLocalizacionMuestra(JComboBox<String> comboLocalizacion) {
+	public void cargarDatosLocalizacionMuestra(JComboBox<Localizacion> comboLocalizacion) {
 		try {
-			List<Localizacion>lista=LocalizacionDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
 					.getLocalizacionesMuestra();
-			comboLocalizacion.removeAll();
-			lista.forEach(loca->comboLocalizacion.addItem(loca.toString()));
+			comboLocalizacion.removeAllItems();
+			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
 	
-	public void cargarDatosFecha(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo, JComboBox<String> comboFecha) {
-		comboFecha.removeAllItems();
-		
+	public void cargarDatosFecha(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
-		String meteo=comboMeteo.getSelectedItem().toString();
-		
-		
-		
+		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
 		try {
-			ResultSet resultados = manager.executeQuery("SELECT DISTINCT Muestras.fecha\r\n" + 
-					"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
-					"WHERE Localizaciones.nombre='"+pueblo+"' AND Meteos.descripcion='"+meteo+"';");
-			while(resultados.next()) {
-				comboFecha.addItem(resultados.getString("fecha"));
-			}
+			List<String>listaFec=FechaDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+					.getFechas(pueblo, meteo.getId());
+			comboFecha.removeAllItems();
+			listaFec.forEach(fecha->comboFecha.addItem(fecha));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();	
 		if(muestra1!=null)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 	}
 	
-	public void cargarDatosMeteo(JComboBox<String> comboLocalizacion, JComboBox<String> comboMeteo) {
-		comboMeteo.removeAllItems();
-				
+	public void cargarDatosMeteo(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
-		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
-		
-		
-		
 		try {
-			ResultSet resultados = manager.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
-					"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
-					condicion+";");
-			while(resultados.next()) {
-				comboMeteo.addItem(resultados.getString("descripcion"));
-			}
+			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+					.getMeteo(pueblo);
+			comboMeteo.removeAllItems();
+			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-		}
-		manager.conClose();			
+		}		
 	}
 
 

@@ -35,6 +35,7 @@ public class LocalizacionDAO extends DBManager{
 				+ "FROM Localizaciones WHERE email='"+email+"'");
 		resultSet.next();
 		localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+		conClose();
 		return localizacion;
 	}
 	public List<Localizacion> getLocalizacionesMuestra() throws SQLException{
@@ -45,6 +46,7 @@ public class LocalizacionDAO extends DBManager{
 			localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
+		conClose();
 		return listLoca;
 	}
 	public List<Localizacion> getAllLocalizaciones() throws SQLException{
@@ -55,6 +57,7 @@ public class LocalizacionDAO extends DBManager{
 			localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
+		conClose();
 		return listLoca;
 	}
 	public void addLocalizacion(String nombre,int habitantes,float AREAkm2) throws SQLException{
