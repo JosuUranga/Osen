@@ -23,8 +23,7 @@ public class GestorEstadosAnadirMuestra {
 	Thread hiloProgressBar;
 	JProgressBar progressBar;
 	UsuarioVO usuario;
-	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list,
-			DBManager manager, UsuarioVO usuario) {
+	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list, UsuarioVO usuario) {
 		super();
 		this.usuario=usuario;
 		lsP = new LineaSeriePrincipal();

@@ -35,7 +35,6 @@ import javax.swing.JToolBar;
 import javax.swing.UIManager;
 import javax.swing.UnsupportedLookAndFeelException;
 
-import db.DBManager;
 import dialogos.DialogoUsuario;
 import dialogos.Login;
 import estados.GeneradorPanelesMuestra;
@@ -73,7 +72,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JComboBox<Meteorologia>comboMeteo1,comboMeteo2;
 	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
-	DBManager manager;
 	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
@@ -86,8 +84,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	Login login;
 	public Principal(){
 		super("OSEN");
-		
-		manager=DBManager.getInstance(dbuser,dbpass ,dbname,dbip);
 		this.loguear();
 		this.setLocation (340,100);
 		this.setSize(1000,800);
@@ -109,7 +105,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	
 
 	private void loguear() {
-		login = new Login(this, manager);
+		login = new Login(this);
 		controladorIdioma=login.getControladorIdioma();
 		System.out.println(login.esCorrecto());
 		if(login.esCorrecto()) {
@@ -123,7 +119,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	private void iniciarNotis() {
 		if(usuario.getTipo()>0) {
-			notiManager=new NotificationManager("keyaqui", manager, usuario);
+			notiManager=new NotificationManager("keyaqui", usuario);
 			notiManager.start();
 			}		
 	}
@@ -329,7 +325,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
-				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager, usuario);
+				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), usuario);
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar

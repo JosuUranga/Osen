@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
-import db.DBManager;
 import idiomas.ControladorIdioma;
 import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
@@ -38,15 +37,13 @@ public class Login extends JDialog implements ActionListener{
 	boolean loginCorrecto;
 	UsuarioVO user;
 	List<String> listaPalabras;
-	DBManager manager;
 	ControladorIdioma controladorIdioma;
 	int idioma=0;
-	public Login(JFrame ventana, DBManager manager) {
+	public Login(JFrame ventana) {
 		super(ventana,"Login",true);
 		this.setSize(600,325);
 		this.setLocation (600,400);
 		loginCorrecto=false;
-		this.manager=manager;
 		controladorIdioma=new ControladorIdioma(idioma);
 		controladorIdioma.cargarIdioma();
 		this.listaPalabras=controladorIdioma.getListaPalabras();

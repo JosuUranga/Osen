@@ -15,7 +15,8 @@ public class MuestrasDAO extends DBManager{
 	CallableStatement callStatement;
 	static MuestrasDAO instance;
 	private final static String getMuestra="{CALL get_muestra(?,?,?)}";
-
+	private final static String get_ultimaMuestra="{CALL get_lastMuestra(?)}";
+	
 	protected MuestrasDAO(String u, String p, String db, String ip) {
 		super(u, p, db, ip);
 	}
@@ -44,16 +45,21 @@ public class MuestrasDAO extends DBManager{
 	}
 
 	public void delMuestra(int id)throws SQLException{
-		
 		execute("DELETE FROM Muestras WHERE muestraID="+id);
-		
 	}
-
-	public void addMuestra(Float duracion, int co2eq,int humedad,int temp,int voc,int meteorologia,int localizacion,int usuario) throws SQLException{
-		
+	public void addMuestra(Float duracion, int co2eq,int humedad,int temp,int voc,int meteorologia,int localizacion,int usuario) throws SQLException{	
 		execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) "
 					+ "VALUES (curdate(), "+duracion+", "+co2eq+", "+humedad+", "+temp+", "+voc+", "+meteorologia+", "+ localizacion+", "+usuario+")");
-		
+	}
+	public Muestra getUltimaMuestra(int id) throws SQLException{
+		callStatement=executeCall(get_ultimaMuestra);
+		callStatement.setInt(1, id);
+		resultSet=callStatement.executeQuery();
+		float duracion=(float) 10.5;
+		Muestra muestra=null;
+		muestra=new MuestraCo2(resultSet.getInt(1), resultSet.getString(2), duracion, resultSet.getInt(3), resultSet.getFloat(4), resultSet.getFloat(5), resultSet.getFloat(6), resultSet.getString(7), new Localizacion(resultSet.getInt(11),resultSet.getString(8),resultSet.getInt(9),resultSet.getFloat(10)), resultSet.getString(12));
+		conClose();
+		return muestra;
 	}
 
 }
