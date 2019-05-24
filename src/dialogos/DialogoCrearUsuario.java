@@ -158,10 +158,11 @@ public class DialogoCrearUsuario extends JDialog{
 	
 	
 	public void cargarDatosIdioma(JComboBox<String> combo) {
-		ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
-				"FROM Idiomas\r\n" + 
-				"GROUP BY Idiomas.idiomaID;");
+		
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
+					"FROM Idiomas\r\n" + 
+					"GROUP BY Idiomas.idiomaID;");
 			combo.removeAllItems();
 			while(resultados.next()) {
 				String result=resultados.getString("descripcion");

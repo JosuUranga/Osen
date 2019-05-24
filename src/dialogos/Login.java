@@ -105,12 +105,12 @@ public class Login extends JDialog implements ActionListener{
 		JPanel panel=new JPanel(new GridLayout(1,2,40,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 		panel.setBackground(Color.white);
-		logear=new JButton(listaPalabras.get(47));
+		logear=new JButton(listaPalabras.get(48));
 		logear.setActionCommand("logear");
 		this.getRootPane().setDefaultButton(logear);
 		logear.addActionListener(this);
 		panel.add(logear);
-		logear=new JButton(listaPalabras.get(48));
+		logear=new JButton(listaPalabras.get(47));
 		logear.setActionCommand("signup");
 		logear.addActionListener(this);
 		panel.add(logear);

@@ -49,25 +49,20 @@ public class DBManager {
 		}
 		return connect;
 	}
-	public ResultSet executeQuery(String query) {
+	public ResultSet executeQuery(String query) throws SQLException{
 		connect = this.getConnection();
-		try {
-			statement = connect.createStatement();
-			resultSet = statement.executeQuery(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		
+		statement = connect.createStatement();
+		resultSet = statement.executeQuery(query);
+	
 		return resultSet;
 	}
-	public int executeUpdate(String query) {
+	public int executeUpdate(String query) throws SQLException {
 		connect = this.getConnection();
 		int result=0;
-		try {
-			statement = connect.createStatement();
-			result = statement.executeUpdate(query);
-		} catch (SQLException e) {
-			e.printStackTrace();
-		}
+		statement = connect.createStatement();
+		result = statement.executeUpdate(query);
+		
 		return result;
 	}
 	public boolean execute(String query) throws SQLException {
@@ -77,22 +72,14 @@ public class DBManager {
 		result = statement.execute(query);
 		return result;
 	}
-	public CallableStatement executeCall(String sql) {
-		try {
-			callState = this.getConnection().prepareCall(sql);
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public CallableStatement executeCall(String sql) throws SQLException {
+		callState = this.getConnection().prepareCall(sql);
+			
 		return callState;
 	}
-	public ResultSet reCall(CallableStatement call) {
-		try {
-			resultSet=call.executeQuery();
-		} catch (SQLException e) {
-			e.printStackTrace();
-			return null;
-		}
+	public ResultSet reCall(CallableStatement call) throws SQLException {
+		resultSet=call.executeQuery();
+			
 		return resultSet;
 	}
 	

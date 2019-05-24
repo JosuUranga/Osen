@@ -200,8 +200,8 @@ public class DialogoInsertarMuestra extends JDialog{
 			public void actionPerformed(ActionEvent arg0) {
 				
 				String numeroMeteorologia=String.valueOf(comboMeteorologia.getSelectedIndex()+1);
-				ResultSet resultado=manager.executeQuery("SELECT localizacionId from Localizaciones where nombre='"+comboLocalizacion.getSelectedItem().toString()+"'");
 				try {
+					ResultSet resultado=manager.executeQuery("SELECT localizacionId from Localizaciones where nombre='"+comboLocalizacion.getSelectedItem().toString()+"'");
 					resultado.next();
 					numeroLocalizacion=Integer.toString(resultado.getInt(1));
 				} catch (SQLException e) {
@@ -240,9 +240,10 @@ public class DialogoInsertarMuestra extends JDialog{
 	}
 	
 	public void cargarDatosLocalizaciones() {
-		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
-				"FROM Localizaciones\r\n;");
+		
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+					"FROM Localizaciones\r\n;");
 			comboLocalizacion.removeAllItems();
 			while(resultados.next()) {
 				comboLocalizacion.addItem(resultados.getString("nombre"));

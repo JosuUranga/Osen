@@ -440,11 +440,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		String meteo=comboMeteo.getSelectedItem().toString();
 		
-		ResultSet resultados = manager.executeQuery("SELECT DISTINCT Muestras.fecha\r\n" + 
-				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
-				"WHERE Localizaciones.nombre='"+pueblo+"' AND Meteos.descripcion='"+meteo+"';");
+		
 		
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT DISTINCT Muestras.fecha\r\n" + 
+					"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
+					"WHERE Localizaciones.nombre='"+pueblo+"' AND Meteos.descripcion='"+meteo+"';");
 			while(resultados.next()) {
 				comboFecha.addItem(resultados.getString("fecha"));
 			}
@@ -461,11 +462,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		String condicion=(" WHERE nombre = '"+ pueblo+"' ");
 		
-		ResultSet resultados = manager.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
-				"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
-				condicion+";");
+		
 		
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT DISTINCT Meteos.descripcion \r\n" + 
+					"FROM (Muestras JOIN Meteos ON Muestras.meteorologia=Meteos.meteoID) JOIN Localizaciones ON Muestras.localizacion=Localizaciones.localizacionID\r\n" + 
+					condicion+";");
 			while(resultados.next()) {
 				comboMeteo.addItem(resultados.getString("descripcion"));
 			}

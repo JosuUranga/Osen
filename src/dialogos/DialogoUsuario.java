@@ -208,10 +208,11 @@ public class DialogoUsuario extends JDialog{
 	}
 	
 	public void cargarDatosIdioma(JComboBox<String> combo) {
-		ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
-				"FROM Idiomas\r\n" + 
-				"GROUP BY Idiomas.idiomaID;");
+		
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
+					"FROM Idiomas\r\n" + 
+					"GROUP BY Idiomas.idiomaID;");
 			combo.removeAllItems();
 			while(resultados.next()) {
 				String result=resultados.getString("descripcion");
@@ -223,9 +224,10 @@ public class DialogoUsuario extends JDialog{
 		manager.conClose();		
 	}
 	public void cargarDatosLocalizaciones(JComboBox<String> combo) {
-		ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
-				"FROM Localizaciones\r\n;");
+	
 		try {
+			ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
+					"FROM Localizaciones\r\n;");
 			combo.removeAllItems();
 			while(resultados.next()) {
 				combo.addItem(resultados.getString("nombre"));
