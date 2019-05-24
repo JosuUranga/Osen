@@ -12,8 +12,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.text.ParseException;
 import java.util.List;
 
 import javax.swing.AbstractAction;
@@ -50,7 +50,6 @@ import modelos.UsuarioVO;
 import muestras.Localizacion;
 import muestras.Meteorologia;
 import muestras.Muestra;
-import muestras.MuestraCo2;
 import notificaciones.NotificationManager;
 
 
@@ -330,7 +329,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
-				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager);
+				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), manager, usuario);
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
@@ -419,21 +418,23 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String fecha=comboFecha.getSelectedItem().toString();
 		Muestra muestra=null;
 		try {
-			muestra=MuestrasDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+			muestra=MuestrasDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMuestra(meteo.getId(),pueblo, fecha);
 			} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-		}
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+		} catch (ParseException e) {
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+			}
 		return muestra;
 	}
 	public void cargarDatosLocalizacionMuestra(JComboBox<Localizacion> comboLocalizacion) {
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getLocalizacionesMuestra();
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -442,24 +443,24 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
 		try {
-			List<String>listaFec=FechaDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+			List<String>listaFec=FechaDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getFechas(pueblo, meteo.getId());
 			comboFecha.removeAllItems();
 			listaFec.forEach(fecha->comboFecha.addItem(fecha));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
 	public void cargarDatosMeteo(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		try {
-			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
+			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMeteo(pueblo);
 			comboMeteo.removeAllItems();
 			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}		
 	}
 

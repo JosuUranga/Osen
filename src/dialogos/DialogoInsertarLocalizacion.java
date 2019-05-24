@@ -21,7 +21,6 @@ import javax.swing.JTextField;
 import db.DBManager;
 import estados.GestorEstadosAnadirMuestra;
 import modelos.LocalizacionDAO;
-import muestras.Localizacion;
 import muestras.MuestraCo2;
 
 

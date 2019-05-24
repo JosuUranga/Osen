@@ -12,13 +12,13 @@ public class Lector extends Thread {
 	
 	CommPortIdentifier puerto;
 	PropertyChangeSupport soporte;
-	String datos[];
+	String datos[]= {"600","20","50","200"};
 
 	public Lector(SerialComm lineaSerie, CommPortIdentifier puerto) {
 		this.lineaSerie = lineaSerie;
 		this.puerto = puerto;
 		soporte= new PropertyChangeSupport(this);
-	}
+		}
 	public void addPropertyChangeListener(PropertyChangeListener listener) {
 		soporte.addPropertyChangeListener(listener);
 	}

@@ -9,6 +9,7 @@ import db.DBManager;
 import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
 import lineaSerie.LineaSeriePrincipal;
+import modelos.UsuarioVO;
 import muestras.Localizacion;
 
 public class GestorEstadosAnadirMuestra {
@@ -22,11 +23,12 @@ public class GestorEstadosAnadirMuestra {
 	DBManager manager;
 	Thread hiloProgressBar;
 	JProgressBar progressBar;
-
+	UsuarioVO usuario;
 	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list,
-			DBManager manager) {
+			DBManager manager, UsuarioVO usuario) {
 		super();
-		//lsP = new LineaSeriePrincipal();
+		this.usuario=usuario;
+		lsP = new LineaSeriePrincipal();
 		this.state = state;
 		System.out.println("Nuevo objeto, estado: "+this.state);
 		this.ventana = ventana;
@@ -43,13 +45,13 @@ public class GestorEstadosAnadirMuestra {
 	}
 	public void estados() {
 		switch(state) {
-		case 1://añadir muestra
+		case 1://aï¿½adir muestra
 			dialogoInsertarMuestra= new 
-			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras,manager, this, lsP);
+			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras,manager, this, lsP, usuario);
 			localizacion=dialogoInsertarMuestra.getLocalizacion();
 			break;
 			
-		case 2://añadir localizacion
+		case 2://aï¿½adir localizacion
 			@SuppressWarnings("unused") 
 			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
 			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, manager);
