@@ -68,7 +68,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	MiAccion anadirCampo, anadirMuestra, ayuda, recargar,perfil, salir;
 	JComboBox<String> comboLocalizacion1, comboMeteo1, comboFecha1, comboLocalizacion2, comboMeteo2, comboFecha2;
 	boolean compararActivado=false;
-	LineaSeriePrincipal lsP;
 	DBManager manager;
 	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
@@ -99,8 +98,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setContentPane(crearPanelVentana());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		//lsP = new LineaSeriePrincipal();
-		//lsP.accion();
+
 	}
 	
 
@@ -359,10 +357,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			
 	}
 	@SuppressWarnings("unused")
-	private void iniciarSerialComm() {
-		lsP = new LineaSeriePrincipal();
-		lsP.accion();
-	}
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());

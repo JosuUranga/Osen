@@ -8,6 +8,7 @@ import javax.swing.JProgressBar;
 import db.DBManager;
 import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
+import lineaSerie.LineaSeriePrincipal;
 import muestras.Localizacion;
 
 public class GestorEstadosAnadirMuestra {
@@ -15,6 +16,7 @@ public class GestorEstadosAnadirMuestra {
 	int state;
 	Localizacion localizacion;
 	DialogoInsertarMuestra dialogoInsertarMuestra;
+	LineaSeriePrincipal lsP;
 	JFrame ventana;
 	List<String>listaPalabras;
 	DBManager manager;
@@ -24,6 +26,7 @@ public class GestorEstadosAnadirMuestra {
 	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list,
 			DBManager manager) {
 		super();
+		lsP = new LineaSeriePrincipal();
 		this.state = state;
 		System.out.println("Nuevo objeto, estado: "+this.state);
 		this.ventana = ventana;
@@ -42,7 +45,7 @@ public class GestorEstadosAnadirMuestra {
 		switch(state) {
 		case 1://añadir muestra
 			dialogoInsertarMuestra= new 
-			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras,manager, this);
+			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras,manager, this, lsP);
 			localizacion=dialogoInsertarMuestra.getLocalizacion();
 			break;
 			
@@ -53,6 +56,7 @@ public class GestorEstadosAnadirMuestra {
 			break;
 			
 		case 3://sensor
+			lsP.accion();
 			dialogoInsertarMuestra.gestionarStart();
 			break;
 			

@@ -5,7 +5,7 @@ public class LineaSeriePrincipal {
 	SerialComm lineaSerie;
 	Lector hiloLectura;
 	CommPortIdentifier puerto;
-	
+
 	public LineaSeriePrincipal() {
 		lineaSerie = new SerialComm(); //crea un serialComm
 		puerto = lineaSerie.encontrarPuerto();	//busca un peurto en el pc
@@ -26,12 +26,17 @@ public class LineaSeriePrincipal {
 	}
 	public void accion() { 		
 		hiloLectura.start(); 		//empieza el hilo lector ya creado
-		lineaSerie.escribir("A");
 		System.out.println("iniciando lectura");
 
 	}
 	public void escribir(String msg) { //funcion para mandar el msg llamando al escribir de la linea serie
 		lineaSerie.escribir(msg);
 	}
+	public void cogerMuestra() {
+		lineaSerie.escribir("A");
 	}
+	public String[] cogerDatos() {
+		return hiloLectura.getDatos();
+	}
+}
 

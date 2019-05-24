@@ -23,6 +23,7 @@ import javax.swing.JProgressBar;
 
 import db.DBManager;
 import estados.GestorEstadosAnadirMuestra;
+import lineaSerie.LineaSeriePrincipal;
 import muestras.Localizacion;
 import muestras.MuestraCo2;
 
@@ -45,6 +46,8 @@ public class DialogoInsertarMuestra extends JDialog{
 	DBManager manager;
 	JButton botonOK;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
+	LineaSeriePrincipal lsp;
+	String[] datos;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	
 	
@@ -53,7 +56,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	public JComboBox<String> getComboLocalizacion() {
 		return comboLocalizacion;
 	}
-	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra) {
+	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp) {
 		super(ventana,titulo,modo);
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
 		this.listaPalabras=list;
@@ -64,7 +67,8 @@ public class DialogoInsertarMuestra extends JDialog{
 		this.comboLocalizacion=new JComboBox<>();
 		this.cargarDatosLocalizaciones();
 		this.setContentPane(crearPanelDialogo());
-		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
+		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);	
+		this.lsp=lsp;
 		this.setVisible(true);
 		
 	}
@@ -124,6 +128,8 @@ public class DialogoInsertarMuestra extends JDialog{
 		return panel;
 	}
 	public void gestionarStart() {
+		lsp.accion();
+		lsp.cogerMuestra();
 		hiloProgressBar = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -137,7 +143,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				}
 				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(45), listaPalabras.get(43), JOptionPane.PLAIN_MESSAGE);
 				botonOK.setEnabled(true);
-
+				datos=lsp.cogerDatos();
 			}		
 		});
 		hiloProgressBar.start();				
@@ -210,8 +216,9 @@ public class DialogoInsertarMuestra extends JDialog{
 				if(hiloProgressBar!=null)hiloProgressBar.interrupt();
 				
 				try {
+					System.out.println(datos[0]+datos[1]+datos[2]+datos[3]);
 					manager.execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) "
-							+ "VALUES (curdate(), 10.00, 15, 50.59, 18.64, 65.95, "+numeroMeteorologia+", "+ numeroLocalizacion+", "+"1)");
+							+ "VALUES (curdate(), "+datos[0]+", "+datos[1]+", "+datos[2]+", "+datos[3]+", "+numeroMeteorologia+", "+ numeroLocalizacion+", "+"1)");
 					DialogoInsertarMuestra.this.dispose();
 
 				} catch (SQLException e1) {

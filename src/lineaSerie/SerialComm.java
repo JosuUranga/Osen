@@ -9,6 +9,7 @@ import gnu.io.CommPortIdentifier;
 import gnu.io.SerialPort;
 
 public class SerialComm {
+	private static final String CARACTERFIN = "#";
 	InputStream in;
 	OutputStream out;
 	CommPort commPort;
@@ -44,15 +45,21 @@ public class SerialComm {
     public String  leer () throws IOException //esta funcion lee lo que llege de la linea serie
     {
     	int max = 1024;
-        byte[] buffer = new byte[max]; //aqui mete lo que va llegando
+        byte[] buffer = new byte[max];//aqui mete lo que va llegando
         int len = -1;
         int offset = 0;
-        len = this.in.read(buffer,offset,max-offset); //va metiendo en buffer lo que llega byte a byte.
-        offset+= len;
-
-        return (new String (buffer,0,offset)); //devuelve lo que ha llegado en modo String, que sera una letra
+        boolean fin = false;
+        while ( !fin){
+        	len = this.in.read(buffer,offset,max-offset);//va metiendo en buffer lo que llega byte a byte.
+        	offset+= len;
+            System.out.println(new String (buffer,offset-1,1));
+        	if (new String (buffer,offset-1,1).equals(CARACTERFIN)) {
+        		fin = true;
+        	}
+       } 
+      System.out.println("salgo");
+        return (new String (buffer,0,offset-1));//devuelve lo que ha llegado en modo String, que sera una letra
      }
-    
 
     /** */
     public void escribir  (String msg)

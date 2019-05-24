@@ -6,11 +6,14 @@ import java.io.IOException;
 
 import gnu.io.CommPortIdentifier;
 
+
 public class Lector extends Thread {
 	SerialComm lineaSerie;
+	
 	CommPortIdentifier puerto;
-	volatile boolean parar = false;
 	PropertyChangeSupport soporte;
+	String datos[];
+
 	public Lector(SerialComm lineaSerie, CommPortIdentifier puerto) {
 		this.lineaSerie = lineaSerie;
 		this.puerto = puerto;
@@ -26,33 +29,17 @@ public class Lector extends Thread {
 	@Override
 	public void run() {
 		String mensaje = null;
-		
 		try {
-			do {
-				  mensaje = lineaSerie.leer();		//espera aqui hasta que llega algo
-				  System.out.println("Recivido: "+mensaje);
-				  /*if(mensaje.equals("D")) { 		//si lo recibido es una D apaga la alarma
-					  lineaSerie.escribir("D");
-					  System.out.println("Apagando alarma");
-					  this.parar();
-					  soporte.firePropertyChange("apagarAlarma", true, false);
-				  }
-				  else {		
-					 
-				  }
-				  if(cont>=3) {		//si el cont es 3 manda a la basys una C, que pase a modo alarma sonando
-					  cont=0;
-					  lineaSerie.escribir("C");
-				  }*/
-			}while (!parar); 	
-			
+			mensaje = lineaSerie.leer();		//espera aqui hasta que llega algo
+			System.out.println("Recivido: "+mensaje);
+			datos=mensaje.split("[$]");	
 		}catch(IOException e) {
 			e.printStackTrace();
 		}
 		System.out.println("fin hilo lector");
 	}
-	public void parar() { //para el clip y hace que salga del do while.
-		parar = true;
+
+	public String[] getDatos() {
+		return datos;
 	}
-	
 }
