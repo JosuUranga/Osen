@@ -50,6 +50,7 @@ import modelos.UsuarioVO;
 import muestras.Localizacion;
 import muestras.Meteorologia;
 import muestras.Muestra;
+import muestras.MuestraCo2;
 import notificaciones.NotificationManager;
 
 
@@ -72,6 +73,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JComboBox<Localizacion>comboLocalizacion1,comboLocalizacion2;
 	JComboBox<Meteorologia>comboMeteo1,comboMeteo2;
 	boolean compararActivado=false;
+	LineaSeriePrincipal lsP;
 	DBManager manager;
 	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
@@ -102,7 +104,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setContentPane(crearPanelVentana());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-
+		//lsP = new LineaSeriePrincipal();
+		//lsP.accion();
 	}
 	
 
@@ -361,6 +364,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			
 	}
 	@SuppressWarnings("unused")
+	private void iniciarSerialComm() {
+		lsP = new LineaSeriePrincipal();
+		lsP.accion();
+	}
 	public static void main(String[] args) {
 		try {
 			UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
@@ -410,14 +417,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	private Muestra realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
 		Localizacion localiz=(Localizacion) comboLocalizacion.getSelectedItem();
 		String pueblo=localiz.getNombre();
-		Meteorologia meteo2=(Meteorologia) comboMeteo.getSelectedItem();
-
+		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
 		String fecha=comboFecha.getSelectedItem().toString();
-		System.out.println(pueblo+meteo2.getId()+fecha);
 		Muestra muestra=null;
 		try {
 			muestra=MuestrasDAO.getInstance(this.dbuser, this.dbpass, this.dbname, this.dbip)
-					.getMuestra(meteo2.getId(),pueblo, fecha);
+					.getMuestra(meteo.getId(),pueblo, fecha);
 			} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
