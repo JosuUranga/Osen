@@ -143,7 +143,7 @@ public class Login extends JDialog implements ActionListener{
 			
 		}
 		if(e.getActionCommand().equals("signup")) {
-			new DialogoCrearUsuario(this, listaPalabras.get(47), true, listaPalabras, manager);
+			new DialogoCrearUsuario(this, listaPalabras.get(47), true, listaPalabras);
 		}
 	}
 	public Boolean esCorrecto() {

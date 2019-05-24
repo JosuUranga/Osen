@@ -20,7 +20,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
-import db.DBManager;
 import estados.GestorEstadosAnadirMuestra;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.LocalizacionDAO;
@@ -44,7 +43,6 @@ public class DialogoInsertarMuestra extends JDialog{
 	Localizacion localizacion;
 	MuestraCo2 muestra;
 	boolean anadirLocalizacionSeleccionado=false;
-	DBManager manager;
 	JButton botonOK;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	LineaSeriePrincipal lsp;
@@ -61,7 +59,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	public JComboBox<Localizacion> getComboLocalizacion() {
 		return comboLocalizacion;
 	}
-	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, DBManager manager, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp, UsuarioVO usuario) {
+	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp, UsuarioVO usuario) {
 		super(ventana,titulo,modo);
 		this.usuario=usuario;
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
@@ -69,7 +67,6 @@ public class DialogoInsertarMuestra extends JDialog{
 		this.ventana=ventana;
 		this.setSize(600,400);
 		this.setLocation (100,100);
-		this.manager=manager;
 		this.comboLocalizacion=new JComboBox<>();
 		this.cargarDatosLocalizaciones();
 		this.setContentPane(crearPanelDialogo());

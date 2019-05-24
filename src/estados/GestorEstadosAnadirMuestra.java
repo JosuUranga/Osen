@@ -20,7 +20,6 @@ public class GestorEstadosAnadirMuestra {
 	LineaSeriePrincipal lsP;
 	JFrame ventana;
 	List<String>listaPalabras;
-	DBManager manager;
 	Thread hiloProgressBar;
 	JProgressBar progressBar;
 	UsuarioVO usuario;
@@ -33,7 +32,6 @@ public class GestorEstadosAnadirMuestra {
 		System.out.println("Nuevo objeto, estado: "+this.state);
 		this.ventana = ventana;
 		this.listaPalabras = list;
-		this.manager = manager;
 		this.dialogoInsertarMuestra=dialogoInsertarMuestra;
 		this.estados();
 	}
@@ -47,14 +45,14 @@ public class GestorEstadosAnadirMuestra {
 		switch(state) {
 		case 1://a�adir muestra
 			dialogoInsertarMuestra= new 
-			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras,manager, this, lsP, usuario);
+			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras, this, lsP, usuario);
 			localizacion=dialogoInsertarMuestra.getLocalizacion();
 			break;
 			
 		case 2://a�adir localizacion
 			@SuppressWarnings("unused") 
 			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
-			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, manager);
+			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras);
 			break;
 			
 		case 3://sensor

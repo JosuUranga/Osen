@@ -34,7 +34,7 @@ public class UsuarioDAO extends DBManager{
 	}
 
 	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) throws SQLException{
-		executeUpdate("UPDATE Usuaios SET nombre='"+name+"', email='"+email+"', localizacion="+localizacion+", idioma="+idioma+ " WHERE usuarioID=" + id + ";");
+		executeUpdate("UPDATE Usuarios SET nombre='"+name+"', email='"+email+"', localizacion="+localizacion+", idioma="+idioma+ " WHERE usuarioID=" + id + ";");
 		executeUpdate("UPDATE RelacionTipoUsuarios SET tipo="+type+ " WHERE usuario=" + id + ";");
 	}
 

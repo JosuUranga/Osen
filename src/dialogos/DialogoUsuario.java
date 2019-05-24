@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -22,17 +21,22 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import db.DBManager;
+import modelos.IdiomaDAO;
+import modelos.LocalizacionDAO;
+import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
+import muestras.Localizacion;
+import osen.Principal;
 
 @SuppressWarnings("serial")
 public class DialogoUsuario extends JDialog{
 	
 	JFrame ventana;
 	List<String>listaPalabras;
-	DBManager manager;
 	JTextField nombre, email;
-	JComboBox <String> localizacion, idioma;
+	JComboBox <String>  idioma;
+	JComboBox <Localizacion>  localizacion;
+
 	JPasswordField pass;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	boolean editando=false;
@@ -41,14 +45,13 @@ public class DialogoUsuario extends JDialog{
 	public final static String dbpass="Osen!1234";
 	public final static String dbname="osen";
 	public final static String dbip="68.183.211.91";
-	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list, DBManager manager,UsuarioVO user) {
+	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
 		this.ventana=ventana;
 		this.setSize(600,500);
 		this.setLocation (500,200);
 		this.user=user;
-		this.manager=manager;
 		this.cargarLocalizacionesIdioma();
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
@@ -108,24 +111,23 @@ public class DialogoUsuario extends JDialog{
 		
 		panel.add(crearTextField(email=new JTextField(user.getEmail()), listaPalabras.get(36)));
 		
-		panel.add(crearComboBox(localizacion, listaPalabras.get(37)));
+		panel.add(crearComboBoxLoca(localizacion, listaPalabras.get(37)));
 
 		panel.add(crearComboBox(idioma, listaPalabras.get(38)));
 
 		return panel;
 	}
-	private String calcularTipoUsuario() {
-		String tipo;
-		
-		if(user.getTipo()==0)tipo="Admin";
-		else if(user.getTipo()==1)
-		{
-			tipo="Basic";
-		
-		}
-		else tipo="Pro";
-		return tipo;
+	private Component crearComboBoxLoca(JComboBox<Localizacion> text, String string) {
+		JPanel panel = new JPanel(new GridLayout(1,2));
+		JLabel label = new JLabel(string);	
+		label.setFont(fuenteTituloInfoGeneral);
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 30));
+		panel.add(label);
+		text.setEnabled(editando);
+		panel.add(text);
+		return panel;
 	}
+	
 
 	private Component crearComboBox(JComboBox<String> text, String string) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
@@ -170,13 +172,18 @@ public class DialogoUsuario extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
-				//UsuarioDAO.getInstance(calcularTipoUsuario(), dbpass, dbname, dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), calcularLocalizacion(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());;
+				Localizacion loca = (Localizacion) localizacion.getSelectedItem();
 				toggleStatusEditando();
+				try {
+					UsuarioDAO.getInstance(calcularTipoUsuario(), dbpass, dbname, dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+				} catch (SQLException e1) {
+					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+
+				};
+				
 				
 			}
 
-			
 			
 		});
 		panel.add(botonOK);
@@ -215,32 +222,30 @@ public class DialogoUsuario extends JDialog{
 	public void cargarDatosIdioma(JComboBox<String> combo) {
 		
 		try {
-			ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
-					"FROM Idiomas\r\n" + 
-					"GROUP BY Idiomas.idiomaID;");
+			System.out.println(calcularTipoUsuario());
+			List<String> listaIdiomas = IdiomaDAO.getInstance(calcularTipoUsuario(), DialogoUsuario.dbpass, dbname, dbip).getIdiomas();
 			combo.removeAllItems();
-			while(resultados.next()) {
-				String result=resultados.getString("descripcion");
-				combo.addItem(result);
-			}
+			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();		
 	}
-	public void cargarDatosLocalizaciones(JComboBox<String> combo) {
+	private String calcularTipoUsuario() {
+		if (user.getTipo()==0)return "Basic";
+		else if (user.getTipo()==1)return "Pro";
+		else return "Admin";
+	}
+
+	public void cargarDatosLocalizaciones(JComboBox<Localizacion> combo) {
 	
 		try {
-			ResultSet resultados = manager.executeQuery("SELECT Localizaciones.nombre\r\n" + 
-					"FROM Localizaciones\r\n;");
-			combo.removeAllItems();
-			while(resultados.next()) {
-				combo.addItem(resultados.getString("nombre"));
-			}
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+					.getAllLocalizaciones();
+			localizacion.removeAllItems();
+			listaLoca.forEach(loca->localizacion.addItem(loca));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();		
 	}
 	
 

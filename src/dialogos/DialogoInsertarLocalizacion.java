@@ -18,7 +18,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
-import db.DBManager;
 import estados.GestorEstadosAnadirMuestra;
 import modelos.LocalizacionDAO;
 import muestras.MuestraCo2;
@@ -34,7 +33,6 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	
 	JTextField nombre,habitantes,area;
 	List<String>listaPalabras;
-	DBManager manager;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	
 	boolean anadirLocalizacionSeleccionado=false;
@@ -43,14 +41,13 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	public final static String dbpass="Osen!1234";
 	public final static String dbname="osen";
 	public final static String dbip="68.183.211.91";
-	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, DBManager manager) {
+	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list) {
 		super(dialogoInsertarMuestra,titulo,modo);
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
 		this.listaPalabras=list;
 		this.ventana=dialogoInsertarMuestra;
 		this.setSize(600,400);
 		this.setLocation (100,100);
-		this.manager=manager;
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);

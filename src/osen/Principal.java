@@ -349,7 +349,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), manager,usuario);
+				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), usuario);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();

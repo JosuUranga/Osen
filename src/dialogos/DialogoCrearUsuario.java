@@ -7,7 +7,6 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -21,16 +20,14 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
-import db.DBManager;
+import modelos.IdiomaDAO;
 import modelos.UsuarioDAO;
-import osen.Principal;
 
 @SuppressWarnings("serial")
 public class DialogoCrearUsuario extends JDialog{
 	
 	Login ventana;
 	List<String>listaPalabras;
-	DBManager manager;
 	JTextField nombre, email;
 	JComboBox <String> idioma;
 	JPasswordField pass;
@@ -38,13 +35,17 @@ public class DialogoCrearUsuario extends JDialog{
 	JButton botonOK,botonEditar, botonSalir;
 	int numeroLocalizacion;
 	
-	public DialogoCrearUsuario (Login login, String titulo, boolean modo, List<String> list, DBManager manager) {
+	public final static String dbuser="Basic";
+	public final static String dbpass="Osen!1234";
+	public final static String dbname="osen";
+	public final static String dbip="68.183.211.91";
+	
+	public DialogoCrearUsuario (Login login, String titulo, boolean modo, List<String> list) {
 		super(login,titulo,modo);
 		this.listaPalabras=list;
 		this.ventana=login;
 		this.setSize(600,500);
 		this.setLocation (500,200);
-		this.manager=manager;
 		this.cargarLocalizacionesIdioma();
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
@@ -78,7 +79,7 @@ public class DialogoCrearUsuario extends JDialog{
 			public void actionPerformed(ActionEvent e3) {
 				
 				try {
-					UsuarioDAO.getInstance(Principal.dbuser,Principal.dbpass, Principal.dbname, Principal.dbip).addUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(),(idioma.getSelectedIndex()+1));
+					UsuarioDAO.getInstance(DialogoCrearUsuario.dbuser,DialogoCrearUsuario.dbpass, DialogoCrearUsuario.dbname, DialogoCrearUsuario.dbip).addUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(),(idioma.getSelectedIndex()+1));
 					DialogoCrearUsuario.this.dispose();
 
 				} catch (SQLException e1) {
@@ -158,20 +159,14 @@ public class DialogoCrearUsuario extends JDialog{
 	
 	
 	public void cargarDatosIdioma(JComboBox<String> combo) {
-		
+	
 		try {
-			ResultSet resultados = manager.executeQuery("SELECT Idiomas.descripcion\r\n" + 
-					"FROM Idiomas\r\n" + 
-					"GROUP BY Idiomas.idiomaID;");
+			List<String> listaIdiomas = IdiomaDAO.getInstance(dbuser, dbpass, dbname, dbpass).getIdiomas();
 			combo.removeAllItems();
-			while(resultados.next()) {
-				String result=resultados.getString("descripcion");
-				combo.addItem(result);
-			}
+			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		manager.conClose();		
 	}
 	
 
