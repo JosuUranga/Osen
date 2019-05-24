@@ -28,6 +28,7 @@ public class IdiomaDAO extends DBManager{
 		callStatement=executeCall(get_idiomaUsuario);
 		callStatement.setInt(1, id);
 		resultSet=callStatement.executeQuery();
+		resultSet.next();
 		String idioma=resultSet.getString(1);
 		conClose();
 		return idioma;

@@ -9,7 +9,6 @@ public class DBManager {
 	private String PASS = "";
 	private String DBNAME = "osen";
 	private String IP = "localhost";
-	public final static String getIdioma="{CALL get_idioma()}";
 	
 	
 	
@@ -40,7 +39,7 @@ public class DBManager {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection(
-					"jdbc:mysql://"+this.IP+":3306/"+this.DBNAME,this.USER,this.PASS);
+					"jdbc:mysql://"+this.IP+":3306/"+this.DBNAME+"?noAccessToProcedureBodies=true",this.USER,this.PASS);
 			System.out.println("Conexion con la DB establecida");
 			return connect;
 		} catch (Exception e) {

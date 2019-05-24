@@ -42,9 +42,7 @@ public class DialogoUsuario extends JDialog{
 	boolean editando=false;
 	UsuarioVO user;
 	JButton botonOK,botonEditar, botonSalir;
-	public final static String dbpass="Osen!1234";
-	public final static String dbname="osen";
-	public final static String dbip="68.183.211.91";
+	
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
@@ -61,10 +59,12 @@ public class DialogoUsuario extends JDialog{
 	
 	private void cargarLocalizacionesIdioma() {
 		this.cargarDatosIdioma(idioma=new JComboBox<>());
-		this.idioma.setSelectedIndex(user.getIdiomaSeleccionado());
+		this.idioma.setSelectedIndex(user.getIdiomaSeleccionado()-1);
 		
 		this.cargarDatosLocalizaciones(localizacion=new JComboBox<>());
-		this.localizacion.setSelectedIndex(user.getLocalizacion());		
+		if(user.getTipo()==0)this.localizacion.setSelectedIndex(-1);	
+		else this.localizacion.setSelectedIndex(user.getLocalizacion());		
+
 	}
 
 	private Container crearPanelDialogo() {
@@ -172,10 +172,9 @@ public class DialogoUsuario extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				Localizacion loca = (Localizacion) localizacion.getSelectedItem();
 				toggleStatusEditando();
 				try {
-					UsuarioDAO.getInstance(calcularTipoUsuario(), dbpass, dbname, dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+					updateUser();
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 
@@ -183,6 +182,8 @@ public class DialogoUsuario extends JDialog{
 				
 				
 			}
+
+			
 
 			
 		});
@@ -204,7 +205,20 @@ public class DialogoUsuario extends JDialog{
 		panel.add(botonEditar);
 		return panel;
 	}
-	
+	private void updateUser() throws SQLException{
+		Localizacion loca = (Localizacion) localizacion.getSelectedItem();
+
+		if(user.getTipo()!=0)UsuarioDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+		else UsuarioDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), -1, idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+		user.setNombre(nombre.getText());
+		user.setEmail(email.getText());
+		user.setPass( String.valueOf(pass.getPassword()));
+		if(user.getTipo()!=0) {
+			user.setLocalizacion(loca.getId());
+		}
+		user.setIdiomaSeleccionado(idioma.getSelectedIndex()+1);
+		
+	}
 	private void toggleStatusEditando() {
 		editando=!editando;
 		botonOK.setEnabled(editando);
@@ -214,7 +228,7 @@ public class DialogoUsuario extends JDialog{
 		nombre.setEnabled(editando);
 		pass.setEnabled(editando);
 		email.setEnabled(editando);
-		localizacion.setEnabled(editando);
+		if(user.getTipo()!=0)localizacion.setEnabled(editando);
 		idioma.setEnabled(editando);
 
 	}
@@ -223,7 +237,7 @@ public class DialogoUsuario extends JDialog{
 		
 		try {
 			System.out.println(calcularTipoUsuario());
-			List<String> listaIdiomas = IdiomaDAO.getInstance(calcularTipoUsuario(), DialogoUsuario.dbpass, dbname, dbip).getIdiomas();
+			List<String> listaIdiomas = IdiomaDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).getIdiomas();
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
@@ -239,7 +253,7 @@ public class DialogoUsuario extends JDialog{
 	public void cargarDatosLocalizaciones(JComboBox<Localizacion> combo) {
 	
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getAllLocalizaciones();
 			localizacion.removeAllItems();
 			listaLoca.forEach(loca->localizacion.addItem(loca));

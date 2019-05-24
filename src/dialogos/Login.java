@@ -122,18 +122,20 @@ public class Login extends JDialog implements ActionListener{
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("logear")) {
 			try {
-				System.out.println(usuario.getText() + String.valueOf(password.getPassword()));
-				user = UsuarioDAO.getInstance(Principal.dbuser,Principal.dbpass, Principal.dbname, Principal.dbip).getUser(usuario.getText(), String.valueOf(password.getPassword()));
+				user = UsuarioDAO.getInstance("Basic",Principal.dbpass, Principal.dbname, Principal.dbip).getUser(usuario.getText(), String.valueOf(password.getPassword()));
 				if(user!=null) {
 					loginCorrecto=true;
 					this.dispose();
 				}
 				else {
+					
 					JOptionPane.showMessageDialog(Login.this, listaPalabras.get(49), listaPalabras.get(50), JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (SQLException e1) {
 				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, listaPalabras.get(51), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-				else JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				else {
+					JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				}
 			} catch (NumberFormatException e2) {
 				JOptionPane.showMessageDialog(Login.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
 			}	 
@@ -158,5 +160,5 @@ public class Login extends JDialog implements ActionListener{
 	public UsuarioVO getUser() {
 		return user;
 	}
-	
+
 }

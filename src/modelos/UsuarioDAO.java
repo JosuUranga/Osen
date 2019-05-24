@@ -34,8 +34,13 @@ public class UsuarioDAO extends DBManager{
 	}
 
 	public void updateUser(String name, String password,String email,int localizacion,int idioma,int type,int id) throws SQLException{
+		if(type!=0) {
 		executeUpdate("UPDATE Usuarios SET nombre='"+name+"', email='"+email+"', localizacion="+localizacion+", idioma="+idioma+ " WHERE usuarioID=" + id + ";");
 		executeUpdate("UPDATE RelacionTipoUsuarios SET tipo="+type+ " WHERE usuario=" + id + ";");
+		}
+		else {
+			executeUpdate("UPDATE Usuarios SET nombre='"+name+"', email='"+email+"', idioma="+idioma+ " WHERE usuarioID=" + id + ";");
+		}
 	}
 
 	public void addUser(String name, String password,String email,int idioma) throws SQLException{

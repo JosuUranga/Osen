@@ -5,7 +5,6 @@ import java.util.List;
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
-import db.DBManager;
 import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
 import lineaSerie.LineaSeriePrincipal;
@@ -51,7 +50,7 @@ public class GestorEstadosAnadirMuestra {
 		case 2://a�adir localizacion
 			@SuppressWarnings("unused") 
 			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
-			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras);
+			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, usuario);
 			break;
 			
 		case 3://sensor

@@ -42,6 +42,7 @@ import estados.GestorEstadosAnadirMuestra;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.FechaDAO;
+import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
 import modelos.MeteoDAO;
 import modelos.MuestrasDAO;
@@ -57,7 +58,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	File file = new File("ficheros/TeoriaCo2.pdf");
 	
-	public final static String dbuser="Admin";
 	public final static String dbpass="Osen!1234";
 	public final static String dbname="osen";
 	public final static String dbip="68.183.211.91";
@@ -76,7 +76,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	ControladorIdioma controladorIdioma;
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	Font fuenteTituloInfoGeneral;
-	String seleccionIdioma="Castellano";
+	String seleccionIdioma;
 	GeneradorPanelesMuestra generadorPan;
 	Muestra muestra1,muestra2;
 	Component combo;
@@ -90,7 +90,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		
 		//iniciarNotis();
-		
+		seleccionIdioma=seleccionarIdioma();
 		generadorPan=new GeneradorPanelesMuestra(controladorIdioma);
 		this.crearAcciones();
 		this.crearComboBox1();
@@ -99,11 +99,20 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setContentPane(crearPanelVentana());
 		this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		this.setVisible(true);
-		//lsP = new LineaSeriePrincipal();
-		//lsP.accion();
+		
 	}
 	
+	private String seleccionarIdioma() {
+		try {
+			return IdiomaDAO.getInstance(usuario.calcularTipoUsuario(), dbpass, dbname, dbip).getIdiomaUser(usuario.getUsuarioID());
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 
+		}
+		return "Castellano";
+	}
+
+	
 	private void loguear() {
 		login = new Login(this);
 		controladorIdioma=login.getControladorIdioma();
@@ -414,7 +423,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String fecha=comboFecha.getSelectedItem().toString();
 		Muestra muestra=null;
 		try {
-			muestra=MuestrasDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			muestra=MuestrasDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMuestra(meteo.getId(),pueblo, fecha);
 			} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
@@ -425,7 +434,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 	public void cargarDatosLocalizacionMuestra(JComboBox<Localizacion> comboLocalizacion) {
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getLocalizacionesMuestra();
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
@@ -439,7 +448,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
 		try {
-			List<String>listaFec=FechaDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<String>listaFec=FechaDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getFechas(pueblo, meteo.getId());
 			comboFecha.removeAllItems();
 			listaFec.forEach(fecha->comboFecha.addItem(fecha));
@@ -451,7 +460,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	public void cargarDatosMeteo(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		try {
-			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMeteo(pueblo);
 			comboMeteo.removeAllItems();
 			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));

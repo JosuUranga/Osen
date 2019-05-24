@@ -55,6 +55,7 @@ public class MuestrasDAO extends DBManager{
 		callStatement=executeCall(get_ultimaMuestra);
 		callStatement.setInt(1, id);
 		resultSet=callStatement.executeQuery();
+		resultSet.next();
 		float duracion=(float) 10.5;
 		Muestra muestra=null;
 		muestra=new MuestraCo2(resultSet.getInt(1), resultSet.getString(2), duracion, resultSet.getInt(3), resultSet.getFloat(4), resultSet.getFloat(5), resultSet.getFloat(6), resultSet.getString(7), new Localizacion(resultSet.getInt(11),resultSet.getString(8),resultSet.getInt(9),resultSet.getFloat(10)), resultSet.getString(12));

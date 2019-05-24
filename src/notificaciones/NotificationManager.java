@@ -39,7 +39,7 @@ public class NotificationManager extends Thread {
 	@Override
 	public void run() {
 		try {
-			muestra=MuestrasDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+			muestra=MuestrasDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getUltimaMuestra(user.getLocalizacion());
 			ultimaMuestra=muestra.getId();
 		} catch (SQLException e) {
@@ -57,7 +57,7 @@ public class NotificationManager extends Thread {
 				tiempo.setMinutos(MINUTOS);
 				tiempo.setSegundos(SEGUNDOS);
 				try {
-					muestra=MuestrasDAO.getInstance(Principal.dbuser, Principal.dbpass, Principal.dbname, Principal.dbip)
+					muestra=MuestrasDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 							.getUltimaMuestra(user.getLocalizacion());
 					muestraActual=muestra.getId();
 					MuestraCo2 muestra2=(MuestraCo2) muestra;
@@ -78,4 +78,5 @@ public class NotificationManager extends Thread {
 			}
 		}
 	}
+	
 }

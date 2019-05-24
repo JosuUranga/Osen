@@ -27,6 +27,7 @@ import modelos.MuestrasDAO;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
 import muestras.MuestraCo2;
+import osen.Principal;
 
 
 
@@ -50,10 +51,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	UsuarioVO usuario;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 	
-	public final static String dbuser="Admin";
-	public final static String dbpass="Osen!1234";
-	public final static String dbname="osen";
-	public final static String dbip="68.183.211.91";
+	
 	
 	
 	public JComboBox<Localizacion> getComboLocalizacion() {
@@ -223,7 +221,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				if(hiloProgressBar!=null)hiloProgressBar.interrupt();
 				
 				try {
-					MuestrasDAO.getInstance(dbuser, dbpass, dbname, dbip).addMuestra(Float.valueOf(10), Integer.parseInt(datos[0]), Integer.parseInt(datos[2]), Integer.parseInt(datos[1]), Integer.parseInt(datos[3]), numeroMeteorologia, numeroLocalizacion, usuario.getUsuarioID());
+					MuestrasDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).addMuestra(Float.valueOf(10), Integer.parseInt(datos[0]), Integer.parseInt(datos[2]), Integer.parseInt(datos[1]), Integer.parseInt(datos[3]), numeroMeteorologia, numeroLocalizacion, usuario.getUsuarioID());
 					System.out.println(datos[0]+datos[1]+datos[2]+datos[3]);
 					DialogoInsertarMuestra.this.dispose();
 
@@ -254,7 +252,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	
 	public void cargarDatosLocalizaciones() {
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(DialogoInsertarMuestra.dbuser, DialogoInsertarMuestra.dbpass, DialogoInsertarMuestra.dbname, DialogoInsertarMuestra.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getAllLocalizaciones();
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));

@@ -20,7 +20,9 @@ import javax.swing.JTextField;
 
 import estados.GestorEstadosAnadirMuestra;
 import modelos.LocalizacionDAO;
+import modelos.UsuarioVO;
 import muestras.MuestraCo2;
+import osen.Principal;
 
 
 
@@ -34,15 +36,13 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	JTextField nombre,habitantes,area;
 	List<String>listaPalabras;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
-	
+	UsuarioVO usuario;
 	boolean anadirLocalizacionSeleccionado=false;
 	
-	public final static String dbuser="Admin";
-	public final static String dbpass="Osen!1234";
-	public final static String dbname="osen";
-	public final static String dbip="68.183.211.91";
-	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list) {
+	
+	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, UsuarioVO usuario) {
 		super(dialogoInsertarMuestra,titulo,modo);
+		this.usuario=usuario;
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
 		this.listaPalabras=list;
 		this.ventana=dialogoInsertarMuestra;
@@ -110,7 +110,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					LocalizacionDAO.getInstance(dbuser, dbpass, dbname, dbip).addLocalizacion(nombre.getText(), Integer.parseInt(habitantes.getText()), Float.parseFloat(area.getText()));
+					LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).addLocalizacion(nombre.getText(), Integer.parseInt(habitantes.getText()), Float.parseFloat(area.getText()));
 					anadirLocalizacionSeleccionado=true;
 					DialogoInsertarLocalizacion.this.dispose();
 

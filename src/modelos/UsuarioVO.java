@@ -78,5 +78,10 @@ public class UsuarioVO {
 	public void setIdiomaSeleccionado(int idiomaSeleccionado) { 
 		this.idiomaSeleccionado = idiomaSeleccionado; 
 	} 
+	public String calcularTipoUsuario() {
+		if (this.getTipo()==0)return "Basic";
+		else if (this.getTipo()==1)return "Pro";
+		else return "Admin";
+	}
 	 
 } 

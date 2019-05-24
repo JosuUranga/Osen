@@ -22,6 +22,7 @@ import javax.swing.JTextField;
 
 import modelos.IdiomaDAO;
 import modelos.UsuarioDAO;
+import osen.Principal;
 
 @SuppressWarnings("serial")
 public class DialogoCrearUsuario extends JDialog{
@@ -36,9 +37,7 @@ public class DialogoCrearUsuario extends JDialog{
 	int numeroLocalizacion;
 	
 	public final static String dbuser="Basic";
-	public final static String dbpass="Osen!1234";
-	public final static String dbname="osen";
-	public final static String dbip="68.183.211.91";
+	
 	
 	public DialogoCrearUsuario (Login login, String titulo, boolean modo, List<String> list) {
 		super(login,titulo,modo);
@@ -79,7 +78,7 @@ public class DialogoCrearUsuario extends JDialog{
 			public void actionPerformed(ActionEvent e3) {
 				
 				try {
-					UsuarioDAO.getInstance(DialogoCrearUsuario.dbuser,DialogoCrearUsuario.dbpass, DialogoCrearUsuario.dbname, DialogoCrearUsuario.dbip).addUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(),(idioma.getSelectedIndex()+1));
+					UsuarioDAO.getInstance("Admin",Principal.dbpass, Principal.dbname, Principal.dbip).addUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(),(idioma.getSelectedIndex()+1));
 					DialogoCrearUsuario.this.dispose();
 
 				} catch (SQLException e1) {
@@ -161,7 +160,7 @@ public class DialogoCrearUsuario extends JDialog{
 	public void cargarDatosIdioma(JComboBox<String> combo) {
 	
 		try {
-			List<String> listaIdiomas = IdiomaDAO.getInstance(dbuser, dbpass, dbname, dbpass).getIdiomas();
+			List<String> listaIdiomas = IdiomaDAO.getInstance(dbuser, Principal.dbpass, Principal.dbname, Principal.dbip).getIdiomas();
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
