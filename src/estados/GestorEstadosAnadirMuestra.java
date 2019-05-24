@@ -26,7 +26,7 @@ public class GestorEstadosAnadirMuestra {
 	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list,
 			DBManager manager) {
 		super();
-		lsP = new LineaSeriePrincipal();
+		//lsP = new LineaSeriePrincipal();
 		this.state = state;
 		System.out.println("Nuevo objeto, estado: "+this.state);
 		this.ventana = ventana;
@@ -56,7 +56,6 @@ public class GestorEstadosAnadirMuestra {
 			break;
 			
 		case 3://sensor
-			lsP.accion();
 			dialogoInsertarMuestra.gestionarStart();
 			break;
 			

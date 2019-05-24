@@ -31,10 +31,10 @@ public class LocalizacionDAO extends DBManager{
 		return instance;
 	}
 	public Localizacion getLocalizacionUser(String email) throws SQLException{
-		resultSet=executeQuery("SELECT Localizaciones.nombre,Localizaciones.habitantes,Localizaciones.AREAkm2 "
+		resultSet=executeQuery("SELECT Localizaciones.nombre,Localizaciones.habitantes,Localizaciones.AREAkm2,Localizaciones.localizacionID "
 				+ "FROM Localizaciones WHERE email='"+email+"'");
 		resultSet.next();
-		localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+		localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 		conClose();
 		return localizacion;
 	}
@@ -43,7 +43,7 @@ public class LocalizacionDAO extends DBManager{
 		resultSet=callStatement.executeQuery();
 		listLoca=new ArrayList<>();
 		while(resultSet.next()) {
-			localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+			localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
 		conClose();
@@ -54,7 +54,7 @@ public class LocalizacionDAO extends DBManager{
 		resultSet=callStatement.executeQuery();
 		listLoca=new ArrayList<>();
 		while(resultSet.next()) {
-			localizacion=new Localizacion(resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+			localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
 		conClose();

@@ -124,7 +124,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	private void iniciarNotis() {
 		if(usuario.getTipo()>0) {
-			notiManager=new NotificationManager("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", manager, usuario);
+			notiManager=new NotificationManager("keyaqui", manager, usuario);
 			notiManager.start();
 			}		
 	}
@@ -154,7 +154,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		
 	}
 	private void crearComboBox1() {
-		//coger los datos de la BD
 		comboLocalizacion1=new JComboBox<>();
 		comboMeteo1=new JComboBox<>();
 		comboFecha1=new JComboBox<>();
@@ -172,7 +171,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 
 	private void crearComboBox2() {
-		//coger los datos de la BD
 		comboLocalizacion2=new JComboBox<>();
 		comboMeteo2=new JComboBox<>();
 		comboFecha2=new JComboBox<>();	
@@ -451,7 +449,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), "Codigo de error SQL: "+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
-		if(muestra1!=null)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 	}
 	
 	public void cargarDatosMeteo(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo) {

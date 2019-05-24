@@ -128,8 +128,8 @@ public class DialogoInsertarMuestra extends JDialog{
 		return panel;
 	}
 	public void gestionarStart() {
-		lsp.accion();
-		lsp.cogerMuestra();
+		//lsp.accion();
+		//lsp.cogerMuestra();
 		hiloProgressBar = new Thread(new Runnable() {
 			@Override
 			public void run() {
@@ -143,7 +143,7 @@ public class DialogoInsertarMuestra extends JDialog{
 				}
 				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(45), listaPalabras.get(43), JOptionPane.PLAIN_MESSAGE);
 				botonOK.setEnabled(true);
-				datos=lsp.cogerDatos();
+				//datos=lsp.cogerDatos();
 			}		
 		});
 		hiloProgressBar.start();				

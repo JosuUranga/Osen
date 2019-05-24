@@ -35,7 +35,6 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	
 	JTextField nombre,habitantes,area;
 	List<String>listaPalabras;
-	Localizacion localizacion;
 	DBManager manager;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	
@@ -115,8 +114,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 
 				try {
-					localizacion = new Localizacion(nombre.getText(),Integer.valueOf(habitantes.getText()),Float.valueOf(area.getText()));
-					LocalizacionDAO.getInstance(dbuser, dbpass, dbname, dbip).addLocalizacion(localizacion.getNombre(), localizacion.getHabitantes(), localizacion.getArea());
+					LocalizacionDAO.getInstance(dbuser, dbpass, dbname, dbip).addLocalizacion(nombre.getText(), Integer.parseInt(habitantes.getText()), Float.parseFloat(area.getText()));
 					anadirLocalizacionSeleccionado=true;
 					DialogoInsertarLocalizacion.this.dispose();
 
@@ -145,12 +143,6 @@ public class DialogoInsertarLocalizacion extends JDialog{
 
 		panel.add(boton2);
 		return panel;
-	}
-	
-	
-	
-	public Localizacion getLocalizacion() {
-		return localizacion;
 	}
 
 	
