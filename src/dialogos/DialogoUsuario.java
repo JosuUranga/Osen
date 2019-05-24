@@ -38,7 +38,9 @@ public class DialogoUsuario extends JDialog{
 	boolean editando=false;
 	UsuarioVO user;
 	JButton botonOK,botonEditar, botonSalir;
-	
+	public final static String dbpass="Osen!1234";
+	public final static String dbname="osen";
+	public final static String dbip="68.183.211.91";
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list, DBManager manager,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
@@ -168,10 +170,13 @@ public class DialogoUsuario extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+				
+				//UsuarioDAO.getInstance(calcularTipoUsuario(), dbpass, dbname, dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), calcularLocalizacion(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());;
 				toggleStatusEditando();
-				//UsuarioDAO.getInstance("Admin","Osen!1234","osen","68.183.211.91").updateUser(nombre.getText(), pass.getPassword().toString(), email.getText(), localizacion.getText(), idioma.getText(), type, id);
 				
 			}
+
+			
 			
 		});
 		panel.add(botonOK);

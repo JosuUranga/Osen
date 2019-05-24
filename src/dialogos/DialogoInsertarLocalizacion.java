@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 
 import db.DBManager;
 import estados.GestorEstadosAnadirMuestra;
+import modelos.LocalizacionDAO;
 import muestras.Localizacion;
 import muestras.MuestraCo2;
 
@@ -40,8 +41,10 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	
 	boolean anadirLocalizacionSeleccionado=false;
 	
-	
-	
+	public final static String dbuser="Admin";
+	public final static String dbpass="Osen!1234";
+	public final static String dbname="osen";
+	public final static String dbip="68.183.211.91";
 	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, DBManager manager) {
 		super(dialogoInsertarMuestra,titulo,modo);
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
@@ -113,16 +116,16 @@ public class DialogoInsertarLocalizacion extends JDialog{
 
 				try {
 					localizacion = new Localizacion(nombre.getText(),Integer.valueOf(habitantes.getText()),Float.valueOf(area.getText()));
-					manager.execute("INSERT INTO Localizaciones (nombre, habitantes, areakm2) VALUES ('"+localizacion.getNombre()+"', "+localizacion.getHabitantes()+", "+localizacion.getArea()+");");
+					LocalizacionDAO.getInstance(dbuser, dbpass, dbname, dbip).addLocalizacion(localizacion.getNombre(), localizacion.getHabitantes(), localizacion.getArea());
 					anadirLocalizacionSeleccionado=true;
 					DialogoInsertarLocalizacion.this.dispose();
 
 				} catch (SQLException e1) {
-					if(e1.getErrorCode()==1062)	JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, "Ya existe la localizaci�n '"+nombre.getText()+"' en la base de datos", "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-					else JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, e1.getMessage(), "Codigo de error SQL: "+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					if(e1.getErrorCode()==1062)	JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.get(52)+nombre.getText(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					else JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, "Formato no v�lido: ("+e2.getLocalizedMessage()+")", "Aviso", JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
 					
 				}	
 				

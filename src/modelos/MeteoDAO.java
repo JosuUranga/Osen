@@ -1,11 +1,13 @@
 package modelos;
 
-import java.sql.*;
+import java.sql.CallableStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
 import db.DBManager;
-import muestras.Localizacion;
 import muestras.Meteorologia;
 
 public class MeteoDAO extends DBManager{
