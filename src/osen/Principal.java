@@ -84,6 +84,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	Login login;
 	public Principal(){
 		super("OSEN");
+		System.setProperty("javax.net.ssl.trustStore","client-certs/cacerts"); 
+		System.setProperty("javax.net.ssl.trustStorePassword","Osen!1234");
+		System.setProperty("javax.net.ssl.trustStoreType", "JKS");
+		System.setProperty("javax.net.ssl.keyStore","client-certs/keycerts"); 
+		System.setProperty("javax.net.ssl.keyStorePassword","Osen!1234");
+		System.setProperty("javax.net.ssl.keyStoreType", "JKS");
 		this.loguear();
 		this.setLocation (340,100);
 		this.setSize(1000,800);

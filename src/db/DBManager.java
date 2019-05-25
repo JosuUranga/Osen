@@ -39,7 +39,7 @@ public class DBManager {
 		try {
 			Class.forName("com.mysql.jdbc.Driver");
 			connect = DriverManager.getConnection(
-					"jdbc:mysql://"+this.IP+":3306/"+this.DBNAME+"?noAccessToProcedureBodies=true",this.USER,this.PASS);
+					"jdbc:mysql://"+this.IP+":3306/"+this.DBNAME+"?verifyServerCertificate=true"+ "&useSSL=true&noAccessToProcedureBodies=true"+ "&requireSSL=true",this.USER,this.PASS);
 			System.out.println("Conexion con la DB establecida");
 			return connect;
 		} catch (Exception e) {
@@ -50,7 +50,6 @@ public class DBManager {
 	}
 	public ResultSet executeQuery(String query) throws SQLException{
 		connect = this.getConnection();
-		
 		statement = connect.createStatement();
 		resultSet = statement.executeQuery(query);
 	
