@@ -42,7 +42,8 @@ public class DialogoUsuario extends JDialog{
 	boolean editando=false;
 	UsuarioVO user;
 	JButton botonOK,botonEditar, botonSalir;
-	
+	JButton upgrade;
+	JLabel tipo;
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
@@ -56,6 +57,7 @@ public class DialogoUsuario extends JDialog{
 		this.setVisible(true);
 		
 	}
+	
 	
 	private void cargarLocalizacionesIdioma() {
 		this.cargarDatosIdioma(idioma=new JComboBox<>());
@@ -103,7 +105,7 @@ public class DialogoUsuario extends JDialog{
 		
 		panel.add(crearJLabelCombo(new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.get(32)));
 		
-		panel.add(crearJLabelCombo(new JLabel(calcularTipoUsuario()), listaPalabras.get(33)));
+		panel.add(crearJLabelCombo2(crearPanelTipoUsuarioUpgrade(), listaPalabras.get(33)));
 
 		panel.add(crearTextField(nombre=new JTextField(user.getNombre()), listaPalabras.get(34)));
 		
@@ -117,6 +119,55 @@ public class DialogoUsuario extends JDialog{
 
 		return panel;
 	}
+	private Component crearJLabelCombo2(JPanel panel2, String string) {
+		JPanel panel = new JPanel(new GridLayout(1,2));
+		JLabel label = new JLabel(string);	
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 30));
+		label.setFont(fuenteTituloInfoGeneral);
+		panel.add(label);
+		panel.add(panel2);
+		return panel;
+	}
+
+	private JPanel crearPanelTipoUsuarioUpgrade() {
+		JPanel panel = new JPanel(new GridLayout(1,2));
+		tipo = new JLabel(user.calcularTipoUsuario());		
+		tipo.setHorizontalAlignment(0);
+		panel.add(tipo);
+		
+		upgrade = new JButton (listaPalabras.get(53));
+		upgrade.addActionListener(new ActionListener() {
+			public void actionPerformed(ActionEvent e) {
+				
+				System.out.println("Mejorar cuenta");
+				user.setTipo(1);
+				upgradeText();
+				
+				
+			}
+		});
+		
+		upgradeText();
+		panel.add(upgrade);
+		return panel;
+		
+		
+	}
+
+	private void upgradeText() {
+		tipo.setText(user.calcularTipoUsuario());
+		if(user.getTipo()==0) {
+			upgrade.setEnabled(true);
+			upgrade.setText(listaPalabras.get(53));
+
+		}
+		else {
+			upgrade.setEnabled(false);
+			upgrade.setText(listaPalabras.get(55));
+		}		
+	}
+
+
 	private Component crearComboBoxLoca(JComboBox<Localizacion> text, String string) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 		JLabel label = new JLabel(string);	
@@ -208,8 +259,8 @@ public class DialogoUsuario extends JDialog{
 	private void updateUser() throws SQLException{
 		Localizacion loca = (Localizacion) localizacion.getSelectedItem();
 
-		if(user.getTipo()!=0)UsuarioDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
-		else UsuarioDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), -1, idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+		if(user.getTipo()!=0)UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
+		else UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), -1, idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
 		user.setNombre(nombre.getText());
 		user.setEmail(email.getText());
 		user.setPass( String.valueOf(pass.getPassword()));
@@ -236,24 +287,20 @@ public class DialogoUsuario extends JDialog{
 	public void cargarDatosIdioma(JComboBox<String> combo) {
 		
 		try {
-			System.out.println(calcularTipoUsuario());
-			List<String> listaIdiomas = IdiomaDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).getIdiomas();
+			System.out.println(user.calcularTipoUsuario());
+			List<String> listaIdiomas = IdiomaDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).getIdiomas();
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
-	private String calcularTipoUsuario() {
-		if (user.getTipo()==0)return "Basic";
-		else if (user.getTipo()==1)return "Pro";
-		else return "Admin";
-	}
+	
 
 	public void cargarDatosLocalizaciones(JComboBox<Localizacion> combo) {
 	
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getAllLocalizaciones();
 			localizacion.removeAllItems();
 			listaLoca.forEach(loca->localizacion.addItem(loca));
@@ -262,6 +309,6 @@ public class DialogoUsuario extends JDialog{
 		}
 	}
 	
-
+	
 
 }

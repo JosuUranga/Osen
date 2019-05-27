@@ -151,12 +151,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				new Integer(KeyEvent.VK_H));
 		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
 				new Integer(KeyEvent.VK_P));
+		
 		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
 		if(usuario.getTipo()==0) {
 			anadirCampo.setEnabled(false);
 			anadirMuestra.setEnabled(false);
-
 		}
 		if(usuario.getTipo()==1) {
 			anadirMuestra.setEnabled(false);
