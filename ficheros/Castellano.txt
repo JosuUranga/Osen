@@ -50,3 +50,10 @@ Iniciar sesion
 La informacion introducida no es valida
 Error
 Datos incorrectos: no existe ningun usuario con los datos proporcionados
+Ya existe la localizacion 
+Mejorar cuenta
+Mejora tu cuenta a PRO
+¡Ya eres PRO!
+Nº de tarjeta
+Fecha de caducidad
+CVC

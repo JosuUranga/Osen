@@ -44,6 +44,7 @@ public class DialogoUsuario extends JDialog{
 	JButton botonOK,botonEditar, botonSalir;
 	JButton upgrade;
 	JLabel tipo;
+	
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user) {
 		super(ventana,titulo,modo);
 		this.listaPalabras=list;
@@ -55,10 +56,7 @@ public class DialogoUsuario extends JDialog{
 		this.setContentPane(crearPanelDialogo());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
-		
-	}
-	
-	
+	}	
 	private void cargarLocalizacionesIdioma() {
 		this.cargarDatosIdioma(idioma=new JComboBox<>());
 		this.idioma.setSelectedIndex(user.getIdiomaSeleccionado()-1);
@@ -140,7 +138,8 @@ public class DialogoUsuario extends JDialog{
 			public void actionPerformed(ActionEvent e) {
 				
 				System.out.println("Mejorar cuenta");
-				user.setTipo(1);
+				new DialogoTarjeta(DialogoUsuario.this, "Payment", true, listaPalabras, user);
+				//user.setTipo(1);
 				upgradeText();
 				
 				
