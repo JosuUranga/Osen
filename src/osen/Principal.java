@@ -71,7 +71,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JComboBox<String>comboFecha1,comboFecha2;
 	JComboBox<Localizacion>comboLocalizacion1,comboLocalizacion2;
 	JComboBox<Meteorologia>comboMeteo1,comboMeteo2;
-	boolean compararActivado=false;
 	LineaSeriePrincipal lsP;
 	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
@@ -151,18 +150,17 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 
 	private void crearAcciones() {
-		anadirCampo = new MiAccion (controladorIdioma.getListaPalabras().get(0),new ImageIcon("iconos/edit_add.png"),controladorIdioma.getListaPalabras().get(1),
+		anadirCampo = new MiAccion (controladorIdioma.getListaPalabras().get(0),"anadirCampo",new ImageIcon("iconos/edit_add.png"),controladorIdioma.getListaPalabras().get(1),
 				new Integer(KeyEvent.VK_C));
-		anadirMuestra = new MiAccion (controladorIdioma.getListaPalabras().get(2),new ImageIcon("iconos/amigo.png"),controladorIdioma.getListaPalabras().get(3),
+		anadirMuestra = new MiAccion (controladorIdioma.getListaPalabras().get(2),"anadirMuestra",new ImageIcon("iconos/amigo.png"),controladorIdioma.getListaPalabras().get(3),
 				new Integer(KeyEvent.VK_A));
-		recargar = new MiAccion (controladorIdioma.getListaPalabras().get(4),new ImageIcon("iconos/recargar.png"),controladorIdioma.getListaPalabras().get(5),
+		recargar = new MiAccion (controladorIdioma.getListaPalabras().get(4),"recargar",new ImageIcon("iconos/recargar.png"),controladorIdioma.getListaPalabras().get(5),
 				new Integer(KeyEvent.VK_R));
-		ayuda = new MiAccion (controladorIdioma.getListaPalabras().get(6),new ImageIcon("iconos/edit.png"),controladorIdioma.getListaPalabras().get(7),
+		ayuda = new MiAccion (controladorIdioma.getListaPalabras().get(6),"ayuda",new ImageIcon("iconos/edit.png"),controladorIdioma.getListaPalabras().get(7),
 				new Integer(KeyEvent.VK_H));
-		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
+		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),"pefil",new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
 				new Integer(KeyEvent.VK_P));
-		
-		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
+		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),"salir",new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
 		if(usuario.getTipo()==0) {
 			anadirCampo.setEnabled(false);
@@ -177,6 +175,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		comboLocalizacion1=new JComboBox<>();
 		comboMeteo1=new JComboBox<>();
 		comboFecha1=new JComboBox<>();
+		comboFecha1.setActionCommand("fecha");
 		cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 		comboLocalizacion1.addActionListener(this);
 		comboLocalizacion1.setActionCommand("localizacion");
@@ -195,9 +194,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		comboMeteo2=new JComboBox<>();
 		comboFecha2=new JComboBox<>();	
 		comboLocalizacion2.addActionListener(this);
-		comboLocalizacion2.setActionCommand("localizacion2");
 		comboMeteo2.addActionListener(this);
-		comboMeteo2.setActionCommand("meteo2");
 	}
 	private Container crearPanelVentana() {
 		panelinfo = new JPanel(new BorderLayout(0,0));
@@ -295,18 +292,24 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	private JMenu crearMenuAyuda() {
 		JMenu menudAyuda = new JMenu (controladorIdioma.getListaPalabras().get(26));
 		menudAyuda.setMnemonic(new Integer(KeyEvent.VK_A));
-		JMenuItem opcionMenu = new JMenuItem (ayuda);
+		JMenuItem opcionMenu;
+		opcionMenu = new JMenuItem (controladorIdioma.getListaPalabras().get(26));
+		opcionMenu.setActionCommand("ayuda");
 		menudAyuda.add(opcionMenu);
 		return menudAyuda;
 	}
 	private JMenu crearMenuEditar() {
 		JMenu menuEditar = new JMenu (controladorIdioma.getListaPalabras().get(27));
 		menuEditar.setMnemonic(new Integer(KeyEvent.VK_E));
-		JMenuItem opcionMenu = new JMenuItem (anadirCampo);
+		JMenuItem opcionMenu;
+		opcionMenu = new JMenuItem (anadirCampo);
+		opcionMenu.setActionCommand("anadirCampo");
 		menuEditar.add(opcionMenu);
 		opcionMenu = new JMenuItem (recargar);
+		opcionMenu.setActionCommand("recargar");
 		menuEditar.add(opcionMenu);
 		opcionMenu = new JMenuItem (perfil);
+		opcionMenu.setActionCommand("perfil");
 		menuEditar.add(opcionMenu);
 		return menuEditar;
 	}
@@ -319,45 +322,50 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 	private class MiAccion extends AbstractAction {
 		String texto;
-		public MiAccion (String texto, Icon imagen, String descrip, Integer nemonic){
+		public MiAccion (String texto,String actionCommand, Icon imagen, String descrip, Integer nemonic){
 			super(texto,imagen);
 			this.texto = texto;
 			this.putValue(Action.SHORT_DESCRIPTION ,descrip);
 			this.putValue(Action.MNEMONIC_KEY, nemonic);
+			this.putValue(ACTION_COMMAND_KEY, actionCommand);
 		}
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			
-			if (texto.equals(controladorIdioma.getListaPalabras().get(0))){
-				compararActivado=!compararActivado;
-				if(generadorPan.getState()!=2)generadorPan.setState(2);
-				else generadorPan.setState(0);
-				if(compararActivado) {
+			if (e.getActionCommand().equals("anadirCampo")){
+				if(generadorPan.getState()!=2) {
+					generadorPan.setState(0);
+					updatePanelMuestras();
+					generadorPan.setState(2);
 					panelComboBox2.add(comboLocalizacion2,0);
 					panelComboBox2.add(comboMeteo2,1);
 					panelComboBox2.add(comboFecha2,2);
 					cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
+					comboLocalizacion2.setActionCommand("localizacion2");
+					comboMeteo2.setActionCommand("meteo2");
 				}
-				else {
-				panelComboBox2.remove(0);
-				panelComboBox2.remove(0);
-				panelComboBox2.remove(0);
+				else{
+					comboLocalizacion2.setActionCommand("nada");
+					comboMeteo2.setActionCommand("nada");
+					generadorPan.setState(0);
+					updatePanelMuestras();
+					panelComboBox2.remove(0);
+					panelComboBox2.remove(0);
+					panelComboBox2.remove(0);
 				}
-				//hay q dinamizar esto
 				Principal.this.revalidate();
 				Principal.this.repaint();
 				
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
+			if (e.getActionCommand().equals("anadirMuestra")){//anadir muestra
 				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma, usuario);
 
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
+			if (e.getActionCommand().equals("recargar")){//recargar
 				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
-			if(texto.equals(controladorIdioma.getListaPalabras().get(6))) {//ayuda
+			if(e.getActionCommand().equals("ayuda")) {//ayuda
 				
 				Desktop desktop = Desktop.getDesktop();
 		        
@@ -369,10 +377,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 						}
 
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
+			if (e.getActionCommand().equals("perfil")){//perfil
 				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma, usuario, Principal.this);
 			}
-			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
+			if (e.getActionCommand().equals("salir")){//salir
 				Principal.this.dispose();
 			}
 		}
@@ -399,22 +407,18 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	@Override
 	public void actionPerformed(ActionEvent e) {
-				
+		System.out.println(e.getActionCommand());
 		switch(e.getActionCommand()) {
 		
 		case "Buscar":
-			if(!compararActivado)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
+			if(generadorPan.getState()==0)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 			else {
 				muestra2=realizarBusquedaSinComparar(comboLocalizacion2,comboMeteo2,comboFecha2);
 			}
 			muestra1=realizarBusquedaSinComparar(comboLocalizacion1,comboMeteo1,comboFecha1);
-			panelinfo.removeAll();
-			panelinfo.add(combo,BorderLayout.NORTH);
-			panelinfo.add(generadorPan.getPanel(muestra1, muestra2),BorderLayout.CENTER);
-			panelinfo.revalidate();
-			panelinfo.repaint();
+			updatePanelMuestras();
 			break;
-		case "localizacion":		
+		case "localizacion":
 			if(comboLocalizacion1.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
 			break;
 		case "localizacion2":
@@ -429,6 +433,13 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		}
 	}
 
+	private void updatePanelMuestras() {
+		panelinfo.removeAll();
+		panelinfo.add(combo,BorderLayout.NORTH);
+		panelinfo.add(generadorPan.getPanel(muestra1, muestra2),BorderLayout.CENTER);
+		panelinfo.revalidate();
+		panelinfo.repaint();
+	}
 
 
 	private Muestra realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {

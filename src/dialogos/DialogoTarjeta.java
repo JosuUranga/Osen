@@ -117,9 +117,7 @@ public class DialogoTarjeta extends JDialog{
 		
 		});
 		panel.add(botonOK);
-		
 		botonCancelar = new JButton (listaPalabras.getListaPalabras().get(39));
-	
 		botonCancelar.addActionListener(new ActionListener(){
 
 			@Override
