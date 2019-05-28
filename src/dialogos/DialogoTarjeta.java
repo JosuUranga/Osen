@@ -98,7 +98,7 @@ public class DialogoTarjeta extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 					try {
-						Suscripciones sus=new Suscripciones("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
+						Suscripciones sus=Suscripciones.getInstance();
 						sus.createCustomer(user.getNombre(), user.getEmail());
 						String cad[]=fecha.getText().split("/");
 						sus.createCard(user.getEmail(), tarjeta.getText(), cad[1], cad[0], CVC.getText());

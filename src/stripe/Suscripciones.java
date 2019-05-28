@@ -9,10 +9,18 @@ import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
 
+import modelos.FechaDAO;
+
 public class Suscripciones {
-	
-	public Suscripciones(String key) {
+	static Suscripciones instance;
+	protected Suscripciones(String key) {
 		Stripe.apiKey = key;
+	}
+	public static Suscripciones getInstance() {
+		if (instance != null) {
+			instance = new Suscripciones("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
+		}
+		return instance;
 	}
 	public boolean createCustomer(String name,String mail) throws StripeException{
 		Customer customer=findCustomer(mail);

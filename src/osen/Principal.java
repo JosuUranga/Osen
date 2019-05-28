@@ -294,8 +294,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		JMenu menudAyuda = new JMenu (controladorIdioma.getListaPalabras().get(26));
 		menudAyuda.setMnemonic(new Integer(KeyEvent.VK_A));
 		JMenuItem opcionMenu;
-		opcionMenu = new JMenuItem (controladorIdioma.getListaPalabras().get(26));
-		opcionMenu.setActionCommand("ayuda");
+		opcionMenu = new JMenuItem (ayuda);
 		menudAyuda.add(opcionMenu);
 		return menudAyuda;
 	}
@@ -304,13 +303,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		menuEditar.setMnemonic(new Integer(KeyEvent.VK_E));
 		JMenuItem opcionMenu;
 		opcionMenu = new JMenuItem (anadirCampo);
-		opcionMenu.setActionCommand("anadirCampo");
 		menuEditar.add(opcionMenu);
 		opcionMenu = new JMenuItem (recargar);
-		opcionMenu.setActionCommand("recargar");
 		menuEditar.add(opcionMenu);
 		opcionMenu = new JMenuItem (perfil);
-		opcionMenu.setActionCommand("perfil");
 		menuEditar.add(opcionMenu);
 		return menuEditar;
 	}
@@ -331,7 +327,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			this.putValue(Action.MNEMONIC_KEY, nemonic);
 			this.putValue(ACTION_COMMAND_KEY, actionCommand);
 		}
-
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().equals("anadirCampo")){
@@ -359,16 +355,15 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				Principal.this.repaint();
 				
 			}
-			if (e.getActionCommand().equals("anadirMuestra")){//anadir muestra
+			if (e.getActionCommand().equals("anadirMuestra")){
 				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma, usuario);
 
 			}
-			if (e.getActionCommand().equals("recargar")){//recargar
+			if (e.getActionCommand().equals("recargar")){
 				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
 				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
-			if(e.getActionCommand().equals("ayuda")) {//ayuda
-				
+			if(e.getActionCommand().equals("ayuda")) {
 				Desktop desktop = Desktop.getDesktop();
 		        
 		        if(file.exists())
@@ -379,14 +374,14 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 						}
 
 			}
-			if (e.getActionCommand().equals("perfil")){//perfil
+			if (e.getActionCommand().equals("perfil")){
 				int idioma=usuario.getIdiomaSeleccionado();
 				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma, usuario, Principal.this);
 				if(idioma!=usuario.getIdiomaSeleccionado()) {
 					updatePanelMuestras("idioma");
 				}
 			}
-			if (e.getActionCommand().equals("salir")){//salir
+			if (e.getActionCommand().equals("salir")){
 				Principal.this.dispose();
 			}
 		}

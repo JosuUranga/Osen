@@ -28,12 +28,15 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.stripe.exception.StripeException;
+
 import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 import osen.Principal;
 import otros.TextPrompt;
+import stripe.Suscripciones;
 
 
 
@@ -48,6 +51,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 	ControladorIdioma listaPalabras;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	JComboBox <String> idioma;
+	JPanel panel;
 	PropertyChangeSupport soporte;
 	
 	public JComboBox<String> getIdioma() {
@@ -85,10 +89,17 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 		combo.setSelectedIndex(0);
 	}
 	private Container crearPanelGeneral() {
-		JPanel panel = new JPanel(new GridLayout(1,1));
+		panel = new JPanel(new GridLayout(1,1));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 		panel.add(crearPanelCuadro());	
 		return panel;
+	}
+	private void updatePanel() {
+		idioma.removeItemListener(this);
+		panel.removeAll();
+		panel.add(crearPanelCuadro());	
+		panel.revalidate();
+		panel.repaint();
 	}
 	public Container crearPanelTitulo() {
 		JPanel panel=new JPanel();
@@ -157,16 +168,16 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 		panel.add(logear);
 		return panel;
 	}
-	public boolean checkLogin() {
-		
-
-		return true;
-	}
 	@Override
 	public void actionPerformed(ActionEvent e) {
 		if (e.getActionCommand().equals("logear")) {
 			try {
 				user = UsuarioDAO.getInstance("Basic",Principal.dbpass, Principal.dbname, Principal.dbip).getUser(usuario.getText(), String.valueOf(password.getPassword()));
+				Suscripciones sus=Suscripciones.getInstance();
+				if (user.getTipo()==UsuarioVO.PRO && !sus.checkSubActive(user.getEmail())) {
+					user.setTipo(UsuarioVO.NORMAL);
+					UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), -1, user.getLocalizacion(), user.getTipo(), user.getUsuarioID());
+				}
 				if(user!=null) {
 					loginCorrecto=true;
 					this.dispose();
@@ -182,6 +193,8 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 				}
 			} catch (NumberFormatException e2) {
 				JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+			} catch (StripeException e3) {
+				JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(42)+e3.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 			}	 
 			
 		}
@@ -207,7 +220,9 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 	@Override
 	public void itemStateChanged(ItemEvent e) {
 		if(e.getStateChange()==1) {
+			System.out.println("a");
 			soporte.firePropertyChange("idioma", null, idioma.getSelectedIndex());
+			updatePanel();
 		}
 	}
 
