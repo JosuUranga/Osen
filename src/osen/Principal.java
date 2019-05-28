@@ -158,7 +158,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				new Integer(KeyEvent.VK_R));
 		ayuda = new MiAccion (controladorIdioma.getListaPalabras().get(6),"ayuda",new ImageIcon("iconos/edit.png"),controladorIdioma.getListaPalabras().get(7),
 				new Integer(KeyEvent.VK_H));
-		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),"pefil",new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
+		perfil = new MiAccion (controladorIdioma.getListaPalabras().get(30),"perfil",new ImageIcon("iconos/perfil.png"),controladorIdioma.getListaPalabras().get(31),
 				new Integer(KeyEvent.VK_P));
 		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),"salir",new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
@@ -282,7 +282,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	
 
 	private JMenuBar crearMenu() {
-		JMenuBar barra = new JMenuBar();
+		barra=new JMenuBar();
 		barra.add (crearMenuEditar());
 		barra.add (crearMenuAyuda());
 		barra.add (crearMenuSalir());
@@ -335,7 +335,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			if (e.getActionCommand().equals("anadirCampo")){
 				if(generadorPan.getState()!=2) {
 					generadorPan.setState(0);
-					updatePanelMuestras();
+					updatePanelMuestras("asd");
 					generadorPan.setState(2);
 					panelComboBox2.add(comboLocalizacion2,0);
 					panelComboBox2.add(comboMeteo2,1);
@@ -348,7 +348,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 					comboLocalizacion2.setActionCommand("nada");
 					comboMeteo2.setActionCommand("nada");
 					generadorPan.setState(0);
-					updatePanelMuestras();
+					updatePanelMuestras("asd");
 					panelComboBox2.remove(0);
 					panelComboBox2.remove(0);
 					panelComboBox2.remove(0);
@@ -378,7 +378,11 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (e.getActionCommand().equals("perfil")){//perfil
+				int idioma=usuario.getIdiomaSeleccionado();
 				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma, usuario, Principal.this);
+				if(idioma!=usuario.getIdiomaSeleccionado()) {
+					updatePanelMuestras("idioma");
+				}
 			}
 			if (e.getActionCommand().equals("salir")){//salir
 				Principal.this.dispose();
@@ -416,7 +420,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				muestra2=realizarBusquedaSinComparar(comboLocalizacion2,comboMeteo2,comboFecha2);
 			}
 			muestra1=realizarBusquedaSinComparar(comboLocalizacion1,comboMeteo1,comboFecha1);
-			updatePanelMuestras();
+			updatePanelMuestras("asd");
 			break;
 		case "localizacion":
 			if(comboLocalizacion1.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
@@ -433,12 +437,22 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		}
 	}
 
-	private void updatePanelMuestras() {
+	private void updatePanelMuestras(String type) {
+		if(type.equals("idioma")) {
+			combo=crearPanelNorte();
+			barra.removeAll();
+			barra.add (crearMenuEditar());
+			barra.add (crearMenuAyuda());
+			barra.add (crearMenuSalir());
+			barra.revalidate();
+			barra.repaint();
+		}
 		panelinfo.removeAll();
 		panelinfo.add(combo,BorderLayout.NORTH);
 		panelinfo.add(generadorPan.getPanel(muestra1, muestra2),BorderLayout.CENTER);
 		panelinfo.revalidate();
 		panelinfo.repaint();
+
 	}
 
 
@@ -502,8 +516,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		case "idioma":
 				controladorIdioma.cambiarIdioma((int)evt.getNewValue());
 				controladorIdioma.cargarIdioma();
-				//this.revalidate();
-				//this.repaint();
 			break;
 		}
 	}
