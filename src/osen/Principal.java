@@ -141,6 +141,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 
 
+	@SuppressWarnings("unused")
 	private void iniciarNotis() {
 		if(usuario.getTipo()>0) {
 			notiManager=new NotificationManager("keyaqui", usuario);
@@ -321,6 +322,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		return menuSalir;
 	}
 	private class MiAccion extends AbstractAction {
+		@SuppressWarnings("unused")
 		String texto;
 		public MiAccion (String texto,String actionCommand, Icon imagen, String descrip, Integer nemonic){
 			super(texto,imagen);
