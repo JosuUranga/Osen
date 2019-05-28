@@ -2,29 +2,58 @@ Add Field
 Add a new field
 Add Sample
 Add a new sample
-Refresh
-Refreshes the information in the database
+Reload
+Refresh database information
 Help
 Review the information of the meteorological variables
 Exit
 Close the application
 Map
 General information
-Charts
-Place:
-Area:
-Population:
-Density:
-Environmental data
-Temperature:
-Co2 equivalent:
-Humidity:
-Density:
-Sample number:
-Date:
-Weather condition:
-Taken by:
-Help
-Edit
+Graphics
+Place: 
+Area (km2):  
+Inhabitants: 
+Density:  
+Environmental data 
+Temperature 
+Equivalent Co2:  
+Humidity: 
+Density:  
+Sample number:  
+Date  
+Weather condition:  
+Taken by:  
+Help 
+Edit 
 Exit
-inhabitants / km2
+inhabitants/km2
+Profile
+View user profile information
+User number: 
+Type of user: 
+Name 
+Password: 
+Email: 
+Location: 
+Language: 
+Cancel
+A user already exists in the database with the data provided
+SQL error code: 
+Invalid format: (
+Warning
+Start
+The sample was taken correctly
+Add location
+Create user
+Login
+The information entered is not valid
+Error
+Incorrect data: there is no user with the data provided
+The location already exists 
+Improve account
+Upgrade your account to PRO
+You're PRO!
+Card number
+Expiry date
+CVC

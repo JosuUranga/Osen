@@ -1,0 +1,59 @@
+Zelaia Gehitu
+Zelai berria gehitzen du
+Lagina Gehitu
+Lagin berria gehitzen du
+Kargatu
+Datu-basearen informazioa freskatzen du
+Laguntza
+Aldagai meteorologikoen informazioa ikusi
+Irten
+Aplikazioa ixten du
+Mapa
+Informazio orokorra
+Grafikoak
+Lekua: 
+Area (km2): 
+Biztanleak: 
+Dentsitatea: 
+Ingurumen-datuak 
+Tenperatura: 
+Co2 baliokidea: 
+Hezetasuna: 
+Dentsitatea: 
+Lagin-zenbakia: 
+Data: 
+Baldintza meteorologikoa: 
+Hartzailea: 
+Laguntza 
+Editatu 
+Irten
+biztanle/km2
+Profila
+Erabiltzaile-profilaren informazioa kontsultatzen du
+Erabiltzaile zenbakia: 
+Erabiltzaile-tipoa: 
+Izena: 
+Pasahitza: 
+Posta elektronikoa: 
+Lokalizazioa: 
+Hizkuntza: 
+Ezeztatu
+Jada erabiltzaile bat datu-basean dago proportziodun datuekin
+SQL akats kodea: 
+Emandako formatua ez da baliagarria: (
+Abisua
+Hasi
+Lagina zuzenki hartu da
+Lokalizazioa gehitu
+Erabiltzailea sortu
+Saioa hasi
+Sartutako informazioa ez da baliogarria
+Akatsa
+Datu okerrak: inongo erabiltzailerik ez dago proportziodun datuekin
+Jada lokalizazioa badago 
+Kontua hobetu
+Hobe ezazu zure kontua PRO-ra
+Jada PRO zara!
+Txartel-zenbakia
+Iraungitze-data
+CVC-a
