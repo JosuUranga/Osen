@@ -1,18 +1,25 @@
 package dialogos;
 
 
+import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ItemEvent;
+import java.awt.event.ItemListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
+import javax.swing.JComboBox;
 import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -20,7 +27,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
+
 import idiomas.ControladorIdioma;
+import modelos.IdiomaDAO;
 import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 import osen.Principal;
@@ -30,7 +39,7 @@ import otros.TextPrompt;
 
 
 @SuppressWarnings("serial")
-public class Login extends JDialog implements ActionListener{
+public class Login extends JDialog implements ActionListener, ItemListener{
 	JTextField usuario;
 	JPasswordField password;
 	JButton logear;
@@ -38,18 +47,44 @@ public class Login extends JDialog implements ActionListener{
 	UsuarioVO user;
 	List<String> listaPalabras;
 	ControladorIdioma controladorIdioma;
-	int idioma=0;
-	public Login(JFrame ventana) {
+	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
+	JComboBox <String> idioma;
+	PropertyChangeSupport soporte;
+	
+	public JComboBox<String> getIdioma() {
+		return idioma;
+	}
+	public Login(JFrame ventana, PropertyChangeListener listener, ControladorIdioma ci) {
 		super(ventana,"Login",true);
+		soporte = new PropertyChangeSupport(this);
+		soporte.addPropertyChangeListener(listener);
+		controladorIdioma=ci;
 		this.setSize(600,325);
 		this.setLocation (600,400);
 		loginCorrecto=false;
-		controladorIdioma=new ControladorIdioma(idioma);
+		this.cargarDatosIdioma(idioma=new JComboBox<>());
 		controladorIdioma.cargarIdioma();
 		this.listaPalabras=controladorIdioma.getListaPalabras();
 		this.setContentPane(crearPanelGeneral());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
+	}
+	public void addPropertyChangeListener(PropertyChangeListener listener) { 
+		soporte.addPropertyChangeListener(listener); 
+	} 
+	public void removePropertyChangeListener(PropertyChangeListener listener) { 
+		soporte.removePropertyChangeListener(listener); 
+	} 
+	public void cargarDatosIdioma(JComboBox<String> combo) {
+		
+		try {
+			List<String> listaIdiomas = IdiomaDAO.getInstance("Basic", Principal.dbpass, Principal.dbname, Principal.dbip).getIdiomas();
+			combo.removeAllItems();
+			listaIdiomas.forEach(idioma->combo.addItem(idioma));
+		} catch (SQLException e) {
+			JOptionPane.showMessageDialog(Login.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+		}
+		combo.setSelectedIndex(0);
 	}
 	private Container crearPanelGeneral() {
 		JPanel panel = new JPanel(new GridLayout(1,1));
@@ -65,10 +100,21 @@ public class Login extends JDialog implements ActionListener{
 		return panel;
 	}
 	public Container crearPanelCuadro() {
-		JPanel panel= new JPanel();
+		JPanel panel= new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		panel.add(crearPanelLogin());
+		panel.add(crearPanelIdioma(idioma, listaPalabras.get(38)),BorderLayout.NORTH);
+		panel.add(crearPanelLogin(),BorderLayout.CENTER);
 		panel.setOpaque(true);
+		return panel;
+	}
+	private Component crearPanelIdioma(JComboBox<String> text, String string) {
+		JPanel panel = new JPanel(new GridLayout(1,2));
+		JLabel label = new JLabel(string);	
+		label.setFont(fuenteTituloInfoGeneral);
+		panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 30));
+		text.addItemListener(this);
+		panel.add(label);
+		panel.add(text);
 		return panel;
 	}
 	public Container crearPanelLogin() {
@@ -83,7 +129,7 @@ public class Login extends JDialog implements ActionListener{
 	public Container crearPanelTextos() {
 		JPanel panel=new JPanel(new GridLayout(2,2,10,10));
 		JLabel label,label2;
-		label=new JLabel(listaPalabras.get(32));
+		label=new JLabel(listaPalabras.get(36));
 		panel.setBackground(Color.white);
 		label.setHorizontalAlignment(JLabel.LEFT);
 		label2=new JLabel(listaPalabras.get(35));
@@ -159,6 +205,12 @@ public class Login extends JDialog implements ActionListener{
 	}
 	public UsuarioVO getUser() {
 		return user;
+	}
+	@Override
+	public void itemStateChanged(ItemEvent e) {
+		if(e.getStateChange()==1) {
+			soporte.firePropertyChange("idioma", null, idioma.getSelectedIndex());
+		}
 	}
 
 }

@@ -46,6 +46,7 @@ import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
 import modelos.MeteoDAO;
 import modelos.MuestrasDAO;
+import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
 import muestras.Meteorologia;
@@ -89,7 +90,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		System.setProperty("javax.net.ssl.trustStoreType", "JKS");
 		System.setProperty("javax.net.ssl.keyStore","client-certs/keycerts"); 
 		System.setProperty("javax.net.ssl.keyStorePassword","Osen!1234");
-		System.setProperty("javax.net.ssl.keyStoreType", "JKS");
+		System.setProperty("javax.net.ssl.keyStoreType", "JKS");		
+		controladorIdioma=new ControladorIdioma(0);
 		this.loguear();
 		this.setLocation (340,100);
 		this.setSize(1000,800);
@@ -120,11 +122,19 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 	
 	private void loguear() {
-		login = new Login(this);
-		controladorIdioma=login.getControladorIdioma();
+		login = new Login(this, this, controladorIdioma);
 		System.out.println(login.esCorrecto());
 		if(login.esCorrecto()) {
-			usuario=login.getUser();
+			
+			try {
+				usuario=login.getUser();
+				usuario.setIdiomaSeleccionado(login.getIdioma().getSelectedIndex()+1);
+				UsuarioDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(usuario.getNombre(), usuario.getPass(), usuario.getEmail(), usuario.getLocalizacion(), usuario.getIdiomaSeleccionado(), usuario.getTipo(), usuario.getUsuarioID());
+				controladorIdioma.cambiarIdioma(usuario.getIdiomaSeleccionado());
+
+			} catch (SQLException e) {
+				JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			};
 		}else {
 			this.dispose();
 			System.exit(1);
@@ -259,7 +269,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 	private Component panelBarraBotones() {
 		JToolBar toolBar = new JToolBar();
-		
+		toolBar.setFloatable(false);
 		@SuppressWarnings("unused")
 		JButton boton;
 		toolBar.add(anadirCampo);
@@ -360,7 +370,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), usuario);
+				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), usuario, Principal.this);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();
@@ -479,8 +489,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	public void propertyChange(PropertyChangeEvent evt) {
 		switch(evt.getPropertyName()) {
 		case "idioma":
-				this.revalidate();
-				this.repaint();
+				controladorIdioma.cambiarIdioma((int)evt.getNewValue());
+				controladorIdioma.cargarIdioma();
+				//this.revalidate();
+				//this.repaint();
 			break;
 		}
 	}

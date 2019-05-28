@@ -7,6 +7,8 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.sql.SQLException;
 import java.util.List;
 
@@ -44,9 +46,13 @@ public class DialogoUsuario extends JDialog{
 	JButton botonOK,botonEditar, botonSalir;
 	JButton upgrade;
 	JLabel tipo;
+	PropertyChangeSupport soporte;
+	JPanel panelPrincipal;
 	
-	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user) {
+	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user, PropertyChangeListener listener) {
 		super(ventana,titulo,modo);
+		soporte = new PropertyChangeSupport(this);
+		soporte.addPropertyChangeListener(listener);
 		this.listaPalabras=list;
 		this.ventana=ventana;
 		this.setSize(600,500);
@@ -68,11 +74,11 @@ public class DialogoUsuario extends JDialog{
 	}
 
 	private Container crearPanelDialogo() {
-		JPanel panel = new JPanel (new BorderLayout(0,20));
-		panel.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
-		panel.add(crearPanelDatos(),BorderLayout.CENTER);
-		panel.add(crearPanelDobleBotones(),BorderLayout.SOUTH);
-		return panel;
+		panelPrincipal = new JPanel (new BorderLayout(0,20));
+		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
+		panelPrincipal.add(crearPanelDatos(),BorderLayout.CENTER);
+		panelPrincipal.add(crearPanelDobleBotones(),BorderLayout.SOUTH);
+		return panelPrincipal;
 	}
 	
 	private Component crearPanelDobleBotones() {
@@ -225,9 +231,13 @@ public class DialogoUsuario extends JDialog{
 				toggleStatusEditando();
 				try {
 					updateUser();
+					
+					//crearPanelDialogo();
+					
+					
+
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-
 				};
 				
 				
@@ -246,8 +256,6 @@ public class DialogoUsuario extends JDialog{
 			@Override
 			public void actionPerformed(ActionEvent e) {
 				toggleStatusEditando();
-
-				
 				
 			}
 			
@@ -257,7 +265,8 @@ public class DialogoUsuario extends JDialog{
 	}
 	private void updateUser() throws SQLException{
 		Localizacion loca = (Localizacion) localizacion.getSelectedItem();
-
+		user.setIdiomaSeleccionado(idioma.getSelectedIndex()+1);
+		
 		if(user.getTipo()!=0)UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
 		else UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), -1, idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
 		user.setNombre(nombre.getText());
@@ -266,8 +275,12 @@ public class DialogoUsuario extends JDialog{
 		if(user.getTipo()!=0) {
 			user.setLocalizacion(loca.getId());
 		}
-		user.setIdiomaSeleccionado(idioma.getSelectedIndex()+1);
+
 		
+		soporte.firePropertyChange("idioma", null, idioma.getSelectedIndex());
+	
+		
+
 	}
 	private void toggleStatusEditando() {
 		editando=!editando;
@@ -309,5 +322,4 @@ public class DialogoUsuario extends JDialog{
 	}
 	
 	
-
 }

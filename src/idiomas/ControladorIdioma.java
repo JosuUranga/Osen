@@ -37,15 +37,19 @@ public class ControladorIdioma {
 	public void cargarIdioma() { 
 		switch(idioma) { 
 		case 0: 
+			System.out.println("castellano");
 			ficheroIdioma=new FicheroIdioma(ficheroCastellano); 
 		break; 
 		case 1: 
+			System.out.println("euskara");
+			ficheroIdioma=null;
 			ficheroIdioma=new FicheroIdioma(ficheroEuskara); 
 		break; 
 		case 2: 
+			ficheroIdioma=null;
+			System.out.println("ingles");
 			ficheroIdioma=new FicheroIdioma(ficheroIngles); 
 		break; 
 		} 
-	soporte.firePropertyChange("idioma", null, null); 
 	} 
 } 
