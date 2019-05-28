@@ -37,6 +37,8 @@ public class DialogoCrearUsuario extends JDialog{
 	JButton botonOK,botonEditar, botonSalir;
 	int numeroLocalizacion;
 	
+
+		
 	public final static String dbuser="Basic";
 	
 	
@@ -77,7 +79,10 @@ public class DialogoCrearUsuario extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e3) {
-				
+				if (!email.getText().matches(Principal.EMAIL_PATTERN)) {
+					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, "Email no valido", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+				}
+				else {
 				try {
 					UsuarioDAO.getInstance("Admin",Principal.dbpass, Principal.dbname, Principal.dbip).addUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(),(idioma.getSelectedIndex()+1));
 					DialogoCrearUsuario.this.dispose();
@@ -90,7 +95,7 @@ public class DialogoCrearUsuario extends JDialog{
 					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 				}
 			}
-			
+		}
 		});
 		panel.add(boton);
 		JButton boton2= new JButton(listaPalabras.getListaPalabras().get(39));

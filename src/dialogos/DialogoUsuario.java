@@ -23,6 +23,8 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import com.stripe.exception.StripeException;
+
 import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
@@ -30,6 +32,7 @@ import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
 import osen.Principal;
+import stripe.Suscripciones;
 
 @SuppressWarnings("serial")
 public class DialogoUsuario extends JDialog{
@@ -144,11 +147,23 @@ public class DialogoUsuario extends JDialog{
 		upgrade = new JButton (listaPalabras.getListaPalabras().get(53));
 		upgrade.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				
-				System.out.println("Mejorar cuenta");
+				if(e.getActionCommand().equals("upgrade")) {
 				new DialogoTarjeta(DialogoUsuario.this, "Payment", true, listaPalabras, user);
 				upgradeText();
-				
+				}
+				if(e.getActionCommand().equals("downgrade")) {
+					
+					try {
+						Suscripciones.getInstance().cancelSub(user.getEmail());
+						user.setTipo(0);
+						UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), -1, user.getLocalizacion(), user.getTipo(), user.getUsuarioID());
+						upgradeText();
+					}  catch (StripeException e2) {
+						JOptionPane.showMessageDialog(DialogoUsuario.this, e2.getLocalizedMessage(), listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					}
+				}
 				
 			}
 		});
@@ -163,15 +178,21 @@ public class DialogoUsuario extends JDialog{
 	private void upgradeText() {
 		tipo.setText(user.calcularTipoUsuario());
 		if(user.getTipo()==0) {
-			upgrade.setEnabled(true);
 			upgrade.setText(listaPalabras.getListaPalabras().get(53));
+			upgrade.setActionCommand("upgrade");
+
+		}
+		else if(user.getTipo()==1) {
+			cargarDatosLocalizaciones(localizacion);
+			upgrade.setText(listaPalabras.getListaPalabras().get(55));
+			upgrade.setActionCommand("downgrade");
 
 		}
 		else {
-			cargarDatosLocalizaciones(localizacion);
+			upgrade.setText("ADMIN");
 			upgrade.setEnabled(false);
-			upgrade.setText(listaPalabras.getListaPalabras().get(55));
-		}		
+
+		}
 	}
 
 
@@ -230,15 +251,20 @@ public class DialogoUsuario extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				toggleStatusEditando();
-				try {
-					updateUser();
-					updatePaneles();
-
-				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-				};
 				
+				if(email.getText().matches(Principal.EMAIL_PATTERN)) {
+					toggleStatusEditando();
+					try {
+						updateUser();
+						updatePaneles();
+		
+					} catch (SQLException e1) {
+						JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					};
+				}
+				else {
+					JOptionPane.showMessageDialog(DialogoUsuario.this, "Email no valido", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+				}
 				
 			}
 
@@ -279,12 +305,7 @@ public class DialogoUsuario extends JDialog{
 		if(user.getTipo()!=0) {
 			user.setLocalizacion(loca.getId());
 		}
-
-		
 		soporte.firePropertyChange("idioma", null, idioma.getSelectedIndex());
-		
-		
-
 	}
 	private void toggleStatusEditando() {
 		editando=!editando;

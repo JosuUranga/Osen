@@ -62,7 +62,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	public final static String dbpass="Osen!1234";
 	public final static String dbname="osen";
 	public final static String dbip="68.183.211.91";
-
+	public static final String EMAIL_PATTERN = 
+		    "^[_A-Za-z0-9-\\+]+(\\.[_A-Za-z0-9-]+)*@"
+		    + "[A-Za-z0-9-]+(\\.[A-Za-z0-9]+)*(\\.[A-Za-z]{2,})$";
 	JMenuBar barra;
 	JMenu	menuAgregaciones, menuSalir;
 	JMenuItem opcionMenu;
@@ -318,11 +320,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		return menuSalir;
 	}
 	private class MiAccion extends AbstractAction {
-		@SuppressWarnings("unused")
-		String texto;
 		public MiAccion (String texto,String actionCommand, Icon imagen, String descrip, Integer nemonic){
 			super(texto,imagen);
-			this.texto = texto;
 			this.putValue(Action.SHORT_DESCRIPTION ,descrip);
 			this.putValue(Action.MNEMONIC_KEY, nemonic);
 			this.putValue(ACTION_COMMAND_KEY, actionCommand);
