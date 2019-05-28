@@ -45,8 +45,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 	JButton logear;
 	boolean loginCorrecto;
 	UsuarioVO user;
-	List<String> listaPalabras;
-	ControladorIdioma controladorIdioma;
+	ControladorIdioma listaPalabras;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	JComboBox <String> idioma;
 	PropertyChangeSupport soporte;
@@ -58,13 +57,12 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 		super(ventana,"Login",true);
 		soporte = new PropertyChangeSupport(this);
 		soporte.addPropertyChangeListener(listener);
-		controladorIdioma=ci;
+		listaPalabras=ci;
 		this.setSize(600,325);
 		this.setLocation (600,400);
 		loginCorrecto=false;
 		this.cargarDatosIdioma(idioma=new JComboBox<>());
-		controladorIdioma.cargarIdioma();
-		this.listaPalabras=controladorIdioma.getListaPalabras();
+		listaPalabras.cargarIdioma();
 		this.setContentPane(crearPanelGeneral());
 		this.setDefaultCloseOperation(JDialog.DISPOSE_ON_CLOSE);		
 		this.setVisible(true);
@@ -82,7 +80,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(Login.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(Login.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		combo.setSelectedIndex(0);
 	}
@@ -102,7 +100,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 	public Container crearPanelCuadro() {
 		JPanel panel= new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
-		panel.add(crearPanelIdioma(idioma, listaPalabras.get(38)),BorderLayout.NORTH);
+		panel.add(crearPanelIdioma(idioma, listaPalabras.getListaPalabras().get(38)),BorderLayout.NORTH);
 		panel.add(crearPanelLogin(),BorderLayout.CENTER);
 		panel.setOpaque(true);
 		return panel;
@@ -129,10 +127,10 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 	public Container crearPanelTextos() {
 		JPanel panel=new JPanel(new GridLayout(2,2,10,10));
 		JLabel label,label2;
-		label=new JLabel(listaPalabras.get(36));
+		label=new JLabel(listaPalabras.getListaPalabras().get(36));
 		panel.setBackground(Color.white);
 		label.setHorizontalAlignment(JLabel.LEFT);
-		label2=new JLabel(listaPalabras.get(35));
+		label2=new JLabel(listaPalabras.getListaPalabras().get(35));
 		label2.setHorizontalAlignment(JLabel.LEFT);
 		panel.add(label);
 		usuario=new JTextField();
@@ -148,12 +146,12 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 		JPanel panel=new JPanel(new GridLayout(1,2,40,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 40, 20, 40));
 		panel.setBackground(Color.white);
-		logear=new JButton(listaPalabras.get(48));
+		logear=new JButton(listaPalabras.getListaPalabras().get(48));
 		logear.setActionCommand("logear");
 		this.getRootPane().setDefaultButton(logear);
 		logear.addActionListener(this);
 		panel.add(logear);
-		logear=new JButton(listaPalabras.get(47));
+		logear=new JButton(listaPalabras.getListaPalabras().get(47));
 		logear.setActionCommand("signup");
 		logear.addActionListener(this);
 		panel.add(logear);
@@ -175,20 +173,20 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 				}
 				else {
 					
-					JOptionPane.showMessageDialog(Login.this, listaPalabras.get(49), listaPalabras.get(50), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(49), listaPalabras.getListaPalabras().get(50), JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (SQLException e1) {
-				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, listaPalabras.get(51), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(51), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				else {
-					JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (NumberFormatException e2) {
-				JOptionPane.showMessageDialog(Login.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
+				JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 			}	 
 			
 		}
 		if(e.getActionCommand().equals("signup")) {
-			new DialogoCrearUsuario(this, listaPalabras.get(47), true, listaPalabras);
+			new DialogoCrearUsuario(this, listaPalabras.getListaPalabras().get(47), true, listaPalabras);
 		}
 	}
 	public Boolean esCorrecto() {
@@ -201,7 +199,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 		return String.valueOf(password.getPassword());
 	}
 	public ControladorIdioma getControladorIdioma() {
-		return controladorIdioma;
+		return listaPalabras;
 	}
 	public UsuarioVO getUser() {
 		return user;

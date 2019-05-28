@@ -8,7 +8,6 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -19,6 +18,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import estados.GestorEstadosAnadirMuestra;
+import idiomas.ControladorIdioma;
 import modelos.LocalizacionDAO;
 import modelos.UsuarioVO;
 import muestras.MuestraCo2;
@@ -34,17 +34,17 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	MuestraCo2 muestra;
 	
 	JTextField nombre,habitantes,area;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra;
 	UsuarioVO usuario;
 	boolean anadirLocalizacionSeleccionado=false;
 	
 	
-	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, List<String> list, UsuarioVO usuario) {
+	public DialogoInsertarLocalizacion (GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, DialogoInsertarMuestra dialogoInsertarMuestra,String titulo, boolean modo, ControladorIdioma listaPalabras2, UsuarioVO usuario) {
 		super(dialogoInsertarMuestra,titulo,modo);
 		this.usuario=usuario;
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
-		this.listaPalabras=list;
+		this.listaPalabras=listaPalabras2;
 		this.ventana=dialogoInsertarMuestra;
 		this.setSize(600,400);
 		this.setLocation (100,100);
@@ -81,9 +81,9 @@ public class DialogoInsertarLocalizacion extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(3,1));
 		
-		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.get(34)));
-		panel.add(crearTextField(habitantes=new JTextField(), listaPalabras.get(15)));
-		panel.add(crearTextField(area=new JTextField(), listaPalabras.get(14)));
+		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.getListaPalabras().get(34)));
+		panel.add(crearTextField(habitantes=new JTextField(), listaPalabras.getListaPalabras().get(15)));
+		panel.add(crearTextField(area=new JTextField(), listaPalabras.getListaPalabras().get(14)));
 
 		
 
@@ -115,11 +115,11 @@ public class DialogoInsertarLocalizacion extends JDialog{
 					DialogoInsertarLocalizacion.this.dispose();
 
 				} catch (SQLException e1) {
-					if(e1.getErrorCode()==1062)	JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.get(52)+nombre.getText(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-					else JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					if(e1.getErrorCode()==1062)	JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.getListaPalabras().get(52)+nombre.getText(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					else JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarLocalizacion.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 					
 				}	
 				
@@ -127,7 +127,7 @@ public class DialogoInsertarLocalizacion extends JDialog{
 			
 		});
 	
-		JButton boton2 = new JButton (listaPalabras.get(39));
+		JButton boton2 = new JButton (listaPalabras.getListaPalabras().get(39));
 		boton2.addActionListener(new ActionListener(){
 		
 			public void actionPerformed(ActionEvent arg0) {

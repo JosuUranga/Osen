@@ -23,6 +23,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
 import modelos.UsuarioDAO;
@@ -34,7 +35,7 @@ import osen.Principal;
 public class DialogoUsuario extends JDialog{
 	
 	JFrame ventana;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	JTextField nombre, email;
 	JComboBox <String>  idioma;
 	JComboBox <Localizacion>  localizacion;
@@ -49,11 +50,11 @@ public class DialogoUsuario extends JDialog{
 	PropertyChangeSupport soporte;
 	JPanel panelPrincipal;
 	
-	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, List<String> list,UsuarioVO user, PropertyChangeListener listener) {
+	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, ControladorIdioma controladorIdioma,UsuarioVO user, PropertyChangeListener listener) {
 		super(ventana,titulo,modo);
 		soporte = new PropertyChangeSupport(this);
 		soporte.addPropertyChangeListener(listener);
-		this.listaPalabras=list;
+		this.listaPalabras=controladorIdioma;
 		this.ventana=ventana;
 		this.setSize(600,500);
 		this.setLocation (500,200);
@@ -84,7 +85,7 @@ public class DialogoUsuario extends JDialog{
 	private Component crearPanelDobleBotones() {
 		JPanel panel = new JPanel (new GridLayout(2,1));
 		panel.add(crearPanelBotones());
-		panel.add(crearPanelBoton(botonSalir = new JButton(listaPalabras.get(28))));
+		panel.add(crearPanelBoton(botonSalir = new JButton(listaPalabras.getListaPalabras().get(28))));
 		return panel;
 	}
 
@@ -107,19 +108,19 @@ public class DialogoUsuario extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(7,1));
 		
-		panel.add(crearJLabelCombo(new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.get(32)));
+		panel.add(crearJLabelCombo(new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.getListaPalabras().get(32)));
 		
-		panel.add(crearJLabelCombo2(crearPanelTipoUsuarioUpgrade(), listaPalabras.get(33)));
+		panel.add(crearJLabelCombo2(crearPanelTipoUsuarioUpgrade(), listaPalabras.getListaPalabras().get(33)));
 
-		panel.add(crearTextField(nombre=new JTextField(user.getNombre()), listaPalabras.get(34)));
+		panel.add(crearTextField(nombre=new JTextField(user.getNombre()), listaPalabras.getListaPalabras().get(34)));
 		
-		panel.add(crearTextField(pass= new JPasswordField(user.getPass()), listaPalabras.get(35)));
+		panel.add(crearTextField(pass= new JPasswordField(user.getPass()), listaPalabras.getListaPalabras().get(35)));
 		
-		panel.add(crearTextField(email=new JTextField(user.getEmail()), listaPalabras.get(36)));
+		panel.add(crearTextField(email=new JTextField(user.getEmail()), listaPalabras.getListaPalabras().get(36)));
 		
-		panel.add(crearComboBoxLoca(localizacion, listaPalabras.get(37)));
+		panel.add(crearComboBoxLoca(localizacion, listaPalabras.getListaPalabras().get(37)));
 
-		panel.add(crearComboBox(idioma, listaPalabras.get(38)));
+		panel.add(crearComboBox(idioma, listaPalabras.getListaPalabras().get(38)));
 
 		return panel;
 	}
@@ -139,7 +140,7 @@ public class DialogoUsuario extends JDialog{
 		tipo.setHorizontalAlignment(0);
 		panel.add(tipo);
 		
-		upgrade = new JButton (listaPalabras.get(53));
+		upgrade = new JButton (listaPalabras.getListaPalabras().get(53));
 		upgrade.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				
@@ -162,13 +163,13 @@ public class DialogoUsuario extends JDialog{
 		tipo.setText(user.calcularTipoUsuario());
 		if(user.getTipo()==0) {
 			upgrade.setEnabled(true);
-			upgrade.setText(listaPalabras.get(53));
+			upgrade.setText(listaPalabras.getListaPalabras().get(53));
 
 		}
 		else {
 			cargarDatosLocalizaciones(localizacion);
 			upgrade.setEnabled(false);
-			upgrade.setText(listaPalabras.get(55));
+			upgrade.setText(listaPalabras.getListaPalabras().get(55));
 		}		
 	}
 
@@ -231,15 +232,20 @@ public class DialogoUsuario extends JDialog{
 				toggleStatusEditando();
 				try {
 					updateUser();
-					
+					actualizarTextos();
 					//crearPanelDialogo();
 					
 					
 
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				};
 				
+				
+			}
+
+			private void actualizarTextos() {
+				// TODO Auto-generated method stub
 				
 			}
 
@@ -249,7 +255,7 @@ public class DialogoUsuario extends JDialog{
 		});
 		panel.add(botonOK);
 		
-		botonEditar = new JButton (listaPalabras.get(27));
+		botonEditar = new JButton (listaPalabras.getListaPalabras().get(27));
 	
 		botonEditar.addActionListener(new ActionListener(){
 
@@ -278,7 +284,7 @@ public class DialogoUsuario extends JDialog{
 
 		
 		soporte.firePropertyChange("idioma", null, idioma.getSelectedIndex());
-	
+		
 		
 
 	}
@@ -304,7 +310,7 @@ public class DialogoUsuario extends JDialog{
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	
@@ -317,7 +323,7 @@ public class DialogoUsuario extends JDialog{
 			localizacion.removeAllItems();
 			listaLoca.forEach(loca->localizacion.addItem(loca));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoUsuario.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	

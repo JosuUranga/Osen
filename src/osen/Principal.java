@@ -350,7 +350,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(2))){//anadir muestra
-				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma.getListaPalabras(), usuario);
+				new GestorEstadosAnadirMuestra(1, Principal.this,null, controladorIdioma, usuario);
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(4))){//recargar
@@ -370,7 +370,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(30))){//perfil
-				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma.getListaPalabras(), usuario, Principal.this);
+				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma, usuario, Principal.this);
 			}
 			if (texto.equals(controladorIdioma.getListaPalabras().get(8))){//salir
 				Principal.this.dispose();

@@ -8,16 +8,17 @@ import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.sql.SQLException;
-import java.util.List;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import com.stripe.exception.StripeException;
 
+import idiomas.ControladorIdioma;
 import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
 import osen.Principal;
@@ -28,16 +29,16 @@ import stripe.Suscripciones;
 public class DialogoTarjeta extends JDialog{
 	
 	DialogoUsuario ventana;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	JTextField tarjeta, fecha, CVC;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 	boolean editando=false;
 	UsuarioVO user;
 	JButton botonOK,botonCancelar;
 	
-	public DialogoTarjeta (DialogoUsuario dialogoUsuario, String titulo, boolean modo, List<String> list,UsuarioVO user) {
+	public DialogoTarjeta (DialogoUsuario dialogoUsuario, String titulo, boolean modo, ControladorIdioma listaPalabras2,UsuarioVO user) {
 		super(dialogoUsuario,titulo,modo);
-		this.listaPalabras=list;
+		this.listaPalabras=listaPalabras2;
 		this.ventana=dialogoUsuario;
 		this.setSize(600,275);
 		this.setLocation (600,200);
@@ -60,7 +61,7 @@ public class DialogoTarjeta extends JDialog{
 		JPanel panel = new JPanel (new GridLayout(2,1,0,20));
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
 
-		panel.add(crearTextField(tarjeta=new JTextField(), listaPalabras.get(56)));
+		panel.add(crearTextField(tarjeta=new JTextField(), listaPalabras.getListaPalabras().get(56)));
 		tarjeta.setText("4242424242424242");
 		panel.add(crearPanelDatos2());
 
@@ -71,8 +72,8 @@ public class DialogoTarjeta extends JDialog{
 	private Component crearPanelDatos2() {
 		JPanel panel = new JPanel(new GridLayout(1,2,20,0));
 
-		panel.add(crearTextField(fecha=new JTextField(), listaPalabras.get(57)));
-		panel.add(crearTextField(CVC=new JTextField(), listaPalabras.get(58)));
+		panel.add(crearTextField(fecha=new JTextField(), listaPalabras.getListaPalabras().get(57)));
+		panel.add(crearTextField(CVC=new JTextField(), listaPalabras.getListaPalabras().get(58)));
 		
 		return panel;
 	}
@@ -108,16 +109,16 @@ public class DialogoTarjeta extends JDialog{
 							DialogoTarjeta.this.dispose();
 						}
 					} catch (SQLException e1) {
-						e1.printStackTrace();
+						JOptionPane.showMessageDialog(DialogoTarjeta.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 					} catch (StripeException e2) {
-						e2.printStackTrace();
+						JOptionPane.showMessageDialog(DialogoTarjeta.this, e2.getLocalizedMessage(), listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 					}
 			}
 		
 		});
 		panel.add(botonOK);
 		
-		botonCancelar = new JButton (listaPalabras.get(39));
+		botonCancelar = new JButton (listaPalabras.getListaPalabras().get(39));
 	
 		botonCancelar.addActionListener(new ActionListener(){
 

@@ -20,6 +20,7 @@ import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JTextField;
 
+import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.UsuarioDAO;
 import osen.Principal;
@@ -28,7 +29,7 @@ import osen.Principal;
 public class DialogoCrearUsuario extends JDialog{
 	
 	Login ventana;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	JTextField nombre, email;
 	JComboBox <String> idioma;
 	JPasswordField pass;
@@ -39,9 +40,9 @@ public class DialogoCrearUsuario extends JDialog{
 	public final static String dbuser="Basic";
 	
 	
-	public DialogoCrearUsuario (Login login, String titulo, boolean modo, List<String> list) {
+	public DialogoCrearUsuario (Login login, String titulo, boolean modo, ControladorIdioma listaPalabras2) {
 		super(login,titulo,modo);
-		this.listaPalabras=list;
+		this.listaPalabras=listaPalabras2;
 		this.ventana=login;
 		this.setSize(600,500);
 		this.setLocation (500,200);
@@ -82,17 +83,17 @@ public class DialogoCrearUsuario extends JDialog{
 					DialogoCrearUsuario.this.dispose();
 
 				} catch (SQLException e1) {
-					if(e1.getErrorCode()==1062) JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.get(40), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
-					else JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					if(e1.getErrorCode()==1062) JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.getListaPalabras().get(40), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					else JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoCrearUsuario.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 				}
 			}
 			
 		});
 		panel.add(boton);
-		JButton boton2= new JButton(listaPalabras.get(39));
+		JButton boton2= new JButton(listaPalabras.getListaPalabras().get(39));
 		boton2.addActionListener(new ActionListener(){
 
 			@Override
@@ -108,15 +109,15 @@ public class DialogoCrearUsuario extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(5,1));
 				
-		panel.add(crearJLabelCombo(new JLabel("Basic"), listaPalabras.get(33)));
+		panel.add(crearJLabelCombo(new JLabel("Basic"), listaPalabras.getListaPalabras().get(33)));
 
-		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.get(34)));
+		panel.add(crearTextField(nombre=new JTextField(), listaPalabras.getListaPalabras().get(34)));
 		
-		panel.add(crearTextField(pass= new JPasswordField(), listaPalabras.get(35)));
+		panel.add(crearTextField(pass= new JPasswordField(), listaPalabras.getListaPalabras().get(35)));
 		
-		panel.add(crearTextField(email=new JTextField(), listaPalabras.get(36)));
+		panel.add(crearTextField(email=new JTextField(), listaPalabras.getListaPalabras().get(36)));
 		
-		panel.add(crearComboBox(idioma, listaPalabras.get(38)));
+		panel.add(crearComboBox(idioma, listaPalabras.getListaPalabras().get(38)));
 
 		return panel;
 	}
@@ -164,7 +165,7 @@ public class DialogoCrearUsuario extends JDialog{
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoCrearUsuario.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 	}
 	

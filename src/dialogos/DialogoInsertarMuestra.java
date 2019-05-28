@@ -21,6 +21,7 @@ import javax.swing.JPanel;
 import javax.swing.JProgressBar;
 
 import estados.GestorEstadosAnadirMuestra;
+import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.LocalizacionDAO;
 import modelos.MuestrasDAO;
@@ -40,7 +41,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	JComboBox<String> comboMeteorologia;
 	JProgressBar progressBar;
 	Thread hiloProgressBar;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	Localizacion localizacion;
 	MuestraCo2 muestra;
 	boolean anadirLocalizacionSeleccionado=false;
@@ -57,11 +58,11 @@ public class DialogoInsertarMuestra extends JDialog{
 	public JComboBox<Localizacion> getComboLocalizacion() {
 		return comboLocalizacion;
 	}
-	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, List<String> list, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp, UsuarioVO usuario) {
+	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, ControladorIdioma listaPalabras2, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp, UsuarioVO usuario) {
 		super(ventana,titulo,modo);
 		this.usuario=usuario;
 		this.gestorEstadosAnadirMuestra=gestorEstadosAnadirMuestra;
-		this.listaPalabras=list;
+		this.listaPalabras=listaPalabras2;
 		this.ventana=ventana;
 		this.setSize(600,400);
 		this.setLocation (100,100);
@@ -116,7 +117,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	private Component crearPanelBotonStart() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0,220));
-		JButton boton3 = new JButton (listaPalabras.get(44));
+		JButton boton3 = new JButton (listaPalabras.getListaPalabras().get(44));
 		
 		
 		boton3.addActionListener(new ActionListener(){
@@ -139,10 +140,10 @@ public class DialogoInsertarMuestra extends JDialog{
 					try {
 						Thread.sleep(1000);
 					} catch (InterruptedException e) {
-						JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), listaPalabras.get(43), JOptionPane.PLAIN_MESSAGE);
+						JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), listaPalabras.getListaPalabras().get(43), JOptionPane.PLAIN_MESSAGE);
 					}
 				}
-				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(45), listaPalabras.get(43), JOptionPane.PLAIN_MESSAGE);
+				JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.getListaPalabras().get(45), listaPalabras.getListaPalabras().get(43), JOptionPane.PLAIN_MESSAGE);
 				botonOK.setEnabled(true);
 				datos=lsp.cogerDatos();
 			}		
@@ -166,13 +167,13 @@ public class DialogoInsertarMuestra extends JDialog{
 		JPanel panel = new JPanel(new BorderLayout(30,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(35, 10, 50, 10));
 
-		panel.add(crearPanelDatosFila(listaPalabras.get(24),comboMeteorologia));
+		panel.add(crearPanelDatosFila(listaPalabras.getListaPalabras().get(24),comboMeteorologia));
 		return panel;
 	}
 	private Component crearPanelDatosFila1() {
 		JPanel panel = new JPanel(new BorderLayout(30,10));
 		panel.setBorder(BorderFactory.createEmptyBorder(45, 10, 40, 20));
-		JButton boton4 = new JButton (listaPalabras.get(46));
+		JButton boton4 = new JButton (listaPalabras.getListaPalabras().get(46));
 		
 		
 		boton4.addActionListener(new ActionListener(){
@@ -184,7 +185,7 @@ public class DialogoInsertarMuestra extends JDialog{
 			}
 		});
 		
-		panel.add(crearPanelDatosFilaLoca(listaPalabras.get(13),comboLocalizacion),BorderLayout.CENTER);
+		panel.add(crearPanelDatosFilaLoca(listaPalabras.getListaPalabras().get(13),comboLocalizacion),BorderLayout.CENTER);
 		panel.add(boton4,BorderLayout.EAST);
 
 		
@@ -226,10 +227,10 @@ public class DialogoInsertarMuestra extends JDialog{
 					DialogoInsertarMuestra.this.dispose();
 
 				} catch (SQLException e1) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), listaPalabras.get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				
 				} catch (NumberFormatException e2) {
-					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.get(42)+e2.getLocalizedMessage()+")", listaPalabras.get(43), JOptionPane.WARNING_MESSAGE);
+					JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, listaPalabras.getListaPalabras().get(42)+e2.getLocalizedMessage()+")", listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
 				}
 
 			}
@@ -257,7 +258,7 @@ public class DialogoInsertarMuestra extends JDialog{
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
 		} catch (SQLException e) {
-			JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), listaPalabras.get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
+			JOptionPane.showMessageDialog(DialogoInsertarMuestra.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 			
 	}

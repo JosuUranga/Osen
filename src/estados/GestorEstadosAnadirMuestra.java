@@ -1,12 +1,11 @@
 package estados;
 
-import java.util.List;
-
 import javax.swing.JFrame;
 import javax.swing.JProgressBar;
 
 import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
+import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.UsuarioVO;
 import muestras.Localizacion;
@@ -18,18 +17,18 @@ public class GestorEstadosAnadirMuestra {
 	DialogoInsertarMuestra dialogoInsertarMuestra;
 	LineaSeriePrincipal lsP;
 	JFrame ventana;
-	List<String>listaPalabras;
+	ControladorIdioma listaPalabras;
 	Thread hiloProgressBar;
 	JProgressBar progressBar;
 	UsuarioVO usuario;
-	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, List<String> list, UsuarioVO usuario) {
+	public GestorEstadosAnadirMuestra(int state, JFrame ventana, DialogoInsertarMuestra dialogoInsertarMuestra, ControladorIdioma controladorIdioma, UsuarioVO usuario) {
 		super();
 		this.usuario=usuario;
 		lsP = new LineaSeriePrincipal();
 		this.state = state;
 		System.out.println("Nuevo objeto, estado: "+this.state);
 		this.ventana = ventana;
-		this.listaPalabras = list;
+		this.listaPalabras = controladorIdioma;
 		this.dialogoInsertarMuestra=dialogoInsertarMuestra;
 		this.estados();
 	}
@@ -43,14 +42,14 @@ public class GestorEstadosAnadirMuestra {
 		switch(state) {
 		case 1://a�adir muestra
 			dialogoInsertarMuestra= new 
-			DialogoInsertarMuestra(ventana, listaPalabras.get(2), true, listaPalabras, this, lsP, usuario);
+			DialogoInsertarMuestra(ventana, listaPalabras.getListaPalabras().get(2), true, listaPalabras, this, lsP, usuario);
 			localizacion=dialogoInsertarMuestra.getLocalizacion();
 			break;
 			
 		case 2://a�adir localizacion
 			@SuppressWarnings("unused") 
 			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
-			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.get(2), true, listaPalabras, usuario);
+			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.getListaPalabras().get(2), true, listaPalabras, usuario);
 			break;
 			
 		case 3://sensor
