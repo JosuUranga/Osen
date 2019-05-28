@@ -49,6 +49,7 @@ public class DialogoUsuario extends JDialog{
 	JLabel tipo;
 	PropertyChangeSupport soporte;
 	JPanel panelPrincipal;
+	JLabel labelID;
 	
 	public DialogoUsuario (JFrame ventana, String titulo, boolean modo, ControladorIdioma controladorIdioma,UsuarioVO user, PropertyChangeListener listener) {
 		super(ventana,titulo,modo);
@@ -108,7 +109,7 @@ public class DialogoUsuario extends JDialog{
 	private Component crearPanelDatos() {
 		JPanel panel = new JPanel(new GridLayout(7,1));
 		
-		panel.add(crearJLabelCombo(new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.getListaPalabras().get(32)));
+		panel.add(crearJLabelCombo(labelID=new JLabel(String.valueOf(user.getUsuarioID())), listaPalabras.getListaPalabras().get(32)));
 		
 		panel.add(crearJLabelCombo2(crearPanelTipoUsuarioUpgrade(), listaPalabras.getListaPalabras().get(33)));
 
@@ -232,10 +233,7 @@ public class DialogoUsuario extends JDialog{
 				toggleStatusEditando();
 				try {
 					updateUser();
-					actualizarTextos();
-					//crearPanelDialogo();
-					
-					
+					updatePaneles();
 
 				} catch (SQLException e1) {
 					JOptionPane.showMessageDialog(DialogoUsuario.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
@@ -244,14 +242,7 @@ public class DialogoUsuario extends JDialog{
 				
 			}
 
-			private void actualizarTextos() {
-				// TODO Auto-generated method stub
-				
-			}
-
-			
-
-			
+					
 		});
 		panel.add(botonOK);
 		
@@ -268,6 +259,13 @@ public class DialogoUsuario extends JDialog{
 		});
 		panel.add(botonEditar);
 		return panel;
+	}
+	private void updatePaneles() {
+		panelPrincipal.removeAll();
+		panelPrincipal.add(crearPanelDatos(),BorderLayout.CENTER);
+		panelPrincipal.add(crearPanelDobleBotones(),BorderLayout.SOUTH);
+		panelPrincipal.revalidate();
+		panelPrincipal.repaint();				
 	}
 	private void updateUser() throws SQLException{
 		Localizacion loca = (Localizacion) localizacion.getSelectedItem();
