@@ -139,7 +139,6 @@ public class DialogoUsuario extends JDialog{
 				
 				System.out.println("Mejorar cuenta");
 				new DialogoTarjeta(DialogoUsuario.this, "Payment", true, listaPalabras, user);
-				//user.setTipo(1);
 				upgradeText();
 				
 				
@@ -161,6 +160,7 @@ public class DialogoUsuario extends JDialog{
 
 		}
 		else {
+			cargarDatosLocalizaciones(localizacion);
 			upgrade.setEnabled(false);
 			upgrade.setText(listaPalabras.get(55));
 		}		

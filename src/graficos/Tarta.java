@@ -20,32 +20,30 @@ import org.jfree.ui.RectangleInsets;
 public class Tarta extends JPanel{
 	static ChartPanel pan=null;
 	
-   public Tarta() {
+   public Tarta(String tit1, float var1,float var2) {
 	   super();
-	   pan=crearPanel();
+	   pan=crearPanel(tit1,var1,var2);
 	}
    public JPanel getTarta() {
 	   return pan;
    }
-   public ChartPanel crearPanel() {
-	   JFreeChart chart = createChart(createDataset());
+   public ChartPanel crearPanel(String tit1, float var1,float var2) {
+	   JFreeChart chart = createChart(tit1,createDataset(tit1,var1,var2));
 	   chart.setPadding(new RectangleInsets(4, 8, 2, 2));
 	   ChartPanel panel = new ChartPanel(chart);
 	   panel.setMouseWheelEnabled(true);
 	   panel.setPreferredSize(new Dimension(600, 300));
 	   return panel;
    }
-   private static PieDataset createDataset() {
+   private static PieDataset createDataset(String tit1, float var1,float var2) {
        DefaultPieDataset dataset = new DefaultPieDataset();
-       dataset.setValue("Samsung", new Double(27.8));
-       dataset.setValue("Others", new Double(55.3));
-       dataset.setValue("Nokia", new Double(16.8));
-       dataset.setValue("Apple", new Double(17.1));
+       dataset.setValue(tit1+"-Muestra 1", var1);
+       dataset.setValue(tit1+"-Muestra 2", var2);
        return dataset;
    }
-   private static JFreeChart createChart(PieDataset dataset) {
+   private static JFreeChart createChart(String tit,PieDataset dataset) {
        JFreeChart chart = ChartFactory.createPieChart(
-           "Smart Phones Manufactured / Q3 2011",  // chart title
+           tit,  // chart title
            dataset,            // data
            false,              // no legend
            true,               // tooltips
@@ -63,20 +61,17 @@ public class Tarta extends JPanel{
        plot.setOutlineVisible(false);
 
        // use gradients and white borders for the section colours
-       plot.setSectionPaint("Others", createGradientPaint(new Color(200, 200, 255), Color.BLUE));
-       plot.setSectionPaint("Samsung", createGradientPaint(new Color(255, 200, 200), Color.RED));
-       plot.setSectionPaint("Apple", createGradientPaint(new Color(200, 255, 200), Color.GREEN));
-       plot.setSectionPaint("Nokia", createGradientPaint(new Color(200, 255, 200), Color.YELLOW));
-       plot.setBaseSectionOutlinePaint(Color.WHITE);
+       plot.setSectionPaint(dataset.getKey(0), createGradientPaint(new Color(200, 200, 255), Color.BLUE));
+       plot.setSectionPaint(dataset.getKey(1), createGradientPaint(new Color(255, 200, 200), Color.GREEN));
        plot.setSectionOutlinesVisible(true);
        plot.setBaseSectionOutlineStroke(new BasicStroke(2.0f));
 
        // customise the section label appearance
        plot.setLabelFont(new Font("Courier New", Font.BOLD, 20));
-       plot.setLabelLinkPaint(Color.WHITE);
+       plot.setLabelLinkPaint(Color.BLACK);
        plot.setLabelLinkStroke(new BasicStroke(2.0f));
        plot.setLabelOutlineStroke(null);
-       plot.setLabelPaint(Color.WHITE);
+       plot.setLabelPaint(Color.BLACK);
        plot.setLabelBackgroundPaint(null);
        
        return chart;

@@ -35,19 +35,9 @@ public class Anillo extends JPanel {
         public CustomRingPlot(PieDataset dataset) {
             super(dataset);
             this.centerTextFont = new Font(Font.SANS_SERIF, Font.BOLD, 24);
-            this.centerTextColor = Color.LIGHT_GRAY;
+            this.centerTextColor = Color.BLACK;
         }
         
-        /**
-         * Draws one item for the plot and, when drawing the first section,
-         * adds the center text.
-         * 
-         * @param g2  the graphics target (null not permitted).
-         * @param section  the section index.
-         * @param dataArea  the data area (null not permitted).
-         * @param state  the plot state.
-         * @param currentPass  the current pass index.
-         */
         @Override
         protected void drawItem(Graphics2D g2, int section, 
                 Rectangle2D dataArea, PiePlotState state, int currentPass) {
@@ -68,37 +58,24 @@ public class Anillo extends JPanel {
      *
      * @param title  the frame title.
      */
-    public Anillo() {
+    public Anillo(String variable, float var) {
         super();
-        pan=createPanel();
+        pan=createPanel(variable,var);
     }
     
     public JPanel getPanel() {
     	return pan;
     }
-
-    /**
-     * Creates a sample dataset.
-     *
-     * @return A sample dataset.
-     */
-    private static PieDataset createDataset() {
+    private static PieDataset createDataset(String variable, float var) {
         DefaultPieDataset dataset = new DefaultPieDataset();
         dataset.setValue("A", new Double(210));
+        dataset.setValue(variable, var);
         
         return dataset;
     }
-
-    /**
-     * Creates a chart.
-     *
-     * @param dataset  the dataset.
-     *
-     * @return A chart.
-     */
     private static JFreeChart createChart(PieDataset dataset) {
         CustomRingPlot plot = new CustomRingPlot(dataset);
-        JFreeChart chart = new JFreeChart("Custom Ring Chart", 
+        JFreeChart chart = new JFreeChart(dataset.getKey(1).toString(), 
                 JFreeChart.DEFAULT_TITLE_FONT, plot, false);
         chart.setBackgroundPaint(new GradientPaint(new Point(0, 0), 
                 new Color(240, 240, 240), new Point(400, 200), Color.WHITE));
@@ -112,16 +89,16 @@ public class Anillo extends JPanel {
         plot.setBackgroundPaint(null);
         plot.setOutlineVisible(false);
         plot.setLabelGenerator(null);
-        plot.setSectionPaint("A", Color.RED);
-        plot.setSectionPaint("B", new Color(100, 100, 100));
-        plot.setSectionDepth(0.05);
+        plot.setSectionPaint(dataset.getKey(0), Color.RED);
+        plot.setSectionPaint(dataset.getKey(1), Color.BLUE);
+        plot.setSectionDepth(0.02);
         plot.setSectionOutlinesVisible(false);
         plot.setShadowPaint(null);
         return chart;
 
     }
-    public ChartPanel createPanel() {
-        JFreeChart chart = createChart(createDataset());
+    public ChartPanel createPanel(String variable, float var) {
+        JFreeChart chart = createChart(createDataset(variable,var));
         chart.setPadding(new RectangleInsets(4, 8, 2, 2));
         ChartPanel panel = new ChartPanel(chart);
         panel.setMouseWheelEnabled(true);

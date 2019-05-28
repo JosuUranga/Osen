@@ -12,8 +12,10 @@ import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
 import graficos.Anillo;
+import graficos.Tarta;
 import idiomas.ControladorIdioma;
 import muestras.Muestra;
+import muestras.MuestraCo2;
 
 public class GeneradorPanelesMuestra {
 	public final static int ESTADO_SIN_COMPARAR=1;
@@ -22,7 +24,7 @@ public class GeneradorPanelesMuestra {
 	JLabel labelMuestraID, labelFecha, labelMeteo, labelUsuario, labelTemp, labelHumedad, labelCo2, labelVoc, labelLugar, labelHabitantes, labelArea, labelDensidad;
 	ControladorIdioma controladorIdioma;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-	Muestra muestra1,muestra2;
+	MuestraCo2 muestra1,muestra2;
 	int state;
 	public GeneradorPanelesMuestra(ControladorIdioma controlador) {
 		this.controladorIdioma=controlador;
@@ -35,8 +37,8 @@ public class GeneradorPanelesMuestra {
 		return state;
 	}
 	public Component getPanel(Muestra muestra1,Muestra muestra2) {
-		this.muestra1=muestra1;
-		this.muestra2=muestra2;
+		this.muestra1=(MuestraCo2) muestra1;
+		this.muestra2=(MuestraCo2) muestra2;
 		JTabbedPane panel = new JTabbedPane();
 		switch(state) {
 		case ESTADO_SIN_COMPARAR:
@@ -78,7 +80,21 @@ public class GeneradorPanelesMuestra {
 		
 	}
 	private Component crearPanelGraficos() {
-		JPanel panel=new Anillo().getPanel();
+		JPanel panel= new JPanel(new GridLayout(2,2));
+		if (this.getState()==ESTADO_COMPARANDO) {
+			 panel.add(new Tarta("Co2",muestra1.getCo2eq(),muestra2.getCo2eq()).getTarta());
+			 panel.add(new Tarta("Humedad",muestra1.getHumedad(),muestra2.getHumedad()).getTarta());
+			 panel.add(new Tarta("Voc",muestra1.getVoc(),muestra2.getVoc()).getTarta());
+			 panel.add(new Tarta("Temperatura",muestra1.getTemperatura(),muestra2.getTemperatura()).getTarta());
+		}
+		else {
+			 panel.add(new Anillo("Co2",muestra1.getCo2eq()).getPanel());
+			 panel.add(new Anillo("Humedad",muestra1.getHumedad()).getPanel());
+			 panel.add(new Anillo("Voc",muestra1.getVoc()).getPanel());
+			 panel.add(new Anillo("Temperatura",muestra1.getTemperatura()).getPanel());
+		}
+		
+		
 		return panel;
 	}
 	

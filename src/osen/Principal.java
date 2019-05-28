@@ -396,7 +396,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			if(!compararActivado)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 			else {
 				muestra2=realizarBusquedaSinComparar(comboLocalizacion2,comboMeteo2,comboFecha2);
-				System.out.println(muestra2);
 			}
 			muestra1=realizarBusquedaSinComparar(comboLocalizacion1,comboMeteo1,comboFecha1);
 			panelinfo.removeAll();

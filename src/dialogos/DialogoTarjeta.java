@@ -7,6 +7,7 @@ import java.awt.Font;
 import java.awt.GridLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.sql.SQLException;
 import java.util.List;
 
 import javax.swing.BorderFactory;
@@ -15,8 +16,13 @@ import javax.swing.JDialog;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import com.stripe.exception.StripeException;
+
+import modelos.UsuarioDAO;
 import modelos.UsuarioVO;
+import osen.Principal;
 import otros.TextPrompt;
+import stripe.Suscripciones;
 
 @SuppressWarnings("serial")
 public class DialogoTarjeta extends JDialog{
@@ -55,6 +61,7 @@ public class DialogoTarjeta extends JDialog{
 		panel.setBorder(BorderFactory.createEmptyBorder(30, 30, 10, 30));
 
 		panel.add(crearTextField(tarjeta=new JTextField(), listaPalabras.get(56)));
+		tarjeta.setText("4242424242424242");
 		panel.add(crearPanelDatos2());
 
 		return panel;
@@ -89,7 +96,22 @@ public class DialogoTarjeta extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
-				
+					try {
+						Suscripciones sus=new Suscripciones("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
+						sus.createCustomer(user.getNombre(), user.getEmail());
+						String cad[]=fecha.getText().split("/");
+						sus.createCard(user.getEmail(), tarjeta.getText(), cad[1], cad[0], CVC.getText());
+						sus.activateSub(user.getEmail());
+						if(sus.checkSubActive(user.getEmail())) {
+							user.setTipo(UsuarioVO.PRO);
+							UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), 1, user.getIdiomaSeleccionado(), user.getTipo(), user.getUsuarioID());
+							DialogoTarjeta.this.dispose();
+						}
+					} catch (SQLException e1) {
+						e1.printStackTrace();
+					} catch (StripeException e2) {
+						e2.printStackTrace();
+					}
 			}
 		
 		});
@@ -101,6 +123,7 @@ public class DialogoTarjeta extends JDialog{
 
 			@Override
 			public void actionPerformed(ActionEvent e) {
+
 					DialogoTarjeta.this.dispose();
 			}
 			
