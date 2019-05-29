@@ -1,6 +1,6 @@
-package muestras;
+package objetos;
 
-public abstract class Muestra {
+public abstract class MuestraVO {
 	int id;
 	String fecha;
 	float duracion;
@@ -8,7 +8,7 @@ public abstract class Muestra {
 	Localizacion localizacion;
 	String usuario;
 
-	public Muestra(int id, String fecha, float duracion, String metorologia, Localizacion localizacion,
+	public MuestraVO(int id, String fecha, float duracion, String metorologia, Localizacion localizacion,
 			String usuario) {
 		super();
 		this.id = id;

@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.DBManager;
-import muestras.Meteorologia;
+import objetos.Meteorologia;
 
 public class MeteoDAO extends DBManager{
 	Statement statement, tempStatement;

@@ -1,6 +1,7 @@
 package modelos;
 import java.sql.*;
 import db.DBManager;
+import objetos.UsuarioVO;
 
 public class UsuarioDAO extends DBManager{
 	Statement statement, tempStatement;

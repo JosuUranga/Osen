@@ -25,9 +25,9 @@ import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.LocalizacionDAO;
 import modelos.MuestrasDAO;
-import modelos.UsuarioVO;
-import muestras.Localizacion;
-import muestras.MuestraCo2;
+import objetos.Localizacion;
+import objetos.MuestraCo2;
+import objetos.UsuarioVO;
 import osen.Principal;
 
 

@@ -1,4 +1,4 @@
-package modelos;
+package objetos;
 
 public class UsuarioVO { 
 	int usuarioID;

@@ -14,8 +14,8 @@ import javax.swing.JTabbedPane;
 import graficos.Anillo;
 import graficos.Tarta;
 import idiomas.ControladorIdioma;
-import muestras.Muestra;
-import muestras.MuestraCo2;
+import objetos.MuestraCo2;
+import objetos.MuestraVO;
 
 public class GeneradorPanelesMuestra {
 	public final static int ESTADO_SIN_COMPARAR=1;
@@ -36,7 +36,7 @@ public class GeneradorPanelesMuestra {
 	public int getState() {
 		return state;
 	}
-	public Component getPanel(Muestra muestra1,Muestra muestra2) {
+	public Component getPanel(MuestraVO muestra1,MuestraVO muestra2) {
 		this.muestra1=(MuestraCo2) muestra1;
 		this.muestra2=(MuestraCo2) muestra2;
 		JTabbedPane panel = new JTabbedPane();
@@ -99,14 +99,14 @@ public class GeneradorPanelesMuestra {
 		
 		return panel;
 	}
-	private Component crearPanelInfoGeneral(Muestra muestra1,Muestra muestra2) {
+	private Component crearPanelInfoGeneral(MuestraVO muestra1,MuestraVO muestra2) {
 		JPanel panel = new JPanel (new GridLayout(3,1));
 		panel.add(crearPanelInfoNorte(muestra1,muestra2));
 		panel.add(crearPanelInfoCentro(muestra1,muestra2));
 		panel.add(crearPanelInfoSur(muestra1,muestra2));
 		return panel;
 	}
-	private Component crearPanelInfoSur(Muestra muestra,Muestra muestra2) {
+	private Component crearPanelInfoSur(MuestraVO muestra,MuestraVO muestra2) {
 		int columnas;
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
 		else columnas=4;
@@ -146,7 +146,7 @@ public class GeneradorPanelesMuestra {
 
 
 
-	private Component crearPanelInfoCentro(Muestra muestra,Muestra muestra2) {
+	private Component crearPanelInfoCentro(MuestraVO muestra,MuestraVO muestra2) {
 		int columnas;
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;
 		else columnas=4;
@@ -174,7 +174,7 @@ public class GeneradorPanelesMuestra {
 
 
 
-	private Component crearPanelInfoNorte(Muestra muestra,Muestra muestra2) {
+	private Component crearPanelInfoNorte(MuestraVO muestra,MuestraVO muestra2) {
 		
 		int columnas;
 		if(this.getState()==ESTADO_COMPARANDO)columnas=6;

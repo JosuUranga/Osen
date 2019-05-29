@@ -5,9 +5,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
 import db.DBManager;
-import muestras.Localizacion;
-import muestras.Muestra;
-import muestras.MuestraCo2;
+import objetos.Localizacion;
+import objetos.MuestraCo2;
+import objetos.MuestraVO;
 
 public class MuestrasDAO extends DBManager{
 	Statement statement, tempStatement;
@@ -26,8 +26,8 @@ public class MuestrasDAO extends DBManager{
 		}
 		return instance;
 	}	
-	public Muestra getMuestra(int id,String localizacion, String fecha) throws SQLException, ParseException{
-		Muestra muestra=null;
+	public MuestraVO getMuestra(int id,String localizacion, String fecha) throws SQLException, ParseException{
+		MuestraVO muestra=null;
 		
 		SimpleDateFormat sdf1 = new SimpleDateFormat("yyyy-MM-dd");
 		java.util.Date date = sdf1.parse(fecha);
@@ -51,13 +51,13 @@ public class MuestrasDAO extends DBManager{
 		execute("INSERT INTO Muestras (fecha, duracion, co2eq,humedad,temperatura,voc,meteorologia,localizacion,usuario) "
 					+ "VALUES (curdate(), "+duracion+", "+co2eq+", "+humedad+", "+temp+", "+voc+", "+meteorologia+", "+ localizacion+", "+usuario+")");
 	}
-	public Muestra getUltimaMuestra(int id) throws SQLException{
+	public MuestraVO getUltimaMuestra(int id) throws SQLException{
 		callStatement=executeCall(get_ultimaMuestra);
 		callStatement.setInt(1, id);
 		resultSet=callStatement.executeQuery();
 		resultSet.next();
 		float duracion=(float) 10.5;
-		Muestra muestra=null;
+		MuestraVO muestra=null;
 		muestra=new MuestraCo2(resultSet.getInt(1), resultSet.getString(2), duracion, resultSet.getInt(3), resultSet.getFloat(4), resultSet.getFloat(5), resultSet.getFloat(6), resultSet.getString(7), new Localizacion(resultSet.getInt(11),resultSet.getString(8),resultSet.getInt(9),resultSet.getFloat(10)), resultSet.getString(12));
 		conClose();
 		return muestra;

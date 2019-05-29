@@ -30,7 +30,7 @@ import com.stripe.exception.StripeException;
 
 import idiomas.ControladorIdioma;
 import modelos.UsuarioDAO;
-import modelos.UsuarioVO;
+import objetos.UsuarioVO;
 import osen.Principal;
 import otros.TextPrompt;
 import stripe.Suscripciones;

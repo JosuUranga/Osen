@@ -9,9 +9,9 @@ import java.sql.SQLException;
 import javax.swing.Timer;
 
 import modelos.MuestrasDAO;
-import modelos.UsuarioVO;
-import muestras.Muestra;
-import muestras.MuestraCo2;
+import objetos.MuestraCo2;
+import objetos.MuestraVO;
+import objetos.UsuarioVO;
 import osen.Principal;
 
 public class NotificationManager extends Thread {
@@ -25,7 +25,7 @@ public class NotificationManager extends Thread {
 	Tiempo tiempo;
 	UsuarioVO user;
 	ResultSet resultado;
-	Muestra muestra;
+	MuestraVO muestra;
 	int ultimaMuestra, muestraActual, co2eq;
 	public NotificationManager(String key, UsuarioVO usuario) {
 		this.key=key;

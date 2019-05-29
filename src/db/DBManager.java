@@ -33,7 +33,6 @@ public class DBManager {
 			e.printStackTrace();
 		}
 	}
-	
 	public Connection getConnection() {
 		connect = null;
 		try {
@@ -81,7 +80,5 @@ public class DBManager {
 			
 		return resultSet;
 	}
-	
-	
-	
+		
 }

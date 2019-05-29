@@ -1,4 +1,4 @@
-package muestras;
+package objetos;
 
 public class Localizacion {
 	String nombre;

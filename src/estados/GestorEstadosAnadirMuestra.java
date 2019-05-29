@@ -7,8 +7,8 @@ import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
-import modelos.UsuarioVO;
-import muestras.Localizacion;
+import objetos.Localizacion;
+import objetos.UsuarioVO;
 
 public class GestorEstadosAnadirMuestra {
 

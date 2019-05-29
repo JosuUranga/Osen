@@ -1,6 +1,6 @@
-package muestras;
+package objetos;
 
-public class MuestraOzono extends Muestra{
+public class MuestraOzono extends MuestraVO{
 	int oxigeno;
 	float humedad;
 	float temperatura;

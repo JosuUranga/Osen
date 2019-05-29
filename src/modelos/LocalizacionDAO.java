@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.DBManager;
-import muestras.Localizacion;
+import objetos.Localizacion;
 
 public class LocalizacionDAO extends DBManager{
 	Statement statement, tempStatement;

@@ -20,8 +20,8 @@ import javax.swing.JTextField;
 import estados.GestorEstadosAnadirMuestra;
 import idiomas.ControladorIdioma;
 import modelos.LocalizacionDAO;
-import modelos.UsuarioVO;
-import muestras.MuestraCo2;
+import objetos.MuestraCo2;
+import objetos.UsuarioVO;
 import osen.Principal;
 
 

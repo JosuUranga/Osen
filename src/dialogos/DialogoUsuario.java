@@ -29,8 +29,8 @@ import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
 import modelos.UsuarioDAO;
-import modelos.UsuarioVO;
-import muestras.Localizacion;
+import objetos.Localizacion;
+import objetos.UsuarioVO;
 import osen.Principal;
 import stripe.Suscripciones;
 

@@ -47,11 +47,11 @@ import modelos.LocalizacionDAO;
 import modelos.MeteoDAO;
 import modelos.MuestrasDAO;
 import modelos.UsuarioDAO;
-import modelos.UsuarioVO;
-import muestras.Localizacion;
-import muestras.Meteorologia;
-import muestras.Muestra;
 import notificaciones.NotificationManager;
+import objetos.Localizacion;
+import objetos.Meteorologia;
+import objetos.MuestraVO;
+import objetos.UsuarioVO;
 
 
 @SuppressWarnings("serial")
@@ -80,7 +80,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	Font fuenteTituloInfoGeneral;
 	String seleccionIdioma;
 	GeneradorPanelesMuestra generadorPan;
-	Muestra muestra1,muestra2;
+	MuestraVO muestra1,muestra2;
 	Component combo;
 	NotificationManager notiManager;
 	Login login;
@@ -452,12 +452,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 
 
-	private Muestra realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
+	private MuestraVO realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
 		Localizacion localiz=(Localizacion) comboLocalizacion.getSelectedItem();
 		String pueblo=localiz.getNombre();
 		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
 		String fecha=comboFecha.getSelectedItem().toString();
-		Muestra muestra=null;
+		MuestraVO muestra=null;
 		try {
 			muestra=MuestrasDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMuestra(meteo.getId(),pueblo, fecha);

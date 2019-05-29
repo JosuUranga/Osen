@@ -1,6 +1,6 @@
-package muestras;
+package objetos;
 
-public class MuestraCo2 extends Muestra{
+public class MuestraCo2 extends MuestraVO{
 	
 	
 	int co2eq;
