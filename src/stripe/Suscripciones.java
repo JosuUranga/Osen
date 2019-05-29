@@ -1,7 +1,14 @@
 package stripe;
+import java.awt.Dialog;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import com.stripe.Stripe;
 import com.stripe.exception.StripeException;
@@ -9,13 +16,31 @@ import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
 
-public class Suscripciones {
+import dialogos.DialogoTarjeta;
+import idiomas.ControladorIdioma;
+import modelos.UsuarioVO;
+
+public class Suscripciones implements PropertyChangeListener{
+	UsuarioVO user;
+	String tarjeta,cvc,ano,mes;
+	Dialog frame;
+	static ControladorIdioma listaPalabras;
 	static Suscripciones instance;
+	
 	protected Suscripciones(String key) {
 		Stripe.apiKey = key;
 	}
-	public static Suscripciones getInstance() {
+	public void setSettings(UsuarioVO user,String tarjeta,String cvc,String ano,String mes, Dialog frame) {
+		this.user=user;
+		this.tarjeta=tarjeta;
+		this.cvc=cvc;
+		this.ano=ano;
+		this.mes=mes;
+		this.frame=frame;
+	}
+	public static Suscripciones getInstance(ControladorIdioma listaPalabra) {
 		if (instance == null) {
+			listaPalabras=listaPalabra;
 			instance = new Suscripciones("sk_test_dZGN1z9nd2Bx0WHAMfRmomsJ00wCLPBWmC");
 		}
 		return instance;
@@ -97,4 +122,22 @@ public class Suscripciones {
 		Subscription sub=getSub(mail);
 		sub.cancel();
 	}
+	@Override
+	public void propertyChange(PropertyChangeEvent e) {
+		switch(e.getPropertyName()) {
+		case "addSub":
+			try {
+				createCustomer(user.getNombre(), user.getEmail());
+				createCard(user.getEmail(), tarjeta, ano, mes, cvc);
+				activateSub(user.getEmail());
+				if(checkSubActive(user.getEmail())) {
+					user.setTipo(UsuarioVO.PRO);
+				}
+			} catch (StripeException e1) {
+				JOptionPane.showMessageDialog(frame, e1.getLocalizedMessage(), listaPalabras.getListaPalabras().get(43), JOptionPane.WARNING_MESSAGE);
+			}
+			break;
+		}
+	}
+
 }

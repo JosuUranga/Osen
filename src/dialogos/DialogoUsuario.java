@@ -154,7 +154,7 @@ public class DialogoUsuario extends JDialog{
 				if(e.getActionCommand().equals("downgrade")) {
 					
 					try {
-						Suscripciones.getInstance().cancelSub(user.getEmail());
+						Suscripciones.getInstance(listaPalabras).cancelSub(user.getEmail());
 						user.setTipo(0);
 						UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), -1, user.getLocalizacion(), user.getTipo(), user.getUsuarioID());
 						upgradeText();
