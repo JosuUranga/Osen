@@ -1,6 +1,4 @@
 package dialogos;
-
-
 import java.awt.BorderLayout;
 import java.awt.Component;
 import java.awt.Container;
@@ -29,13 +27,8 @@ import objetos.Localizacion;
 import objetos.MuestraCo2;
 import objetos.UsuarioVO;
 import osen.Principal;
-
-
-
-
 @SuppressWarnings("serial")
 public class DialogoInsertarMuestra extends JDialog{
-	
 	JFrame ventana;
 	JComboBox<Localizacion> comboLocalizacion;
 	JComboBox<String> comboMeteorologia;
@@ -51,10 +44,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	String[] datos;
 	UsuarioVO usuario;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
-	
-	
-	
-	
+		
 	public JComboBox<Localizacion> getComboLocalizacion() {
 		return comboLocalizacion;
 	}
@@ -77,7 +67,6 @@ public class DialogoInsertarMuestra extends JDialog{
 	public MuestraCo2 getMuestra() {
 		return muestra;
 	}
-
 	private Container crearPanelDialogo() {
 		JPanel panel = new JPanel (new BorderLayout(0,20));
 		panel.setBorder(BorderFactory.createEmptyBorder(10,10,10,10));
@@ -85,7 +74,6 @@ public class DialogoInsertarMuestra extends JDialog{
 		panel.add(crearPanelBarrayBotones(),BorderLayout.SOUTH);
 		return panel;
 	}
-
 	private Component crearPanelBarrayBotones() {
 		JPanel panel = new JPanel(new BorderLayout());
 		
@@ -113,7 +101,6 @@ public class DialogoInsertarMuestra extends JDialog{
 
 		return panel;
 	}
-
 	private Component crearPanelBotonStart() {
 		JPanel panel = new JPanel(new BorderLayout());
 		panel.setBorder(BorderFactory.createEmptyBorder(0, 220, 0,220));
@@ -250,7 +237,6 @@ public class DialogoInsertarMuestra extends JDialog{
 		panel.add(boton2);
 		return panel;
 	}
-	
 	public void cargarDatosLocalizaciones() {
 		try {
 			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
@@ -262,16 +248,10 @@ public class DialogoInsertarMuestra extends JDialog{
 		}
 			
 	}
-	
-		
 	public String getText() {
 		return comboMeteorologia.getSelectedItem().toString();
 	}
 	public Localizacion getLocalizacion() {
 		return localizacion;
 	}
-	
-
-	
-
 }
