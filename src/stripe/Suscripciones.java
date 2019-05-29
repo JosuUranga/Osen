@@ -2,12 +2,9 @@ package stripe;
 import java.awt.Dialog;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.beans.PropertyChangeSupport;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 
 import com.stripe.Stripe;
@@ -15,8 +12,6 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
-
-import dialogos.DialogoTarjeta;
 import idiomas.ControladorIdioma;
 import modelos.UsuarioVO;
 
@@ -125,7 +120,7 @@ public class Suscripciones implements PropertyChangeListener{
 	@Override
 	public void propertyChange(PropertyChangeEvent e) {
 		switch(e.getPropertyName()) {
-		case "addSub":
+		case "addSubs":
 			try {
 				createCustomer(user.getNombre(), user.getEmail());
 				createCard(user.getEmail(), tarjeta, ano, mes, cvc);
