@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.DBManager;
-import objetos.Localizacion;
+import objetos.LocalizacionVO;
 
 public class LocalizacionDAO extends DBManager{
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;
 	CallableStatement callStatement;
 	static LocalizacionDAO instance;
-	Localizacion localizacion;
-	List<Localizacion>listLoca;
+	LocalizacionVO localizacion;
+	List<LocalizacionVO>listLoca;
 	public final static String insertLocalizacion="{CALL insert_Localizacion(?,?,?)}";
 	public final static String getLocalizacionMuestra="{CALL get_localizacion_where_exists_muestra()}";
 	public final static String getAllLocalizaciones="{CALL get_localizaciones()}";
@@ -30,31 +30,31 @@ public class LocalizacionDAO extends DBManager{
 		}
 		return instance;
 	}
-	public Localizacion getLocalizacionUser(String email) throws SQLException{
+	public LocalizacionVO getLocalizacionUser(String email) throws SQLException{
 		resultSet=executeQuery("SELECT Localizaciones.nombre,Localizaciones.habitantes,Localizaciones.AREAkm2,Localizaciones.localizacionID "
 				+ "FROM Localizaciones WHERE email='"+email+"'");
 		resultSet.next();
-		localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+		localizacion=new LocalizacionVO(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 		conClose();
 		return localizacion;
 	}
-	public List<Localizacion> getLocalizacionesMuestra() throws SQLException{
+	public List<LocalizacionVO> getLocalizacionesMuestra() throws SQLException{
 		callStatement=executeCall(getLocalizacionMuestra);
 		resultSet=callStatement.executeQuery();
 		listLoca=new ArrayList<>();
 		while(resultSet.next()) {
-			localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+			localizacion=new LocalizacionVO(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
 		conClose();
 		return listLoca;
 	}
-	public List<Localizacion> getAllLocalizaciones() throws SQLException{
+	public List<LocalizacionVO> getAllLocalizaciones() throws SQLException{
 		callStatement=executeCall(getAllLocalizaciones);
 		resultSet=callStatement.executeQuery();
 		listLoca=new ArrayList<>();
 		while(resultSet.next()) {
-			localizacion=new Localizacion(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
+			localizacion=new LocalizacionVO(resultSet.getInt(4),resultSet.getString(1),resultSet.getInt(2),resultSet.getFloat(3));
 			listLoca.add(localizacion);
 		}
 		conClose();

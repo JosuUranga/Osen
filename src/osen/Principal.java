@@ -48,8 +48,8 @@ import modelos.MeteoDAO;
 import modelos.MuestrasDAO;
 import modelos.UsuarioDAO;
 import notificaciones.NotificationManager;
-import objetos.Localizacion;
-import objetos.Meteorologia;
+import objetos.LocalizacionVO;
+import objetos.MeteorologiaVO;
 import objetos.MuestraVO;
 import objetos.UsuarioVO;
 
@@ -71,8 +71,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	JPanel panelComboBox2,panelinfo;
 	MiAccion anadirCampo, anadirMuestra, ayuda, recargar,perfil, salir;
 	JComboBox<String>comboFecha1,comboFecha2;
-	JComboBox<Localizacion>comboLocalizacion1,comboLocalizacion2;
-	JComboBox<Meteorologia>comboMeteo1,comboMeteo2;
+	JComboBox<LocalizacionVO>comboLocalizacion1,comboLocalizacion2;
+	JComboBox<MeteorologiaVO>comboMeteo1,comboMeteo2;
 	LineaSeriePrincipal lsP;
 	UsuarioVO usuario;
 	ControladorIdioma controladorIdioma;
@@ -195,7 +195,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		comboMeteo1.setActionCommand("meteo");
 	}
 	
-	private void cargarDatosComboBox(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
+	private void cargarDatosComboBox(JComboBox<LocalizacionVO> comboLocalizacion, JComboBox<MeteorologiaVO> comboMeteo, JComboBox<String> comboFecha) {
 		this.cargarDatosLocalizacionMuestra(comboLocalizacion);
 		this.cargarDatosMeteo(comboLocalizacion,comboMeteo);
 		this.cargarDatosFecha(comboLocalizacion,comboMeteo,comboFecha);
@@ -465,10 +465,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 
 
-	private MuestraVO realizarBusquedaSinComparar(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
-		Localizacion localiz=(Localizacion) comboLocalizacion.getSelectedItem();
+	private MuestraVO realizarBusquedaSinComparar(JComboBox<LocalizacionVO> comboLocalizacion, JComboBox<MeteorologiaVO> comboMeteo, JComboBox<String> comboFecha) {
+		LocalizacionVO localiz=(LocalizacionVO) comboLocalizacion.getSelectedItem();
 		String pueblo=localiz.getNombre();
-		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
+		MeteorologiaVO meteo=(MeteorologiaVO) comboMeteo.getSelectedItem();
 		String fecha=comboFecha.getSelectedItem().toString();
 		MuestraVO muestra=null;
 		try {
@@ -481,9 +481,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			}
 		return muestra;
 	}
-	public void cargarDatosLocalizacionMuestra(JComboBox<Localizacion> comboLocalizacion) {
+	public void cargarDatosLocalizacionMuestra(JComboBox<LocalizacionVO> comboLocalizacion) {
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<LocalizacionVO>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getLocalizacionesMuestra();
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
@@ -493,9 +493,9 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	}
 	
 	
-	public void cargarDatosFecha(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo, JComboBox<String> comboFecha) {
+	public void cargarDatosFecha(JComboBox<LocalizacionVO> comboLocalizacion, JComboBox<MeteorologiaVO> comboMeteo, JComboBox<String> comboFecha) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
-		Meteorologia meteo=(Meteorologia) comboMeteo.getSelectedItem();
+		MeteorologiaVO meteo=(MeteorologiaVO) comboMeteo.getSelectedItem();
 		try {
 			List<String>listaFec=FechaDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getFechas(pueblo, meteo.getId());
@@ -506,10 +506,10 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		}
 	}
 	
-	public void cargarDatosMeteo(JComboBox<Localizacion> comboLocalizacion, JComboBox<Meteorologia> comboMeteo) {
+	public void cargarDatosMeteo(JComboBox<LocalizacionVO> comboLocalizacion, JComboBox<MeteorologiaVO> comboMeteo) {
 		String pueblo=comboLocalizacion.getSelectedItem().toString();
 		try {
-			List<Meteorologia>listaMeteo=MeteoDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<MeteorologiaVO>listaMeteo=MeteoDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMeteo(pueblo);
 			comboMeteo.removeAllItems();
 			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));

@@ -23,19 +23,19 @@ import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
 import modelos.LocalizacionDAO;
 import modelos.MuestrasDAO;
-import objetos.Localizacion;
+import objetos.LocalizacionVO;
 import objetos.MuestraCo2;
 import objetos.UsuarioVO;
 import osen.Principal;
 @SuppressWarnings("serial")
 public class DialogoInsertarMuestra extends JDialog{
 	JFrame ventana;
-	JComboBox<Localizacion> comboLocalizacion;
+	JComboBox<LocalizacionVO> comboLocalizacion;
 	JComboBox<String> comboMeteorologia;
 	JProgressBar progressBar;
 	Thread hiloProgressBar;
 	ControladorIdioma listaPalabras;
-	Localizacion localizacion;
+	LocalizacionVO localizacion;
 	MuestraCo2 muestra;
 	boolean anadirLocalizacionSeleccionado=false;
 	JButton botonOK;
@@ -45,7 +45,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	UsuarioVO usuario;
 	final static String [] meteorologias= {"Despejado", "Nublado", "Lluvioso", "Nevado", "Niebla"};
 		
-	public JComboBox<Localizacion> getComboLocalizacion() {
+	public JComboBox<LocalizacionVO> getComboLocalizacion() {
 		return comboLocalizacion;
 	}
 	public DialogoInsertarMuestra (JFrame ventana,String titulo, boolean modo, ControladorIdioma listaPalabras2, GestorEstadosAnadirMuestra gestorEstadosAnadirMuestra, LineaSeriePrincipal lsp, UsuarioVO usuario) {
@@ -186,7 +186,7 @@ public class DialogoInsertarMuestra extends JDialog{
 		
 		return panel;
 	}
-	private Component crearPanelDatosFilaLoca(String tituloCombo, JComboBox<Localizacion> comboBox) {
+	private Component crearPanelDatosFilaLoca(String tituloCombo, JComboBox<LocalizacionVO> comboBox) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 
 		panel.add(new JLabel (tituloCombo));
@@ -203,7 +203,7 @@ public class DialogoInsertarMuestra extends JDialog{
 			public void actionPerformed(ActionEvent arg0) {
 				
 				int numeroMeteorologia=comboMeteorologia.getSelectedIndex()+1;
-				Localizacion loca = (Localizacion) comboLocalizacion.getSelectedItem();
+				LocalizacionVO loca = (LocalizacionVO) comboLocalizacion.getSelectedItem();
 				int numeroLocalizacion=loca.getId();
 			
 				if(hiloProgressBar!=null)hiloProgressBar.interrupt();
@@ -239,7 +239,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	}
 	public void cargarDatosLocalizaciones() {
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<LocalizacionVO>listaLoca=LocalizacionDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getAllLocalizaciones();
 			comboLocalizacion.removeAllItems();
 			listaLoca.forEach(loca->comboLocalizacion.addItem(loca));
@@ -251,7 +251,7 @@ public class DialogoInsertarMuestra extends JDialog{
 	public String getText() {
 		return comboMeteorologia.getSelectedItem().toString();
 	}
-	public Localizacion getLocalizacion() {
+	public LocalizacionVO getLocalizacion() {
 		return localizacion;
 	}
 }

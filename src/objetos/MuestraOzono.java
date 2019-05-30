@@ -6,7 +6,7 @@ public class MuestraOzono extends MuestraVO{
 	float temperatura;
 	float ozono;
 	public MuestraOzono(int id, String fecha, float duracion, int oxigeno, float humedad, float temperatura, float ozono, 
-			String metorologia, Localizacion localizacion, String usuario) {
+			String metorologia, LocalizacionVO localizacion, String usuario) {
 		super(id,fecha, duracion, metorologia, localizacion, usuario);
 		this.oxigeno = oxigeno;
 		this.humedad = humedad;

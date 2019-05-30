@@ -5,10 +5,10 @@ public abstract class MuestraVO {
 	String fecha;
 	float duracion;
 	String metorologia;
-	Localizacion localizacion;
+	LocalizacionVO localizacion;
 	String usuario;
 
-	public MuestraVO(int id, String fecha, float duracion, String metorologia, Localizacion localizacion,
+	public MuestraVO(int id, String fecha, float duracion, String metorologia, LocalizacionVO localizacion,
 			String usuario) {
 		super();
 		this.id = id;
@@ -47,11 +47,11 @@ public abstract class MuestraVO {
 		this.metorologia = metorologia;
 	}
 
-	public Localizacion getLocalizacion() {
+	public LocalizacionVO getLocalizacion() {
 		return localizacion;
 	}
 
-	public void setLocalizacion(Localizacion localizacion) {
+	public void setLocalizacion(LocalizacionVO localizacion) {
 		this.localizacion = localizacion;
 	}
 

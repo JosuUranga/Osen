@@ -8,7 +8,7 @@ public class MuestraCo2 extends MuestraVO{
 	float temperatura;
 	float voc;
 	
-	public MuestraCo2(int id, String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,String metorologia, Localizacion localizacion, String usuario) {
+	public MuestraCo2(int id, String fecha, float duracion, int co2eq, float humedad, float temperatura, float voc,String metorologia, LocalizacionVO localizacion, String usuario) {
 		super(id, fecha, duracion, metorologia, localizacion, usuario);
 		this.co2eq = co2eq;
 		this.humedad = humedad;

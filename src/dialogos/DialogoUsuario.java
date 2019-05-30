@@ -29,7 +29,7 @@ import idiomas.ControladorIdioma;
 import modelos.IdiomaDAO;
 import modelos.LocalizacionDAO;
 import modelos.UsuarioDAO;
-import objetos.Localizacion;
+import objetos.LocalizacionVO;
 import objetos.UsuarioVO;
 import osen.Principal;
 import stripe.Suscripciones;
@@ -41,7 +41,7 @@ public class DialogoUsuario extends JDialog{
 	ControladorIdioma listaPalabras;
 	JTextField nombre, email;
 	JComboBox <String>  idioma;
-	JComboBox <Localizacion>  localizacion;
+	JComboBox <LocalizacionVO>  localizacion;
 
 	JPasswordField pass;
 	Font fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
@@ -198,7 +198,7 @@ public class DialogoUsuario extends JDialog{
 	}
 
 
-	private Component crearComboBoxLoca(JComboBox<Localizacion> text, String string) {
+	private Component crearComboBoxLoca(JComboBox<LocalizacionVO> text, String string) {
 		JPanel panel = new JPanel(new GridLayout(1,2));
 		JLabel label = new JLabel(string);	
 		label.setFont(fuenteTituloInfoGeneral);
@@ -298,7 +298,7 @@ public class DialogoUsuario extends JDialog{
 		panelPrincipal.repaint();				
 	}
 	private void updateUser() throws SQLException{
-		Localizacion loca = (Localizacion) localizacion.getSelectedItem();
+		LocalizacionVO loca = (LocalizacionVO) localizacion.getSelectedItem();
 		user.setIdiomaSeleccionado(idioma.getSelectedIndex()+1);
 		
 		if(user.getTipo()!=0)UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(nombre.getText(), String.valueOf(pass.getPassword()), email.getText(), loca.getId(), idioma.getSelectedIndex()+1, user.getTipo(), user.getUsuarioID());
@@ -338,10 +338,10 @@ public class DialogoUsuario extends JDialog{
 	}
 	
 
-	public void cargarDatosLocalizaciones(JComboBox<Localizacion> combo) {
+	public void cargarDatosLocalizaciones(JComboBox<LocalizacionVO> combo) {
 	
 		try {
-			List<Localizacion>listaLoca=LocalizacionDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
+			List<LocalizacionVO>listaLoca=LocalizacionDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getAllLocalizaciones();
 			localizacion.removeAllItems();
 			listaLoca.forEach(loca->localizacion.addItem(loca));

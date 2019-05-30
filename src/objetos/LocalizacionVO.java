@@ -1,11 +1,11 @@
 package objetos;
 
-public class Localizacion {
+public class LocalizacionVO {
 	String nombre;
 	int habitantes;
 	float area;
 	int id;
-	public Localizacion(int id,String nombre, int habitantes, float area) {
+	public LocalizacionVO(int id,String nombre, int habitantes, float area) {
 		super();
 		this.id=id;
 		this.nombre = nombre;

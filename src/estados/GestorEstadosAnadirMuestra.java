@@ -7,13 +7,13 @@ import dialogos.DialogoInsertarLocalizacion;
 import dialogos.DialogoInsertarMuestra;
 import idiomas.ControladorIdioma;
 import lineaSerie.LineaSeriePrincipal;
-import objetos.Localizacion;
+import objetos.LocalizacionVO;
 import objetos.UsuarioVO;
 
 public class GestorEstadosAnadirMuestra {
 
 	int state;
-	Localizacion localizacion;
+	LocalizacionVO localizacion;
 	DialogoInsertarMuestra dialogoInsertarMuestra;
 	LineaSeriePrincipal lsP;
 	JFrame ventana;

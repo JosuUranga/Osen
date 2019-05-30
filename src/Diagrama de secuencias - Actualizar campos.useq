@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<sequence-diagram version="1.2.3" icons="true" automaticImage="JPEG" generate-combined-fragments="true">  
+  <object id="1" language="java" name="osen.Principal" project="OSEN" file="/OSEN/src/osen/Principal.java" 
+    binary="false" label="principal" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="2">      
+      <position height="511" width="85" x="5" y="186"/>    
+    </execution>  
+  </object>  
+  <object id="15" language="java" name="modelos.LocalizacionDAO" project="OSEN" 
+    file="/OSEN/src/modelos/LocalizacionDAO.java" binary="false" label="localizacionDAO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="4">      
+      <position height="24" width="143" x="94" y="210"/>    
+    </execution>    
+    <execution id="6">      
+      <position height="110" width="143" x="94" y="258"/>    
+    </execution>  
+  </object>  
+  <object id="20" language="java" name="objetos.LocalizacionVO" project="OSEN" 
+    file="/OSEN/src/objetos/LocalizacionVO.java" binary="false" label="localizacionVO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="19">      
+      <position height="24" width="132" x="241" y="320"/>    
+    </execution>  
+  </object>  
+  <object id="21" language="java" name="modelos.MeteoDAO" project="OSEN" file="/OSEN/src/modelos/MeteoDAO.java" 
+    binary="false" label="meteoDAO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="8">      
+      <position height="24" width="100" x="377" y="370"/>    
+    </execution>    
+    <execution id="10">      
+      <position height="103" width="100" x="377" y="421"/>    
+    </execution>  
+  </object>  
+  <object id="26" language="java" name="objetos.MeteorologiaVO" project="OSEN" 
+    file="/OSEN/src/objetos/MeteorologiaVO.java" binary="false" label="meteorologiaVO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="25">      
+      <position height="24" width="138" x="481" y="476"/>    
+    </execution>  
+  </object>  
+  <object id="27" language="java" name="modelos.FechaDAO" project="OSEN" file="/OSEN/src/modelos/FechaDAO.java" 
+    binary="false" label="fechaDAO" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="12">      
+      <position height="24" width="98" x="623" y="554"/>    
+    </execution>    
+    <execution id="14">      
+      <position height="72" width="98" x="623" y="601"/>    
+    </execution>  
+  </object>  
+  <object id="30" language="java" name="db.DBManager" project="OSEN" file="/OSEN/src/db/DBManager.java" binary="false" 
+    label="dbManager" type="class" autoSize="true">    
+    <position height="-1" width="-1" x="258" y="0"/>    
+    <execution id="17">      
+      <position height="24" width="107" x="725" y="282"/>    
+    </execution>    
+    <execution id="23">      
+      <position height="24" width="107" x="725" y="445"/>    
+    </execution>    
+    <execution id="29">      
+      <position height="24" width="107" x="725" y="625"/>    
+    </execution>  
+  </object>  
+  <message id="3" 
+    operation="getInstance(java.lang.String,java.lang.String,java.lang.String,java.lang.String):modelos.LocalizacionDAO" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="4"/>  
+  </message>  
+  <message id="5" operation="getLocalizacionesMuestra():java.util.List&lt;LocalizacionVO&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="6"/>  
+  </message>  
+  <message id="7" 
+    operation="getInstance(java.lang.String,java.lang.String,java.lang.String,java.lang.String):db.DBManager" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="8"/>  
+  </message>  
+  <message id="9" operation="getMeteo(java.lang.String):java.util.List&lt;MeteorologiaVO&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="10"/>  
+  </message>  
+  <message id="11" 
+    operation="getInstance(java.lang.String,java.lang.String,java.lang.String,java.lang.String):db.DBManager" 
+    asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="12"/>  
+  </message>  
+  <message id="13" operation="getFechas(java.lang.String,int):java.util.List&lt;String&gt;" asynchronous="false">    
+    <end type="SOURCE" refId="2"/>    
+    <end type="TARGET" refId="14"/>  
+  </message>  
+  <message id="16" operation="executeQuery(java.lang.String):java.sql.ResultSet" asynchronous="false">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="17"/>  
+  </message>  
+  <message id="18" operation="getNombre():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="6"/>    
+    <end type="TARGET" refId="19"/>  
+  </message>  
+  <message id="22" operation="executeQuery(java.lang.String):java.sql.ResultSet" asynchronous="false">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="23"/>  
+  </message>  
+  <message id="24" operation="getDescripcion():java.lang.String" asynchronous="false">    
+    <end type="SOURCE" refId="10"/>    
+    <end type="TARGET" refId="25"/>  
+  </message>  
+  <message id="28" operation="executeQuery(java.lang.String):java.sql.ResultSet" asynchronous="false">    
+    <end type="SOURCE" refId="14"/>    
+    <end type="TARGET" refId="29"/>  
+  </message>
+</sequence-diagram>

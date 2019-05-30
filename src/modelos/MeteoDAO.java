@@ -8,15 +8,15 @@ import java.util.ArrayList;
 import java.util.List;
 
 import db.DBManager;
-import objetos.Meteorologia;
+import objetos.MeteorologiaVO;
 
 public class MeteoDAO extends DBManager{
 	Statement statement, tempStatement;
 	ResultSet resultSet, tempResultSet;
 	CallableStatement callStatement;
 	static MeteoDAO instance;
-	List<Meteorologia> listaMeteo;
-	Meteorologia meteo;
+	List<MeteorologiaVO> listaMeteo;
+	MeteorologiaVO meteo;
 	private final static String getMeteoLocalizaciones="{CALL get_meteo(?)}";
 	private final static String getMeteoAll="{CALL get_meteoAll()}";
 	
@@ -29,24 +29,24 @@ public class MeteoDAO extends DBManager{
 		}
 		return instance;
 	}
-	public List<Meteorologia> getMeteo(String nombre) throws SQLException{
+	public List<MeteorologiaVO> getMeteo(String nombre) throws SQLException{
 		callStatement=executeCall(getMeteoLocalizaciones);
 		callStatement.setString(1, nombre);
 		resultSet=callStatement.executeQuery();
 		listaMeteo=new ArrayList<>();
 		while(resultSet.next()) {
-			meteo=new Meteorologia(resultSet.getInt(1),resultSet.getString(2));
+			meteo=new MeteorologiaVO(resultSet.getInt(1),resultSet.getString(2));
 			listaMeteo.add(meteo);
 		}
 		conClose();
 		return listaMeteo;
 	}
-	public List<Meteorologia> getMeteoAll() throws SQLException{
+	public List<MeteorologiaVO> getMeteoAll() throws SQLException{
 		callStatement=executeCall(getMeteoAll);
 		resultSet=callStatement.executeQuery();
 		listaMeteo=new ArrayList<>();
 		while(resultSet.next()) {
-			meteo=new Meteorologia(resultSet.getInt(1),resultSet.getString(2));
+			meteo=new MeteorologiaVO(resultSet.getInt(1),resultSet.getString(2));
 			listaMeteo.add(meteo);
 		}
 		conClose();
