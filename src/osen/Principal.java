@@ -331,6 +331,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	private class MiAccion extends AbstractAction {
 		public MiAccion (String texto,String actionCommand, Icon imagen, String descrip, Integer nemonic){
 			super(texto,imagen);
+			
 			this.putValue(Action.SHORT_DESCRIPTION ,descrip);
 			this.putValue(Action.MNEMONIC_KEY, nemonic);
 			this.putValue(ACTION_COMMAND_KEY, actionCommand);
@@ -340,6 +341,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		public void actionPerformed(ActionEvent e) {
 			if (e.getActionCommand().equals("anadirCampo")){
 				if(generadorPan.getState()!=2) {
+					this.putValue(SMALL_ICON, new ImageIcon("iconos/edit_remove.png"));
 					generadorPan.setState(0);
 					updatePanelMuestras("asd");
 					generadorPan.setState(2);
@@ -351,6 +353,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 					comboMeteo2.setActionCommand("meteo2");
 				}
 				else{
+					this.putValue(SMALL_ICON, new ImageIcon("iconos/edit_add.png"));
 					comboLocalizacion2.setActionCommand("nada");
 					comboMeteo2.setActionCommand("nada");
 					generadorPan.setState(0);

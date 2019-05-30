@@ -55,7 +55,7 @@ public class GeneradorPanelesMuestra {
 	}
 	private JTabbedPane getPanelSinComparar() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
+		//panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,null));
 		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
@@ -63,7 +63,7 @@ public class GeneradorPanelesMuestra {
 	}
 	private JTabbedPane getPanelComparando() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
+		//panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,muestra2));
 		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;

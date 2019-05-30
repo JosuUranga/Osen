@@ -175,11 +175,11 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 				user = UsuarioDAO.getInstance("Basic",Principal.dbpass, Principal.dbname, Principal.dbip).getUser(usuario.getText(), String.valueOf(password.getPassword()));
 				Suscripciones sus=Suscripciones.getInstance(listaPalabras);
 				
-				if (user.getTipo()==UsuarioVO.PRO && !sus.checkSubActive(user.getEmail())) {
-					user.setTipo(UsuarioVO.NORMAL);
-					UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), -1, user.getLocalizacion(), user.getTipo(), user.getUsuarioID());
-				}
 				if(user!=null) {
+					if (user.getTipo()==UsuarioVO.PRO && !sus.checkSubActive(user.getEmail())) {
+						user.setTipo(UsuarioVO.NORMAL);
+						UsuarioDAO.getInstance(user.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip).updateUser(user.getNombre(), user.getPass(), user.getEmail(), -1, user.getLocalizacion(), user.getTipo(), user.getUsuarioID());
+					}
 					loginCorrecto=true;
 					this.dispose();
 				}
