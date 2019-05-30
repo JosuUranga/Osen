@@ -105,6 +105,8 @@ public class DialogoUsuario extends JDialog{
 			}
 			
 		});
+		this.getRootPane().setDefaultButton(boton);
+
 		panel.add(boton);
 		return panel;
 	}
@@ -270,6 +272,7 @@ public class DialogoUsuario extends JDialog{
 
 					
 		});
+
 		panel.add(botonOK);
 		
 		botonEditar = new JButton (listaPalabras.getListaPalabras().get(27));
@@ -283,6 +286,7 @@ public class DialogoUsuario extends JDialog{
 			}
 			
 		});
+		
 		panel.add(botonEditar);
 		return panel;
 	}

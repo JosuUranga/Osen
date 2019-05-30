@@ -19,14 +19,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFormattedTextField;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.text.DefaultFormatterFactory;
 import javax.swing.text.MaskFormatter;
-
-import com.stripe.exception.StripeException;
 
 import idiomas.ControladorIdioma;
 import modelos.UsuarioDAO;
@@ -87,9 +84,7 @@ public class DialogoTarjeta extends JDialog{
 		cardNumberFormatter.setPlaceholderCharacter('_');  
 		
 		panel.add(crearTextField(tarjeta=new JFormattedTextField(), listaPalabras.getListaPalabras().get(56)+" "+cardNumberFormatter));
-
-		
-		
+	
 		DefaultFormatterFactory ssnFormatterFactory = new DefaultFormatterFactory(cardNumberFormatter);
 		tarjeta.setFormatterFactory(ssnFormatterFactory);
 
@@ -172,7 +167,7 @@ public class DialogoTarjeta extends JDialog{
 			}
 		
 		});
-		
+		this.getRootPane().setDefaultButton(botonOK);
 		panel.add(botonOK);
 		botonCancelar = new JButton (listaPalabras.getListaPalabras().get(39));
 		botonCancelar.addActionListener(new ActionListener(){

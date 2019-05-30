@@ -165,15 +165,24 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				new Integer(KeyEvent.VK_P));
 		salir = new MiAccion (controladorIdioma.getListaPalabras().get(8),"salir",new ImageIcon("iconos/exit.png"),controladorIdioma.getListaPalabras().get(9),
 				new Integer(KeyEvent.VK_S));
+		updateCampos();
+		
+	}
+	private void updateCampos() {
 		if(usuario.getTipo()==0) {
 			anadirCampo.setEnabled(false);
 			anadirMuestra.setEnabled(false);
 		}
-		if(usuario.getTipo()==1) {
+		else if(usuario.getTipo()==1) {
 			anadirMuestra.setEnabled(false);
+			anadirCampo.setEnabled(true);
 		}
-		
+		else {
+			anadirMuestra.setEnabled(true);
+			anadirCampo.setEnabled(true);
+		}		
 	}
+
 	private void crearComboBox1() {
 		comboLocalizacion1=new JComboBox<>();
 		comboMeteo1=new JComboBox<>();
@@ -376,6 +385,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			if (e.getActionCommand().equals("perfil")){
 				int idioma=usuario.getIdiomaSeleccionado();
 				new DialogoUsuario(Principal.this, controladorIdioma.getListaPalabras().get(30), true, controladorIdioma, usuario, Principal.this);
+				updateCampos();
 				if(idioma!=usuario.getIdiomaSeleccionado()) {
 					updatePanelMuestras("idioma");
 				}

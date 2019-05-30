@@ -5,6 +5,7 @@ import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
 import javax.swing.JOptionPane;
 
 import com.stripe.Stripe;
@@ -12,8 +13,9 @@ import com.stripe.exception.StripeException;
 import com.stripe.model.Customer;
 import com.stripe.model.Subscription;
 import com.stripe.model.Token;
+
 import idiomas.ControladorIdioma;
-import modelos.UsuarioVO;
+import objetos.UsuarioVO;
 
 public class Suscripciones implements PropertyChangeListener{
 	UsuarioVO user;
