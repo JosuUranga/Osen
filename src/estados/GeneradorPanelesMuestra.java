@@ -93,12 +93,12 @@ public class GeneradorPanelesMuestra {
 		}
 		return panel;
 	}
-	
+	/*
 	private Component crearPanelMapa() {
 		JPanel panel = new JPanel (new BorderLayout(0,10));
 		
 		return panel;
-	}
+	}*/
 	private Component crearPanelInfoGeneral(MuestraVO muestra1,MuestraVO muestra2) {
 		JPanel panel = new JPanel (new GridLayout(3,1));
 		panel.add(crearPanelInfoNorte(muestra1,muestra2));
