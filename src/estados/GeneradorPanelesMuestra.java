@@ -99,11 +99,10 @@ public class GeneradorPanelesMuestra {
 		}
 		return panel;
 	}
-	/*
 	private Component crearPanelMapa() {
         MapViewOptions options = new MapViewOptions();
         options.importPlaces();
-        options.setApiKey("AIzaSyAizpQWiX6L8_oyF1-7vjWUJcVVt094zKI");
+        options.setApiKey("AIzaSyAXsq3M1lBfGwmYD1xx_oGnB76UCHH00CM");
         Mapa map;
         if(this.getState()==ESTADO_COMPARANDO)map=new Mapa(options,muestra1,muestra2,controladorIdioma.getListaPalabras().get(60));
         else {
