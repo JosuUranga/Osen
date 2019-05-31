@@ -98,7 +98,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setSize(1000,800);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
 		
-		//iniciarNotis();
+		iniciarNotis();
 		seleccionIdioma=seleccionarIdioma();
 		generadorPan=new GeneradorPanelesMuestra(controladorIdioma);
 		this.crearAcciones();
