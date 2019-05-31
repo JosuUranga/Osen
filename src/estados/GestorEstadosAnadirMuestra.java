@@ -49,7 +49,7 @@ public class GestorEstadosAnadirMuestra {
 		case 2://a�adir localizacion
 			@SuppressWarnings("unused") 
 			DialogoInsertarLocalizacion dialogoInsertarLocalizacion= 
-			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.getListaPalabras().get(2), true, listaPalabras, usuario);
+			new DialogoInsertarLocalizacion(this,dialogoInsertarMuestra, listaPalabras.getListaPalabras().get(59), true, listaPalabras, usuario);
 			break;
 			
 		case 3://sensor

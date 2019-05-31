@@ -115,6 +115,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		try {
 			return IdiomaDAO.getInstance(usuario.calcularTipoUsuario(), dbpass, dbname, dbip).getIdiomaUser(usuario.getUsuarioID());
 		} catch (SQLException e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 
 		}
@@ -134,6 +135,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				controladorIdioma.cambiarIdioma(usuario.getIdiomaSeleccionado());
 
 			} catch (SQLException e) {
+				e.printStackTrace();
+
 				JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 			};
 		}else {

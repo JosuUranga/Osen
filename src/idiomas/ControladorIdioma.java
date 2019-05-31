@@ -47,7 +47,7 @@ public class ControladorIdioma {
 		break; 
 		case 2: 
 			ficheroIdioma=null;
-			System.out.println("ingles");
+			System.out.println("English");
 			ficheroIdioma=new FicheroIdioma(ficheroIngles); 
 		break; 
 		} 
