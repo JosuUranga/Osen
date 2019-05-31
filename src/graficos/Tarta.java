@@ -16,12 +16,16 @@ import org.jfree.data.general.PieDataset;
 import org.jfree.ui.HorizontalAlignment;
 import org.jfree.ui.RectangleInsets;
 
+import idiomas.ControladorIdioma;
+
 @SuppressWarnings("serial")
 public class Tarta extends JPanel{
 	static ChartPanel pan=null;
+	static ControladorIdioma controladorIdioma;
 	
-   public Tarta(String tit1, float var1,float var2) {
+   public Tarta(String tit1, float var1,float var2,ControladorIdioma controladorIdiomas) {
 	   super();
+	   controladorIdioma=controladorIdiomas;
 	   pan=crearPanel(tit1,var1,var2);
 	}
    public JPanel getTarta() {
@@ -37,8 +41,8 @@ public class Tarta extends JPanel{
    }
    private static PieDataset createDataset(String tit1, float var1,float var2) {
        DefaultPieDataset dataset = new DefaultPieDataset();
-       dataset.setValue(tit1+"-Muestra 1", var1);
-       dataset.setValue(tit1+"-Muestra 2", var2);
+       dataset.setValue(controladorIdioma.getListaPalabras().get(60)+" 1: "+var1, var1);
+       dataset.setValue(controladorIdioma.getListaPalabras().get(60)+" 2: "+var2, var2);
        return dataset;
    }
    private static JFreeChart createChart(String tit,PieDataset dataset) {
@@ -67,7 +71,7 @@ public class Tarta extends JPanel{
        plot.setBaseSectionOutlineStroke(new BasicStroke(2.0f));
 
        // customise the section label appearance
-       plot.setLabelFont(new Font("Courier New", Font.BOLD, 20));
+       plot.setLabelFont(new Font("Courier New", Font.BOLD, 12));
        plot.setLabelLinkPaint(Color.BLACK);
        plot.setLabelLinkStroke(new BasicStroke(2.0f));
        plot.setLabelOutlineStroke(null);

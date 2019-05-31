@@ -117,8 +117,8 @@ public class DialogoInsertarMuestra extends JDialog{
 		return panel;
 	}
 	public void gestionarStart() {
-		//lsp.accion();
-		//lsp.cogerMuestra();
+		lsp.accion();
+		lsp.cogerMuestra();
 		hiloProgressBar = new Thread(new Runnable() {
 			@Override
 			public void run(){
