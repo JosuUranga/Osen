@@ -343,7 +343,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 				if(generadorPan.getState()!=2) {
 					this.putValue(SMALL_ICON, new ImageIcon("iconos/edit_remove.png"));
 					generadorPan.setState(0);
-					updatePanelMuestras("asd");
+					updatePanelMuestras("v");
 					generadorPan.setState(2);
 					panelComboBox2.add(comboLocalizacion2,0);
 					panelComboBox2.add(comboMeteo2,1);
@@ -357,7 +357,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 					comboLocalizacion2.setActionCommand("nada");
 					comboMeteo2.setActionCommand("nada");
 					generadorPan.setState(0);
-					updatePanelMuestras("asd");
+					updatePanelMuestras("vn");
 					panelComboBox2.remove(0);
 					panelComboBox2.remove(0);
 					panelComboBox2.remove(0);
@@ -372,7 +372,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			}
 			if (e.getActionCommand().equals("recargar")){
 				cargarDatosComboBox(comboLocalizacion1, comboMeteo1, comboFecha1);
-				cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
+				if(generadorPan.getState()==GeneradorPanelesMuestra.ESTADO_COMPARANDO)cargarDatosComboBox(comboLocalizacion2, comboMeteo2, comboFecha2);
 			}
 			if(e.getActionCommand().equals("ayuda")) {
 				Desktop desktop = Desktop.getDesktop();
@@ -424,12 +424,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		switch(e.getActionCommand()) {
 		
 		case "Buscar":
-			if(generadorPan.getState()==0)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
+			if(generadorPan.getState()!=2)generadorPan.setState(GeneradorPanelesMuestra.ESTADO_SIN_COMPARAR);
 			else {
 				muestra2=realizarBusquedaSinComparar(comboLocalizacion2,comboMeteo2,comboFecha2);
 			}
 			muestra1=realizarBusquedaSinComparar(comboLocalizacion1,comboMeteo1,comboFecha1);
-			updatePanelMuestras("asd");
+			updatePanelMuestras("");
 			break;
 		case "localizacion":
 			if(comboLocalizacion1.getItemCount()!=0)this.cargarDatosMeteo(comboLocalizacion1, comboMeteo1);
@@ -512,7 +512,7 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 			List<MeteorologiaVO>listaMeteo=MeteoDAO.getInstance(usuario.calcularTipoUsuario(), Principal.dbpass, Principal.dbname, Principal.dbip)
 					.getMeteo(pueblo);
 			comboMeteo.removeAllItems();
-			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));
+			listaMeteo.forEach(meteo->comboMeteo.addItem(meteo));	
 		} catch (SQLException e) {
 			JOptionPane.showMessageDialog(Principal.this, e.getMessage(), controladorIdioma.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}		

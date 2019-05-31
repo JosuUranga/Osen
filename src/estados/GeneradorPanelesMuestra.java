@@ -11,9 +11,12 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 
+import com.teamdev.jxmaps.MapViewOptions;
+
 import graficos.Anillo;
 import graficos.Tarta;
 import idiomas.ControladorIdioma;
+import mapa.Mapa;
 import objetos.MuestraCo2;
 import objetos.MuestraVO;
 
@@ -42,12 +45,15 @@ public class GeneradorPanelesMuestra {
 		JTabbedPane panel = new JTabbedPane();
 		switch(state) {
 		case ESTADO_SIN_COMPARAR:
+			this.muestra2=null;
 			panel=getPanelSinComparar();
 			break;
 		case ESTADO_COMPARANDO:
 			panel=getPanelComparando();
 			break;
 		default:
+			this.muestra2=null;
+			this.muestra1=null;
 			panel=getPanelNoMostrar();
 			break;
 		}
@@ -55,24 +61,24 @@ public class GeneradorPanelesMuestra {
 	}
 	private JTabbedPane getPanelSinComparar() {
 		JTabbedPane panel = new JTabbedPane();
-		//panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,null));
+		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 		
 	}
 	private JTabbedPane getPanelComparando() {
 		JTabbedPane panel = new JTabbedPane();
-		//panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(11), crearPanelInfoGeneral(muestra1,muestra2));
+		panel.addTab(controladorIdioma.getListaPalabras().get(10), crearPanelMapa());
 		panel.addTab(controladorIdioma.getListaPalabras().get(12), crearPanelGraficos());
 		return panel;
 		
 	}
 	private JTabbedPane getPanelNoMostrar() {
 		JTabbedPane panel = new JTabbedPane();
-		panel.addTab(controladorIdioma.getListaPalabras().get(10), new JPanel (new BorderLayout(0,10)));
 		panel.addTab(controladorIdioma.getListaPalabras().get(11), new JPanel (new BorderLayout(0,10)));
+		panel.addTab(controladorIdioma.getListaPalabras().get(10), new JPanel (new BorderLayout(0,10)));
 		panel.addTab(controladorIdioma.getListaPalabras().get(12), new JPanel (new BorderLayout(0,10)));
 		return panel;
 		
@@ -80,25 +86,31 @@ public class GeneradorPanelesMuestra {
 	private Component crearPanelGraficos() {
 		JPanel panel= new JPanel(new GridLayout(2,2));
 		if (this.getState()==ESTADO_COMPARANDO) {
-			 panel.add(new Tarta("Co2",muestra1.getCo2eq(),muestra2.getCo2eq()).getTarta());
-			 panel.add(new Tarta("Humedad",muestra1.getHumedad(),muestra2.getHumedad()).getTarta());
-			 panel.add(new Tarta("Voc",muestra1.getVoc(),muestra2.getVoc()).getTarta());
-			 panel.add(new Tarta("Temperatura",muestra1.getTemperatura(),muestra2.getTemperatura()).getTarta());
+			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(19),muestra1.getCo2eq(),muestra2.getCo2eq(),controladorIdioma).getTarta());
+			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(20),muestra1.getHumedad(),muestra2.getHumedad(),controladorIdioma).getTarta());
+			 panel.add(new Tarta("Voc",muestra1.getVoc(),muestra2.getVoc(),controladorIdioma).getTarta());
+			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(21),muestra1.getTemperatura(),muestra2.getTemperatura(),controladorIdioma).getTarta());
 		}
 		else {
-			 panel.add(new Anillo("Co2",muestra1.getCo2eq()).getPanel());
-			 panel.add(new Anillo("Humedad",muestra1.getHumedad()).getPanel());
-			 panel.add(new Anillo("Voc",muestra1.getVoc()).getPanel());
-			 panel.add(new Anillo("Temperatura",muestra1.getTemperatura()).getPanel());
+			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(19),muestra1.getCo2eq(),controladorIdioma).getPanel());
+			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(20),muestra1.getHumedad(),controladorIdioma).getPanel());
+			 panel.add(new Anillo("Voc",muestra1.getVoc(),controladorIdioma).getPanel());
+			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(21),muestra1.getTemperatura(),controladorIdioma).getPanel());
 		}
 		return panel;
 	}
 	/*
 	private Component crearPanelMapa() {
-		JPanel panel = new JPanel (new BorderLayout(0,10));
-		
-		return panel;
-	}*/
+        MapViewOptions options = new MapViewOptions();
+        options.importPlaces();
+        options.setApiKey("AIzaSyAizpQWiX6L8_oyF1-7vjWUJcVVt094zKI");
+        Mapa map;
+        if(this.getState()==ESTADO_COMPARANDO)map=new Mapa(options,muestra1,muestra2,controladorIdioma.getListaPalabras().get(60));
+        else {
+        	map=new Mapa(options,muestra1,muestra2,controladorIdioma.getListaPalabras().get(60));
+        }
+		return map;
+	}
 	private Component crearPanelInfoGeneral(MuestraVO muestra1,MuestraVO muestra2) {
 		JPanel panel = new JPanel (new GridLayout(3,1));
 		panel.add(crearPanelInfoNorte(muestra1,muestra2));
@@ -165,7 +177,7 @@ public class GeneradorPanelesMuestra {
 		panel.add(crearPanelJLabel(labelHumedad=new JLabel(muestra.ensenarTexto()[6])));
 		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[6])));
 
-		panel.add(crearPanelJLabelTitulo(new JLabel(controladorIdioma.getListaPalabras().get(21))));
+		panel.add(crearPanelJLabelTitulo(new JLabel("Voc")));
 		panel.add(crearPanelJLabel(labelVoc=new JLabel(muestra.ensenarTexto()[7])));
 		if(this.getState()==ESTADO_COMPARANDO)panel.add(crearPanelJLabel(labelMuestraID=new JLabel(muestra2.ensenarTexto()[7])));
 
