@@ -84,6 +84,7 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 			combo.removeAllItems();
 			listaIdiomas.forEach(idioma->combo.addItem(idioma));
 		} catch (SQLException e) {
+			e.printStackTrace();
 			JOptionPane.showMessageDialog(Login.this, e.getMessage(), listaPalabras.getListaPalabras().get(41)+e.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 		}
 		combo.setSelectedIndex(0);
@@ -190,6 +191,8 @@ public class Login extends JDialog implements ActionListener, ItemListener{
 			} catch (SQLException e1) {
 				if(e1.getErrorCode()==1146)	JOptionPane.showMessageDialog(Login.this, listaPalabras.getListaPalabras().get(51), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				else {
+					e1.getStackTrace();
+
 					JOptionPane.showMessageDialog(Login.this, e1.getMessage(), listaPalabras.getListaPalabras().get(41)+e1.getErrorCode(), JOptionPane.WARNING_MESSAGE);
 				}
 			} catch (NumberFormatException e2) {
