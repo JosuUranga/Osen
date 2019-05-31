@@ -50,24 +50,22 @@ uint32_t initCom(COM com, uint32_t baudRate){
 							USART6->BRR = 0x68<<4;
 							USART6->BRR = 0X3;
 							break;
-					 }
-					//Configurar los pins TX y RX en modo alternativo
-					USART6_GPIOC_BASE->MODER &= ~(3 << (2 * USART6_TX_PIN));
-					USART6_GPIOC_BASE->MODER |= (2 << (2 * USART6_TX_PIN));
-					
-					USART6_GPIOG_BASE->MODER &= ~(3 << (2 * USART6_RX_PIN));
-					USART6_GPIOG_BASE->MODER |= (2 << (2 * USART6_RX_PIN));
+					 }					 
+					 //Configurar los pins TX y RX en modo alternativo
+					 initGpioPinMode(GPIOC,USART6_TX_PIN,GPIO_Mode_AF);
+					 initGpioPinMode(GPIOG,USART6_RX_PIN,GPIO_Mode_AF);
 					 
 					//("Alternate function mapping" Table)					
 					USART6_GPIOC_BASE->AFR[USART6_TX_PIN >> 3] |= (8 << (4 * (USART6_TX_PIN & 15))); // 1000 en el AFR que se necesite
 					USART6_GPIOG_BASE->AFR[USART6_RX_PIN >> 3] |= (8 << (4 * ((USART6_RX_PIN & 15)-8)));	
-					
-					//Habilitar las interrupciones de USART6
-					USART6->CR1 |= (1 << TXEIE_BIT);
-					USART6->CR1 |= (1 << RXNEIE_BIT);
-					//Configurar la interrupción de USART6 en NVIC
+				
+					 //Configurar la interrupción de USART6 en NVIC
 					*((uint32_t*) (NVIC_ISER + ISER2_OFFSET)) |= (1 << (USART6_INTERRUPTION%32)); //Numero interrupt/cuantos iser(%32) para saber el restante
-	      
+				
+					//Habilitar las interrupciones de USART6
+				  //USART6->CR1 |= (1 << TXEIE_BIT);
+					USART6->CR1 |= (1 << RXNEIE_BIT);
+					
 	      break; 
 				
 		// USART3 RS232_2 GPIOD8: TX ; GPIOD9: RX
@@ -90,50 +88,41 @@ uint32_t initCom(COM com, uint32_t baudRate){
 					//Configurar los pins TX y RX en modo alternativo
 					 initGpioPinMode(GPIOD,USART3_TX_PIN,GPIO_Mode_AF);
 					 initGpioPinMode(GPIOD,USART3_RX_PIN,GPIO_Mode_AF);
-
-					/*USART3_GPIOD_BASE->MODER &= ~(3 << (2 * USART3_TX_PIN));
-					USART3_GPIOD_BASE->MODER |= (2 << (2 * USART3_TX_PIN));
-					
-					USART3_GPIOD_BASE->MODER &= ~(3 << (2 * USART3_RX_PIN));
-					USART3_GPIOD_BASE->MODER |= (2 << (2 * USART3_RX_PIN));
-					*/
-		 			//("Alternate function mapping" Table)
+					//("Alternate function mapping" Table)
 					USART3_GPIOD_BASE->AFR[USART3_TX_PIN >> 3] |= (7 << (4 * (USART3_TX_PIN & 7))); // 0111 en el AFR que se necesite
 					USART3_GPIOD_BASE->AFR[USART3_RX_PIN >> 3] |= (7 << (4 * (USART3_RX_PIN & 7)));
 					 
 					 //Configurar la interrupción de USART3 en NVIC
 					*((uint32_t*) (NVIC_ISER + ISER1_OFFSET)) |= (1 << (USART3_INTERRUPTION%32));//Numero interrupt/cuantos iser(%32) para saber el restante
 					//Habilitar las interrupciones de USART3
-				//	USART3->CR1 |= (1 << TXEIE_BIT);
+					//USART3->CR1 |= (1 << TXEIE_BIT);
 					USART3->CR1 |= (1 << RXNEIE_BIT);
-					
 	      break;  
 	}
 	return 0;
 }
 
-
 void blockingWriteToUart(COM com, uint8_t *pMsg, uint32_t len){
 			
-			switch(com) {
-				case COM1 :
-					for(int i = 0;i<len;i++){
-					while (!(USART6->SR & USART_SR_TXE)){};
-					USART6->DR = pMsg[i];
-					txBuffer.oldestData++;
-					txBuffer.byteNum--;
-					}
-					break;
-				
-				case COM2 :
-					for(int i = 0;i<len;i++){
-					while (!(USART3->SR & USART_SR_TXE)){};
-					USART3->DR = pMsg[i];
-					txBuffer.oldestData++;
-					txBuffer.byteNum--;
-					}
-					break;				
+	switch(com) {
+		case COM1 :
+			for(int i = 0;i<len;i++){
+			while (!(USART6->SR & USART_SR_TXE)){};
+			USART6->DR = pMsg[i];
+			txBuffer.oldestData++;
+			txBuffer.byteNum--;
 			}
+			break;
+		
+		case COM2 :
+			for(int i = 0;i<len;i++){
+			while (!(USART3->SR & USART_SR_TXE)){};
+			USART3->DR = pMsg[i];
+			txBuffer.oldestData++;
+			txBuffer.byteNum--;
+			}
+			break;				
+		}
 }
 uint32_t mirarTransmitir(COM com){
 	
@@ -160,12 +149,12 @@ uint32_t mirarRecibir(COM com){
 	}
 	return 0;
 }
-	//https://eewiki.net/display/microcontroller/Software+FIFO+Buffer+for+UART+Communication
+	//logica buffers
 void ourUSART3_IRQHandler(void){ //RS232_2
- 
-	if(mirarTransmitir(USED_COM_PORT)){//Si se quiere transmitir
+
+	if(mirarTransmitir(USED_COM_PORT)){//Mirar si se esta transmitiendo
 		if(txBuffer.byteNum == FIFO_BUFFER_SIZE) {//Si el Buffer esta lleno
-			txBufferFull = 0;//Lo ponemos a 0 porque lo vamos a vaciar
+			txBufferFull = 0;//ponemos el flag del buffer lleno
 		}
 		if(txBuffer.byteNum > 0) {//Si hay algo en el Buffer
 			blockingWriteToUart(USED_COM_PORT,txBuffer.bufferData,txBuffer.byteNum);
@@ -174,70 +163,71 @@ void ourUSART3_IRQHandler(void){ //RS232_2
 			txBuffer.oldestData = 0;
 		}
 		if(txBuffer.byteNum == 0) {//Si no hay nada en el Buffer
-			txBufferNotEmpty = 0;     
+			txBufferNotEmpty = 0;    //el flag del bufer no vacio a 0
 		}
-		USART3->CR1 &= ~(1 << TXEIE_BIT);//Desactivamos las interrupciones mientras trabajamos con el buffer
+		USART3->CR1 &= ~(1 << TXEIE_BIT);//Desactivamos las interrupciones mientras trabajamos con el buffer para no tener problemas
 		
 	}
 	if(mirarRecibir(USED_COM_PORT)){//Si se quiere recibir
 
 		if(rxBuffer.byteNum < FIFO_BUFFER_SIZE) {//Si el Buffer no está lleno
 			rxBuffer.bufferData[rxBuffer.oldestData] = USART3->DR;//Poner el dato recibido en el Buffer	 
-			rxBuffer.oldestData++;
-			rxBuffer.byteNum++;
+			rxBuffer.oldestData++;		//aumentar la posicion del dato mas viejo
+			rxBuffer.byteNum++;				//aumentar el numero de bytes del buffer
 		}
 		if(rxBuffer.byteNum == FIFO_BUFFER_SIZE) {//Si el Buffer se llena en el proceso
-			rxBufferFull = 1;
+			rxBufferFull = 1;					//el flag de buffer lleno a 1
 		}
 		if(rxBuffer.oldestData == FIFO_BUFFER_SIZE) {//Si se llega al final del Buffer, volver al principio
 			rxBuffer.oldestData = 0;
 		}
-		rxBufferNotEmpty = 1;
-		leerUsart(USED_COM_PORT);
+		rxBufferNotEmpty = 1;		//flag de buffer no vacio a 1
+		leerUsart(USED_COM_PORT);	//leer lo que ha llegado
 		if(byte=='A') {
-				togleGpioPinValue(GPIOF,LED_3_PIN);
-			generarRandom();
+			togleGpioPinValue(GPIOF,LED_3_PIN);
+			generarRandom();			//generar valores aleatorios, provisional antes de hacer i2c
 		}
 	}
 }
-
 
 void ourUSART6_IRQHandler(void) { //RS232_1
- 
-	if(mirarTransmitir(USED_COM_PORT)){//Si se quiere transmitir
-		if(txBuffer.byteNum == FIFO_BUFFER_SIZE) {//Si el Buffer esta lleno
-			txBufferFull = 0;//Lo ponemos a 0 porque lo vamos a vaciar
+
+	if(mirarTransmitir(USED_COM_PORT)){//Mirar si se esta transmitiendo
+		if(txBuffer.byteNum == FIFO_BUFFER_SIZE) {//Si el Buffer esta lleno ya
+			txBufferFull = 0;//ponemos el flag del buffer lleno
 		}
 		if(txBuffer.byteNum > 0) {//Si hay algo en el Buffer     
-			blockingWriteToUart(USED_COM_PORT,txBuffer.bufferData,txBuffer.byteNum);
+			blockingWriteToUart(USED_COM_PORT,txBuffer.bufferData,txBuffer.byteNum); 
 		}
 		if(txBuffer.oldestData == FIFO_BUFFER_SIZE) {//Si se llega al final del Buffer, volver al principio
-			txBuffer.oldestData = 0;
+			txBuffer.oldestData = 0;	
 		}
 		if(txBuffer.byteNum == 0) {//Si no hay nada en el Buffer
-			txBufferNotEmpty = 0;     
+			txBufferNotEmpty = 0;    //el flag del bufer no vacio a 0
 		}
-		USART6->CR1 &= ~(1 << TXEIE_BIT);//Desactivamos las interrupciones mientras trabajamos con el buffer
-
+		USART6->CR1 &= ~(1 << TXEIE_BIT);//Desactivamos las interrupciones mientras trabajamos con el buffer para no tener problemas
 	}
 	
-	if(mirarRecibir(USED_COM_PORT)){//Si se quiere recibir
+	if(mirarRecibir(USED_COM_PORT)){//Mirar si se esta recibibiendo
 		if(rxBuffer.byteNum < FIFO_BUFFER_SIZE) {//Si el Buffer no está lleno			 
 			rxBuffer.bufferData[rxBuffer.oldestData] = USART6->DR;//Poner el dato recibido en el Buffer	 
-			rxBuffer.oldestData++;
-			rxBuffer.byteNum++;
+			rxBuffer.oldestData++;	//aumentar la posicion del dato mas viejo
+			rxBuffer.byteNum++;			//aumentar el numero de bytes del buffer
 		}
 		if(rxBuffer.byteNum == FIFO_BUFFER_SIZE) {//Si el Buffer se llena en el proceso
-			rxBufferFull = 1;
+			rxBufferFull = 1;		//el flag de buffer lleno a 1
 		}
 		if(rxBuffer.oldestData == FIFO_BUFFER_SIZE) {//Si se llega al final del Buffer, volver al principio
 			rxBuffer.oldestData = 0;
 		}
-		rxBufferNotEmpty = 1;
+		rxBufferNotEmpty = 1;			//flag de buffer no vacio a 1
+		leerUsart(USED_COM_PORT);	//leer lo que ha llegado
+		if(byte=='A') {
+			togleGpioPinValue(GPIOF,LED_3_PIN);
+			generarRandom();				//generar valores aleatorios, provisional antes de hacer i2c
+		}
 	}
-
 }
-
 
 uint32_t escribirUsart(COM com, uint8_t *pMsg, uint32_t len) {
    
@@ -291,7 +281,6 @@ uint32_t escribirUsart(COM com, uint8_t *pMsg, uint32_t len) {
 			}
 				break;
 	}
-	
 	return 0;
 }
 
@@ -337,19 +326,3 @@ uint32_t leerUsart(COM com){
 	 
   return 0;
 }
-/*
-void escribir(COM com, uint8_t *pMsg, uint32_t len) {
-	for(int i=0;i<len;i++){		
-					txBuffer.bufferData[i] = pMsg[i];//Mover dato al Buffer
-	}
-	USART3->CR1 |= (1 << RXNEIE_BIT);//Reactivamos las interrupciones al finalizar de trabajar con el buffer
-}
-void ourUSART3_IRQHandler(void) { //RS232_2
- 
-	if(mirarTransmitir(USED_COM_PORT)){//Si se quiere transmitir
-		togleGpioPinValue(GPIOF,LED_2_PIN);
-		blockingWriteToUart(USED_COM_PORT,txBuffer.bufferData, getSize());
-		USART3->CR1 &= ~(1 << TXEIE_BIT);//Desactivamos las interrupciones mientras trabajamos con el buffer
-	}
-}
-*/

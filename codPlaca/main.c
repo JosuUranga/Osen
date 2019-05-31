@@ -25,9 +25,7 @@ int main(void)
 {
   initGPIO();	
 	initCom(USED_COM_PORT,9600);
-	while(1)
-  {	
-	}
+	while(1){};
 }
 
 void initGPIO(void)
@@ -46,8 +44,8 @@ void initGPIO(void)
 
 void generarRandom(){
 	char co2[3],temp[2],hum[2],voc[4];
-	int r = rand()%800;
-	r+=200;
+	int r = rand()%100;
+	r+=350;
 	sprintf(co2,"%d",r);
 	r = rand()%21;
 	r+=15;
@@ -55,8 +53,8 @@ void generarRandom(){
 	r = rand()%65;
 	r+=20;
 	sprintf(hum,"%d",r);
-	r = rand()%800;
-	r+=200;
+	r = rand()%450;
+	r+=50;
 	sprintf(voc,"%d",r);
 	sprintf(msg,"%s$%s$%s$%s#",co2,temp,hum,voc);
 	escribirUsart(USED_COM_PORT,(uint8_t*)msg,strlen(msg));
