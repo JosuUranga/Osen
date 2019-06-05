@@ -53,7 +53,9 @@ Incorrect data: there is no user with the data provided
 The location already exists 
 Improve account
 Upgrade your account to PRO
-You're PRO!
+Downgrade account
 Card number
 Expiry date
 CVC
+Add location
+Sample

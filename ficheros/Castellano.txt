@@ -53,7 +53,9 @@ Datos incorrectos: no existe ningun usuario con los datos proporcionados
 Ya existe la localizacion 
 Mejorar cuenta
 Mejora tu cuenta a PRO
-¡Ya eres PRO!
+Cancelar suscripcion
 Nº de tarjeta
 Fecha de caducidad
 CVC
+Añadir localización
+Muestra
