@@ -61,10 +61,9 @@ public class NotificationManager extends Thread {
 							.getUltimaMuestra(user.getLocalizacion());
 					muestraActual=muestra.getId();
 					MuestraCo2 muestra2=(MuestraCo2) muestra;
-					co2eq=muestra2.getCo2eq();
 					if(ultimaMuestra<muestraActual) {
-						if(co2eq>800) body = "El CO2eq es de: "+co2eq+"\n Ponte una mascarilla que te mueres";
-						else body= "El CO2eq es de: "+co2eq+"\n Tranqui que no pasa na";
+						if(muestra2.getCo2eq()>420) body = "El CO2eq es de: "+muestra2.getCo2eq()+"\n Precaución! Los niveles CO2eq en el aire son bastante altos.";
+						else body= "El CO2eq es de: "+muestra2.getCo2eq()+"\n Los niveles de CO2 stán estables.";
 						notificacion.enviarNotificacionMail("Nueva muestra disponible!", body);
 						notificacion.enviarNotificacionWindows("Hay una nueva muestra disponible \n"+body);
 						ultimaMuestra=muestraActual;
