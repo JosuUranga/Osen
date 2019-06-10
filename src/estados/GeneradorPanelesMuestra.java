@@ -102,7 +102,7 @@ public class GeneradorPanelesMuestra {
 	private Component crearPanelMapa() {
         MapViewOptions options = new MapViewOptions();
         options.importPlaces();
-        options.setApiKey("IzaSyDYVPEOHoMhWoxx4PcHceGAwddTYJSmmvo");
+        options.setApiKey("AIzaSyDYVPEOHoMhWoxx4PcHceGAwddTYJSmmvo");
         Mapa map;
         if(this.getState()==ESTADO_COMPARANDO)map=new Mapa(options,muestra1,muestra2,controladorIdioma.getListaPalabras().get(60));
         else {

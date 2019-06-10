@@ -74,10 +74,19 @@ public class DialogoUsuario extends JDialog{
 		
 		this.cargarDatosLocalizaciones(localizacion=new JComboBox<>());
 		if(user.getTipo()==0)this.localizacion.setSelectedIndex(-1);	
-		else this.localizacion.setSelectedIndex(user.getLocalizacion());		
+		else this.localizacion.setSelectedIndex(findIndex());		
 
 	}
 
+	private int findIndex() {
+		int userLoca=user.getLocalizacion();
+		LocalizacionVO loca;
+		for(int i=0;i<localizacion.getItemCount();i++) {
+			loca=localizacion.getItemAt(i);
+			if(loca.getId()==userLoca) return i;
+		}
+		return 0;
+	}
 	private Container crearPanelDialogo() {
 		panelPrincipal = new JPanel (new BorderLayout(0,20));
 		panelPrincipal.setBorder(BorderFactory.createEmptyBorder(10,10,20,10));
@@ -185,7 +194,6 @@ public class DialogoUsuario extends JDialog{
 
 		}
 		else if(user.getTipo()==1) {
-			cargarDatosLocalizaciones(localizacion);
 			upgrade.setText(listaPalabras.getListaPalabras().get(55));
 			upgrade.setActionCommand("downgrade");
 
@@ -204,8 +212,8 @@ public class DialogoUsuario extends JDialog{
 		label.setFont(fuenteTituloInfoGeneral);
 		panel.setBorder(BorderFactory.createEmptyBorder(20, 30, 0, 30));
 		panel.add(label);
-		text.setEnabled(editando);
 		panel.add(text);
+		text.setEnabled(editando);
 		return panel;
 	}
 	

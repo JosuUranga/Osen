@@ -45,7 +45,7 @@ public class Anillo extends JPanel {
                 g2.setFont(this.centerTextFont);
                 g2.setPaint(this.centerTextColor);
                 if (this.getDataset().getKey(0).equals(controladorIdioma.getListaPalabras().get(19))) {
-                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"/"+"450", g2, 
+                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"ppm/"+"450ppm", g2, 
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
                             TextAnchor.CENTER);
@@ -54,13 +54,13 @@ public class Anillo extends JPanel {
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
                             TextAnchor.CENTER);
-                }else if(this.getDataset().getKey(0).equals("Voc")) {
-                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"/"+"500", g2, 
+                }else if(this.getDataset().getKey(0).equals("Voc:")) {
+                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"ppb/"+"500ppb", g2, 
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
                             TextAnchor.CENTER);
                 }else if(this.getDataset().getKey(0).equals(controladorIdioma.getListaPalabras().get(18))) {
-                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"/"+"50", g2, 
+                	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"ºC/"+"50ºC", g2, 
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
                             TextAnchor.CENTER);

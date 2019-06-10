@@ -97,8 +97,6 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		this.setLocation (340,100);
 		this.setSize(1000,800);
 		fuenteTituloInfoGeneral=new Font("Tahoma",Font.BOLD,14);
-		
-		iniciarNotis();
 		seleccionIdioma=seleccionarIdioma();
 		generadorPan=new GeneradorPanelesMuestra(controladorIdioma);
 		this.crearAcciones();
@@ -149,7 +147,8 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 	@SuppressWarnings("unused")
 	private void iniciarNotis() {
 		if(usuario.getTipo()>0) {
-			notiManager=new NotificationManager("keyaqui", usuario);
+			System.out.println("INICIANDO NOTIS");
+			notiManager=new NotificationManager("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", usuario);
 			notiManager.start();
 			}		
 	}
@@ -179,6 +178,12 @@ public class Principal extends JFrame implements ActionListener, PropertyChangeL
 		else if(usuario.getTipo()==1) {
 			anadirMuestra.setEnabled(false);
 			anadirCampo.setEnabled(true);
+			System.out.println(notiManager);
+			if(notiManager!=null) {
+			notiManager.parar();
+			notiManager=null;
+			}
+			iniciarNotis();
 		}
 		else {
 			anadirMuestra.setEnabled(true);
