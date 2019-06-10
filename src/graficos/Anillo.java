@@ -59,7 +59,7 @@ public class Anillo extends JPanel {
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
                             TextAnchor.CENTER);
-                }else if(this.getDataset().getKey(0).equals(controladorIdioma.getListaPalabras().get(21))) {
+                }else if(this.getDataset().getKey(0).equals(controladorIdioma.getListaPalabras().get(18))) {
                 	TextUtilities.drawAlignedString(this.getDataset().getValue(this.getDataset().getKey(0))+"/"+"50", g2, 
                             (float) dataArea.getCenterX(), 
                             (float) dataArea.getCenterY(),  
@@ -86,7 +86,7 @@ public class Anillo extends JPanel {
         	dataset.setValue("B", 100-var);
         }else if(variable.equals("Voc")) {
         	dataset.setValue("B", 500-var);
-        }else if(variable.equals(controladorIdioma.getListaPalabras().get(21))) {
+        }else if(variable.equals(controladorIdioma.getListaPalabras().get(18))) {
         	dataset.setValue("B", 50-var);
         }
         return dataset;

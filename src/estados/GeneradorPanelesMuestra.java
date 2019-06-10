@@ -89,13 +89,13 @@ public class GeneradorPanelesMuestra {
 			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(19),muestra1.getCo2eq(),muestra2.getCo2eq(),controladorIdioma).getTarta());
 			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(20),muestra1.getHumedad(),muestra2.getHumedad(),controladorIdioma).getTarta());
 			 panel.add(new Tarta("Voc",muestra1.getVoc(),muestra2.getVoc(),controladorIdioma).getTarta());
-			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(21),muestra1.getTemperatura(),muestra2.getTemperatura(),controladorIdioma).getTarta());
+			 panel.add(new Tarta(controladorIdioma.getListaPalabras().get(18),muestra1.getTemperatura(),muestra2.getTemperatura(),controladorIdioma).getTarta());
 		}
 		else {
 			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(19),muestra1.getCo2eq(),controladorIdioma).getPanel());
 			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(20),muestra1.getHumedad(),controladorIdioma).getPanel());
 			 panel.add(new Anillo("Voc",muestra1.getVoc(),controladorIdioma).getPanel());
-			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(21),muestra1.getTemperatura(),controladorIdioma).getPanel());
+			 panel.add(new Anillo(controladorIdioma.getListaPalabras().get(18),muestra1.getTemperatura(),controladorIdioma).getPanel());
 		}
 		return panel;
 	}
