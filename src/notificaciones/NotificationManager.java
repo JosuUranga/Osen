@@ -62,8 +62,8 @@ public class NotificationManager extends Thread {
 					muestraActual=muestra.getId();
 					MuestraCo2 muestra2=(MuestraCo2) muestra;
 					if(ultimaMuestra<muestraActual) {
-						if(muestra2.getCo2eq()>420) body = "El CO2eq es de: "+muestra2.getCo2eq()+"\n Precaución! Los niveles CO2eq en el aire son bastante altos.";
-						else body= "El CO2eq es de: "+muestra2.getCo2eq()+"\n Los niveles de CO2 stán estables.";
+						if(muestra2.getCo2eq()>420) body = "Buenas "+user.getNombre()+",\n¡Soy Carlos de OSEN, y vengo a informarte de que hay una nueva muestra en tu ubicación!\nEstos son los niveles que se han recogido en tu ubicación.\n El nivel de CO2eq es de: "+muestra2.getCo2eq()+"\n Precaución! Los niveles CO2eq en el aire son bastante altos.\n Los niveles de VOC son: "+muestra2.getVoc()+"\nEstas muestras han sido tomadas en estas condiciones:\nCondición meteorológica: "+muestra2.getMetorologia()+"\nHumedad: "+muestra2.getHumedad()+"% HR\nTemperatura: "+muestra2.getTemperatura()+"\n\nPara mas detalles abre la aplicación de OSEN. ^^\n Gracias por suscribirte,\nCarlos";
+						else body= "Buenas "+user.getNombre()+",\n¡Soy Carlos de OSEN, y vengo a informarte de que hay una nueva muestra en tu ubicación!\nEstos son los niveles que se han recogido en tu ubicación.\n El nivel de CO2eq es de: "+muestra2.getCo2eq()+"\n Los niveles de CO2 están estables.\n Los niveles de VOC son: "+muestra2.getVoc()+"\n Estas muestras han sido tomadas en estas condiciones:\nCondición meteorológica: "+muestra2.getMetorologia()+"\nHumedad: "+muestra2.getHumedad()+"% HR\nTemperatura: "+muestra2.getTemperatura()+"\n\nPara mas detalles abre la aplicación de OSEN. ^^\n Gracias por suscribirte,\nCarlos";
 						notificacion.enviarNotificacionMail("Nueva muestra disponible!", body);
 						notificacion.enviarNotificacionWindows("Hay una nueva muestra disponible \n"+body);
 						ultimaMuestra=muestraActual;
